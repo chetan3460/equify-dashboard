@@ -12,8 +12,12 @@ import ReportsArea from "./components/reports-area";
 import DashboardSelect from "@/components/dasboard-select";
 import TopTen from "./components/top-ten";
 import TopPage from "./components/top-page";
+// import EcommerceStats from "./components/ecommerce-stats";
+import EcommerceStats from "./components/ecommerce-stats";
 
 import DatePickerWithRange from "@/components/date-picker-with-range";
+
+import EcommerceCards from "./components/EcommerceCards";
 
 const Dashboard = () => {
   return (
@@ -29,6 +33,17 @@ const Dashboard = () => {
 
         <DatePickerWithRange />
       </div>
+
+      <EcommerceCards />
+
+      <Card>
+        <CardContent className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            <EcommerceStats />
+          </div>
+        </CardContent>
+      </Card>
+
       {/* reports area */}
       <div className="grid grid-cols-12  gap-6 ">
         <div className="col-span-12 lg:col-span-8">

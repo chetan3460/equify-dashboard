@@ -53,6 +53,13 @@ export { default as BlankVector } from "./man-vector.svg";
 
 // Using LayoutDashboard from lucide-react instead of custom dashboard.svg
 export { LayoutDashboard as DashBoard } from "lucide-react";
+// header logo
+export { default as SiteLogo } from "./logo.svg";
+
+
+
+
+
 export { default as Application } from "./duel-tone/application.svg";
 export { default as Authentication } from "./duel-tone/authentication.svg";
 export { default as Components } from "./duel-tone/components.svg";
@@ -61,7 +68,6 @@ export { default as Stacks2 } from "./duel-tone/stacks.svg";
 export { default as Pages } from "./duel-tone/pages.svg";
 export { default as Chart } from "./duel-tone/chart.svg";
 export { default as Map } from "./duel-tone/map.svg";
-export { default as SiteLogo } from "./duel-tone/logo.svg";
 export { default as Settings } from "./duel-tone/settings.svg";
 export { default as Files } from "./duel-tone/files.svg";
 export { default as Graph } from "./duel-tone/graph.svg";

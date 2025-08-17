@@ -28,7 +28,6 @@ module.exports = {
     },
     extend: {
       colors: {
-        base: "#201D1A",
         border: "hsl(var(--border) / <alpha-value>)",
         default: {
           50: "hsl(var(--default-50) / <alpha-value>)",
@@ -49,7 +48,6 @@ module.exports = {
         background: "hsl(var(--background) / <alpha-value>)",
         foreground: "hsl(var(--foreground) / <alpha-value>)",
         primary: {
-          DEFAULT: "#4E47E1",
           50: "hsl(var(--primary-50) / <alpha-value>)",
           100: "hsl(var(--primary-100) / <alpha-value>)",
           200: "hsl(var(--primary-200) / <alpha-value>)",
@@ -61,7 +59,7 @@ module.exports = {
           800: "hsl(var(--primary-800) / <alpha-value>)",
           900: "hsl(var(--primary-900) / <alpha-value>)",
           950: "hsl(var(--primary-950) / <alpha-value>)",
-          // DEFAULT: "hsl(var(--primary) / <alpha-value>)",
+          DEFAULT: "hsl(var(--primary) / <alpha-value>)",
           foreground: "hsl(var(--primary-foreground) / <alpha-value>)",
         },
         secondary: {
@@ -109,10 +107,9 @@ module.exports = {
         sm: "0px 1px 2px 0px rgba(15, 22, 36, 0.06), 0px 1px 3px 0px rgba(15, 22, 36, 0.10)",
       },
       borderRadius: {
-        DEFAULT: "20px",
-        lg: "20px",
-        md: "16px",
-        sm: "12px",
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
         "accordion-down": {

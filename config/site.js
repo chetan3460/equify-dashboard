@@ -1,6 +1,6 @@
 export const siteConfig = {
-  name: "DashTail Next js Admin Template",
-  description: null,
+  name: "Equence - Admin Dashboard",
+  description: "Equence Admin Dashboard",
   theme: "custom",
   layout: "vertical", // hardcoded to vertical
   // semi-box, horizontal, vertical

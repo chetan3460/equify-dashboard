@@ -35,10 +35,7 @@ const MainLayout = ({ children }) => {
         })}
       >
         <div
-          className={cn(
-            "  md:pt-6 pb-[37px] pt-[15px] md:px-6 px-4  page-min-height ",
-            {}
-          )}
+          className={cn("  lg:py-6 py-4 lg:px-10 px-7 page-min-height ", {})}
         >
           <LayoutWrapper
             isMobile={isMobile}
