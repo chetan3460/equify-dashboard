@@ -16,6 +16,7 @@ import {
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import GaugeChart from "./GaugeChart";
 
 /* Green Up Arrow */
 const GreenArrow = () => (
@@ -110,9 +111,9 @@ const initialCardsData = [
   {
     id: "5",
     title: "Current Total TPS",
-    value: "5K",
-    change: "",
-    color: "text-gray-500",
+    value: "7.2K",
+    change: "Real-time monitoring",
+    color: "text-green-600",
   },
 ];
 
@@ -159,6 +160,21 @@ const DragHandle = () => (
   </svg>
 );
 
+/* Helper function to convert value string to number */
+const getNumericValue = (valueStr) => {
+  if (!valueStr) return 0;
+  if (valueStr.endsWith('K')) {
+    return parseFloat(valueStr.replace('K', '')) * 1000;
+  }
+  if (valueStr.endsWith('M')) {
+    return parseFloat(valueStr.replace('M', '')) * 1000000;
+  }
+  if (valueStr.endsWith('%')) {
+    return parseFloat(valueStr.replace('%', ''));
+  }
+  return parseFloat(valueStr) || 0;
+};
+
 /* Card Content - The draggable inner part */
 const EcommerceCardContent = ({ data, isCustomizeMode = false }) => {
   return (
@@ -174,20 +190,36 @@ const EcommerceCardContent = ({ data, isCustomizeMode = false }) => {
         {data.title}
       </div>
 
-      {/* Value + trend arrow */}
-      <div className="flex items-center gap-1">
-        <div className="text-2xl font-bold text-default-900">{data.value}</div>
-        {data.trend === "up" && <GreenArrow />}
-        {data.trend === "down" && <RedArrow />}
-      </div>
-
-      {/* Change text */}
-      {data.change && (
-        <div
-          className={`flex items-center gap-1 mt-1 text-[11px] ${data.color}`}
-        >
-          <span>{data.change}</span>
+      {data.id === "5" ? (
+        // For Current Total TPS card, show the gauge chart
+        <div className="mt-2">
+          <GaugeChart 
+            value={getNumericValue(data.value)} 
+            maxValue={10000} 
+            title={data.title}
+            enableAnimation={true}
+            showRealTimeUpdate={false}
+          />
         </div>
+      ) : (
+        // For all other cards, show the regular value and change text
+        <>
+          {/* Value + trend arrow */}
+          <div className="flex items-center gap-1">
+            <div className="text-2xl font-bold text-default-900">{data.value}</div>
+            {data.trend === "up" && <GreenArrow />}
+            {data.trend === "down" && <RedArrow />}
+          </div>
+
+          {/* Change text */}
+          {data.change && (
+            <div
+              className={`flex items-center gap-1 mt-1 text-[11px] ${data.color}`}
+            >
+              <span>{data.change}</span>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
@@ -211,22 +243,38 @@ const EcommerceCard = ({ data, isCustomizeMode }) => {
             {data.title}
           </div>
 
-          {/* Value + trend arrow */}
-          <div className="flex items-center gap-1">
-            <div className="text-2xl font-bold text-default-900">
-              {data.value}
+          {data.id === "5" ? (
+            // For Current Total TPS card, show the gauge chart
+            <div className="mt-2">
+              <GaugeChart 
+                value={getNumericValue(data.value)} 
+                maxValue={10000} 
+                title={data.title}
+                enableAnimation={true}
+                showRealTimeUpdate={false}
+              />
             </div>
-            {data.trend === "up" && <GreenArrow />}
-            {data.trend === "down" && <RedArrow />}
-          </div>
+          ) : (
+            // For all other cards, show the regular value and change text
+            <>
+              {/* Value + trend arrow */}
+              <div className="flex items-center gap-1">
+                <div className="text-2xl font-bold text-default-900">
+                  {data.value}
+                </div>
+                {data.trend === "up" && <GreenArrow />}
+                {data.trend === "down" && <RedArrow />}
+              </div>
 
-          {/* Change text */}
-          {data.change && (
-            <div
-              className={`flex items-center gap-1 mt-1 text-[11px] ${data.color}`}
-            >
-              <span>{data.change}</span>
-            </div>
+              {/* Change text */}
+              {data.change && (
+                <div
+                  className={`flex items-center gap-1 mt-1 text-[11px] ${data.color}`}
+                >
+                  <span>{data.change}</span>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
