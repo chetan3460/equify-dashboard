@@ -182,3 +182,5 @@ const ListItem = React.forwardRef(
     </NavigationMenu.Link>
   )
 );
+
+ListItem.displayName = "ListItem";

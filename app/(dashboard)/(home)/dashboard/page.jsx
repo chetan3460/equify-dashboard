@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
@@ -8,44 +9,35 @@ import UserDeviceReport from "./components/user-device-report";
 import UserStats from "./components/user-stats-chart";
 import { Button } from "@/components/ui/button";
 import UsersStat from "./components/users-stat";
-import ReportsArea from "./components/reports-area";
 import DashboardSelect from "@/components/dasboard-select";
 import TopTen from "./components/top-ten";
 import TopPage from "./components/top-page";
-// import EcommerceStats from "./components/ecommerce-stats";
-import EcommerceStats from "./components/ecommerce-stats";
 
 import DatePickerWithRange from "@/components/date-picker-with-range";
-
-import EcommerceCards from "./components/EcommerceCards";
+import TitleSection from "./components/TitleSection";
+// Import draggable system components
+import EcommerceCardsNew from "./components/EcommerceCardsNew";
+import DraggableEcommerceStats from "./components/DraggableEcommerceStats";
+import DraggableReportsArea from "./components/DraggableReportsArea";
 
 const Dashboard = () => {
   return (
     <div className="space-y-6">
-      <div className="flex items-center flex-wrap justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <div className="text-2xl font-semibold ">Welcome back, Rahul!</div>
-          <p className="text-midgray">
-            Your SMS operations are performing well today with steady traffic
-            growth across all channels
-          </p>
-        </div>
+      {/* Header Section */}
+      <TitleSection />
 
-        <DatePickerWithRange />
-      </div>
+      {/* Draggable SMS Stats Cards */}
+      <EcommerceCardsNew />
 
-      <EcommerceCards />
-
+      {/* Draggable Ecommerce Stats */}
       <Card>
         <CardContent className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-            <EcommerceStats />
-          </div>
+          <DraggableEcommerceStats />
         </CardContent>
       </Card>
 
       {/* reports area */}
-      <div className="grid grid-cols-12  gap-6 ">
+      <div className="grid grid-cols-12 gap-6">
         <div className="col-span-12 lg:col-span-8">
           <ReportsSnapshot />
         </div>
@@ -53,10 +45,10 @@ const Dashboard = () => {
           <UsersStat />
         </div>
       </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <ReportsArea />
-        </div>
+        {/* Draggable Reports Area */}
+        <DraggableReportsArea />
         <Card>
           <CardHeader className="border-none p-6 pt-5 mb-0">
             <CardTitle className="text-lg font-semibold text-default-900 p-0">
@@ -78,6 +70,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </div>
+
       <div className="col-span-2">
         <Card>
           <CardHeader className="border-none pb-0">
@@ -95,6 +88,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </div>
+
       <div className="grid grid-cols-12 gap-6">
         <div className="col-span-12 lg:col-span-4">
           <TopTen />

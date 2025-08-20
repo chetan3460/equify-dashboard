@@ -37,14 +37,14 @@ const AlertPage = () => {
       </Card>
       <Card title="Outline Alert" code={outlineAlert}>
         <p className="text-sm text-default-400 dark:text-default-600  mb-4">
-          The <code className="text-primary">variant="outline"</code> props of
+          The <code className="text-primary">variant=&quot;outline&quot;</code> props of
           alert change the outline of alert.
         </p>
         <OutlineAlert />
       </Card>
       <Card title="Soft Alert" code={softAlert}>
         <p className="text-sm text-default-400 dark:text-default-600  mb-4">
-          The <code className="text-primary"> variant="soft"</code> props of
+          The <code className="text-primary"> variant=&quot;soft&quot;</code> props of
           alert change to soft background of alert .
         </p>
 
@@ -68,7 +68,7 @@ const AlertPage = () => {
         <p className="text-sm text-default-400 dark:text-default-600  mb-4">
           The alert{" "}
           <code className="text-primary">
-            dismissible and variant="outline"
+            dismissible and variant=&quot;outline&quot;
           </code>{" "}
           props remove the alert .
         </p>
@@ -77,7 +77,7 @@ const AlertPage = () => {
       <Card title="Dismissible Soft Alerts" code={dismissibleSoftColor}>
         <p className="text-sm text-default-400 dark:text-default-600  mb-4">
           The alert{" "}
-          <code className="text-primary">dismissible and variant="soft"</code>{" "}
+          <code className="text-primary">dismissible and variant=&quot;soft&quot;</code>{" "}
           props remove the alert .
         </p>
         <DismissibleSoftColor />

@@ -1,6 +1,11 @@
 
 
 
+
+
+// header logo
+export { default as SiteLogo } from "./logo.svg";
+
 export { LayoutDashboard } from "lucide-react";
 
 
@@ -53,8 +58,7 @@ export { default as BlankVector } from "./man-vector.svg";
 
 // Using LayoutDashboard from lucide-react instead of custom dashboard.svg
 export { LayoutDashboard as DashBoard } from "lucide-react";
-// header logo
-export { default as SiteLogo } from "./logo.svg";
+
 
 
 

@@ -1,6 +1,6 @@
 import "./assets/css/globals.css";
 import "./assets/css/theme.css";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import Providers from "@/provider/providers";
 import "simplebar-react/dist/simplebar.min.css";
@@ -9,8 +9,13 @@ import "@/lib/suppress-warnings";
 import WarningSuppressor from "@/components/client/warning-suppressor";
 import BodyClassHandler from "@/components/client/body-class-handler";
 import { cn } from "@/lib/utils";
+import Script from "next/script";
 // import "flatpickr/dist/themes/light.css"; // Removed dependency
-const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({ 
+  subsets: ["latin"], 
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins"
+});
 
 export const metadata = {
   title: {
@@ -24,9 +29,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script src="/suppress-warnings.js" />
+        <Script src="/suppress-warnings.js" strategy="beforeInteractive" />
       </head>
-      <body className={cn("dash-tail-app", inter.className)}>
+      <body className={cn("dash-tail-app", poppins.className)}>
         <WarningSuppressor />
         <BodyClassHandler />
         <TanstackProvider>

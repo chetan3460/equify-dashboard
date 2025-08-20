@@ -20,14 +20,14 @@ const SubMenuHandler = ({
         <div
           onClick={() => toggleSubmenu(index)}
           className={cn(
-            "flex  text-default-700 group font-medium text-sm capitalize px-[10px] py-3 rounded cursor-pointer transition-all duration-100 hover:bg-primary hover:text-primary-foreground group",
+            "flex  text-default-700 group font-medium text-sm capitalize px-[10px] py-3 rounded-xl cursor-pointer transition-all duration-100 hover:bg-primary hover:text-primary-foreground group",
             {
               "bg-primary  text-primary-foreground": activeSubmenu === index,
             }
           )}
         >
           <div className="flex-1  gap-3 flex items-start">
-            <span className="inline-flex items-center     ">
+            <span className="inline-flex items-center">
               <SafeIcon icon={item.icon} className="w-5 h-5" />
             </span>
             <div className=" ">{title}</div>

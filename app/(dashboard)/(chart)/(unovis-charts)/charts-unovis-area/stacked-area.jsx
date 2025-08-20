@@ -49,17 +49,33 @@ export default function StackedArea() {
 
     const labels = getLabels(stackedData);
 
+    // Define callbacks at component level
+    const xAccessor = useCallback((d) => d.year, []);
+    
+    // Create individual accessors for each format
+    const vinylAccessor = useCallback((d) => d[Format.Vinyl], [Format.Vinyl]);
+    const cassetteAccessor = useCallback((d) => d[Format.Cassette], [Format.Cassette]);
+    const cdAccessor = useCallback((d) => d[Format.Cd], [Format.Cd]);
+    const downloadAccessor = useCallback((d) => d[Format.Download], [Format.Download]);
+    const streamingAccessor = useCallback((d) => d[Format.Streaming], [Format.Streaming]);
+    
+    const yAccessors = [vinylAccessor, cassetteAccessor, cdAccessor, downloadAccessor, streamingAccessor];
+    const labelXAccessor = useCallback((d) => (labels[d.year] ? d.year : undefined), [labels]);
+    const labelYAccessor = useCallback((d) => labels[d.year]?.value, [labels]);
+    const labelAccessor = useCallback((d) => labels[d.year]?.label, [labels]);
+    const backgroundColorAccessor = useCallback((d) => labels[d.year]?.color ?? 'none', [labels]);
+
     return (
         <>
             <VisXYContainer data={stackedData} height={'50vh'}>
-                <VisArea x={useCallback((d) => d.year, [])} y={formats.map((g) => useCallback((d) => d[g], []))} />
+                <VisArea x={xAccessor} y={yAccessors} />
                 <VisAxis type='x' label='Year' numTicks={10} gridLine={false} domainLine={false} />
                 <VisAxis type='y' label='Revenue (USD, billions)' numTicks={10} />
                 <VisXYLabels
-                    x={useCallback((d) => (labels[d.year] ? d.year : undefined), [])}
-                    y={useCallback((d) => labels[d.year]?.value, [])}
-                    label={useCallback((d) => labels[d.year]?.label, [])}
-                    backgroundColor={useCallback((d) => labels[d.year]?.color ?? 'none', [])}
+                    x={labelXAccessor}
+                    y={labelYAccessor}
+                    label={labelAccessor}
+                    backgroundColor={backgroundColorAccessor}
                     clusterBackgroundColor="none"
                     clusterLabel={() => ''}
                 />

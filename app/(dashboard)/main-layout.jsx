@@ -12,6 +12,8 @@ import MobileSidebar from "@/components/partials/sidebar/mobile-sidebar";
 import HeaderSearch from "@/components/header-search";
 import { useMounted } from "@/hooks/use-mounted";
 import LayoutLoader from "@/components/layout-loader";
+import { DragProvider } from "@/components/draggable/DragProvider";
+import { DragConfirmationPopup } from "@/components/draggable/DragModeHeader";
 const MainLayout = ({ children }) => {
   const { collapsed } = useSidebar();
   const [open, setOpen] = React.useState(false);
@@ -24,7 +26,7 @@ const MainLayout = ({ children }) => {
 
   // Hardcoded vertical layout with classic sidebar
   return (
-    <>
+    <DragProvider>
       <Header handleOpenSearch={() => setOpen(true)} />
       <Sidebar />
 
@@ -48,7 +50,10 @@ const MainLayout = ({ children }) => {
         </div>
       </div>
       <Footer />
-    </>
+      
+      {/* Global drag confirmation popup */}
+      <DragConfirmationPopup />
+    </DragProvider>
   );
 };
 

@@ -1,25 +1,30 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { useId } from "react";
 
-// Inline SVG component to avoid import issues
-const Expand = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path opacity="0.35" d="M14 1.66699H5.175C3.24167 1.66699 1.675 3.23366 1.675 5.15866V10.3087V10.467C1.675 12.4003 3.24167 13.9587 5.16667 13.9587H8.16667C8.625 13.9587 9 14.3337 9 14.792V15.4753C9 15.9337 8.625 16.3087 8.16667 16.3087H6.29167C5.96667 16.3087 5.7 16.5753 5.7 16.9003C5.7 17.2253 5.96667 17.492 6.29167 17.492H12.9C13.225 17.492 13.4917 17.2253 13.4917 16.9003C13.4917 16.5753 13.225 16.3087 12.9 16.3087H11.025C10.5667 16.3087 10.1917 15.9337 10.1917 15.4753V14.792C10.1917 14.3337 10.5667 13.9587 11.025 13.9587H14C15.9333 13.9587 17.4917 12.392 17.4917 10.467V10.3087V5.15866C17.4917 3.23366 15.925 1.66699 14 1.66699Z" fill="currentColor"/>
-    <path d="M16.3667 7.91699H11.9583C10.5167 7.91699 9.99167 8.44199 9.99167 9.90033V16.342C9.99167 17.8087 10.5083 18.3253 11.9583 18.3253H16.3667C17.8083 18.3253 18.3333 17.8003 18.3333 16.342V9.90033C18.3333 8.43366 17.8167 7.91699 16.3667 7.91699ZM14.1667 16.9337C13.6583 16.9337 13.25 16.5253 13.25 16.017C13.25 15.5087 13.6583 15.1003 14.1667 15.1003C14.675 15.1003 15.0833 15.5087 15.0833 16.017C15.0833 16.5253 14.675 16.9337 14.1667 16.9337Z" fill="currentColor"/>
-    <path opacity="0.4" d="M15.0833 16.0163C15.0833 16.5246 14.675 16.9329 14.1667 16.9329C13.6583 16.9329 13.25 16.5246 13.25 16.0163C13.25 15.5079 13.6583 15.0996 14.1667 15.0996C14.675 15.0996 15.0833 15.5163 15.0833 16.0163Z" fill="currentColor"/>
+const Expand = ({ className = "", ...props }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    className={className}
+    {...props}
+  >
+    <path
+      d="M5.333 2H3.333C2.98 2 2.64 2.14 2.391 2.391C2.14 2.641 2 2.98 2 3.333V5.333M14 5.333V3.333C14 2.98 13.859 2.641 13.609 2.391C13.359 2.14 13.02 2 12.667 2H10.667M10.667 14H12.667C13.02 14 13.359 13.859 13.609 13.609C13.859 13.359 14 13.02 14 12.667V10.667M2 10.667V12.667C2 13.02 2.14 13.359 2.391 13.609C2.641 13.859 2.98 14 3.333 14H5.333"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
-import {
-  Tooltip,
-  TooltipArrow,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 function FullScreenToggle() {
+  const tooltipId = useId();
+
   const toggleFullScreen = () => {
-    const doc = window.document;
+    const doc = document;
     const docEl = doc.documentElement;
 
     const requestFullScreen =
@@ -27,46 +32,39 @@ function FullScreenToggle() {
       docEl.mozRequestFullScreen ||
       docEl.webkitRequestFullScreen ||
       docEl.msRequestFullscreen;
+
     const cancelFullScreen =
       doc.exitFullscreen ||
       doc.mozCancelFullScreen ||
       doc.webkitExitFullscreen ||
       doc.msExitFullscreen;
 
-    if (
-      !doc.fullscreenElement &&
-      !doc.mozFullScreenElement &&
-      !doc.webkitFullscreenElement &&
-      !doc.msFullscreenElement
-    ) {
-      requestFullScreen.call(docEl);
-    } else {
-      cancelFullScreen.call(doc);
-    }
+    const isFull =
+      doc.fullscreenElement ||
+      doc.mozFullScreenElement ||
+      doc.webkitFullscreenElement ||
+      doc.msFullscreenElement;
+
+    if (!isFull) requestFullScreen?.call(docEl);
+    else cancelFullScreen?.call(doc);
   };
 
   return (
-
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            onClick={toggleFullScreen}
-            variant="ghost"
-            size="icon"
-            className="relative md:h-9 md:w-9 h-8 w-8 hover:bg-default-100 dark:hover:bg-default-200
-         data-[state=open]:bg-default-100  dark:data-[state=open]:bg-default-200
-           hover:text-primary text-default-500 dark:text-default-800  rounded-full "
-          >
-            <Expand className="h-5 w-5" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <TooltipArrow className="fill-primary" />
-          <p>Full Screen</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider >
+    <div className="relative inline-block group">
+      {/* Button */}
+      <button
+        type="button"
+        onClick={toggleFullScreen}
+        aria-describedby={tooltipId}
+        className="relative h-6 w-6 rounded-full flex items-center justify-center
+                   text-[#595B61] hover:text-primary
+                   hover:bg-primary-100 dark:bg-transparent  dark:text-darkGray
+                   
+                   transition-colors duration-200"
+      >
+        <Expand className="h-4 w-4" />
+      </button>
+    </div>
   );
 }
 

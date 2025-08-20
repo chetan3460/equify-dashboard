@@ -338,8 +338,8 @@ const TaskTable = ({ data, boards, onUpdateTask, boardID2 }) => {
                 total={row.getValue("assign").length}
                 countClass="w-8 h-8"
               >
-                {row.getValue("assign").map((user) => (
-                  <TooltipProvider>
+                {row.getValue("assign").map((user, userIndex) => (
+                  <TooltipProvider key={`assigned-user-${user.value || userIndex}`}>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Avatar className="h-8 w-8 ring-1 ring-background ring-offset-[2px]  ring-offset-background">

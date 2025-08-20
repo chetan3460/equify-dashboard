@@ -44,7 +44,7 @@ const initialCards = [
   { id: "5", title: "Current Total TPS", value: "5K", change: "" },
 ];
 
-function SortableCard({ card, isCustomising }) {
+function SortableCard({ card, isCustomizeMode }) {
   const {
     attributes,
     listeners,
@@ -67,15 +67,15 @@ function SortableCard({ card, isCustomising }) {
       className={`
         bg-white rounded-xl p-4 shadow transition-all duration-300 
         ${
-          isCustomising
+          isCustomizeMode
             ? "border-2 border-dashed border-gray-400"
             : "border border-transparent"
-        } 
+        }
         ${isDragging ? "scale-105 shadow-lg opacity-75" : ""}
         relative
       `}
     >
-      {isCustomising && (
+      {isCustomizeMode && (
         <div
           {...attributes}
           {...listeners}
@@ -101,11 +101,15 @@ function SortableCard({ card, isCustomising }) {
   );
 }
 
-export default function EcommerceCards() {
+export default function EcommerceCards({ 
+  isCustomizeMode = false, 
+  onCardsChanged,
+  showConfirmation = false,
+  onSaveChanges,
+  onCancelChanges 
+}) {
   const [cards, setCards] = useState(initialCards);
   const [originalCards, setOriginalCards] = useState(initialCards);
-  const [isCustomising, setIsCustomising] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
 
   const sensors = useSensors(
@@ -134,32 +138,29 @@ export default function EcommerceCards() {
       return arrayMove(items, oldIndex, newIndex);
     });
     setActiveCard(null);
-    setShowConfirm(true);
+    // Notify parent that cards have been changed
+    if (onCardsChanged) {
+      onCardsChanged();
+    }
   };
 
   const handleSave = () => {
     localStorage.setItem("dashboard-cards", JSON.stringify(cards));
     setOriginalCards(cards);
-    setShowConfirm(false);
-    setIsCustomising(false);
+    if (onSaveChanges) {
+      onSaveChanges();
+    }
   };
 
   const handleCancel = () => {
     setCards(originalCards);
-    setShowConfirm(false);
-    setIsCustomising(false);
+    if (onCancelChanges) {
+      onCancelChanges();
+    }
   };
 
   return (
-    <div className="p-6 relative">
-      {/* Customise Button */}
-      <button
-        onClick={() => setIsCustomising((prev) => !prev)}
-        className="mb-4 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition"
-      >
-        {isCustomising ? "Done" : "Customise"}
-      </button>
-
+    <div className="relative">
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -172,7 +173,7 @@ export default function EcommerceCards() {
               <SortableCard
                 key={card.id}
                 card={card}
-                isCustomising={isCustomising}
+                isCustomizeMode={isCustomizeMode}
               />
             ))}
           </div>
@@ -190,21 +191,30 @@ export default function EcommerceCards() {
       </DndContext>
 
       {/* Floating confirmation popup */}
-      {showConfirm && (
-        <div className="fixed bottom-6 right-6 bg-white shadow-lg border rounded-lg p-4 flex items-center space-x-4 animate-fade-in">
-          <span className="font-medium">Save changes?</span>
-          <button
-            onClick={handleCancel}
-            className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSave}
-            className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-          >
-            Save
-          </button>
+      {showConfirmation && (
+        <div className="fixed bottom-6 right-6 bg-white shadow-xl border rounded-lg p-5 flex flex-col space-y-4 animate-fade-in z-50 min-w-[280px]">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+              <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <span className="font-semibold text-gray-900">Done customizing?</span>
+          </div>
+          <div className="flex space-x-3">
+            <button
+              onClick={handleCancel}
+              className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition font-medium"
+            >
+              Save Changes
+            </button>
+          </div>
         </div>
       )}
 

@@ -71,6 +71,18 @@ const CrosshairStackedBar = ({ height = 400 }) => {
     []
   );
 
+  // Define callbacks at component level
+  const xAccessor = useCallback((d) => d.year, []);
+  
+  // Create individual accessors for each format
+  const vinylAccessor = useCallback((d) => d.vinyl, []);
+  const cassetteAccessor = useCallback((d) => d.cassette, []);
+  const cdAccessor = useCallback((d) => d.cd, []);
+  const downloadAccessor = useCallback((d) => d.download, []);
+  const streamingAccessor = useCallback((d) => d.streaming, []);
+  
+  const yAccessors = [vinylAccessor, cassetteAccessor, cdAccessor, downloadAccessor, streamingAccessor];
+
   return (
     <>
       <link
@@ -84,8 +96,8 @@ const CrosshairStackedBar = ({ height = 400 }) => {
       ))}
       <VisXYContainer data={musicData} height={height}>
         <VisStackedBar
-          x={useCallback((d) => d.year, [])}
-          y={labels.map((l) => useCallback((d) => d[l.format], []))}
+          x={xAccessor}
+          y={yAccessors}
         />
         <VisTooltip
           verticalShift={height}

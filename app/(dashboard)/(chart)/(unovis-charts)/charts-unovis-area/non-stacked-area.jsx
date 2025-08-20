@@ -37,10 +37,21 @@ const NonStackedArea = ({ height = 400 }) => {
   };
 
   const x = useCallback((_, i) => i, []);
-  const accessors = (id) => ({
-    y: useCallback((d) => d.cases[id], []),
-    color: countries[id].color,
-  });
+  
+  // Create accessors with proper hook usage
+  const usAccessor = useCallback((d) => d.cases[Country.UnitedStates], []);
+  const inAccessor = useCallback((d) => d.cases[Country.India], []);
+  
+  const accessors = {
+    [Country.UnitedStates]: {
+      y: usAccessor,
+      color: countries[Country.UnitedStates].color,
+    },
+    [Country.India]: {
+      y: inAccessor,
+      color: countries[Country.India].color,
+    },
+  };
 
   const xTicks = useCallback((i) => [data[i].month, data[i].year].join(""), []);
   const yTicks = Intl.NumberFormat(navigator.language, {
@@ -51,13 +62,13 @@ const NonStackedArea = ({ height = 400 }) => {
     <VisXYContainer data={data} height={height}>
       <VisBulletLegend items={Object.values(countries)} />
       <VisArea
-        {...accessors(Country.UnitedStates)}
+        {...accessors[Country.UnitedStates]}
         x={x}
         opacity={0.7}
         curveType={CurveType.Basis}
       />
       <VisArea
-        {...accessors(Country.India)}
+        {...accessors[Country.India]}
         x={x}
         opacity={0.7}
         curveType={CurveType.Basis}

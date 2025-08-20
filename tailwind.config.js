@@ -1,3 +1,5 @@
+const { dark } = require('react-syntax-highlighter/dist/esm/styles/hljs');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   important: true,
@@ -9,6 +11,9 @@ module.exports = {
     "./src/**/*.{js,jsx,md,mdx}",
   ],
   theme: {
+    fontFamily: {
+      sans: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+    },
     container: {
       center: true,
       padding: {
@@ -28,6 +33,13 @@ module.exports = {
     },
     extend: {
       colors: {
+
+        dark: "#201D1A",
+        lightGray: "#595B61",
+        darkGray: "#ADADAD",
+        midGray: "#6D6863",
+        purple: "#4E47E1",
+        lightpurle: "#A39EF9",
         border: "hsl(var(--border) / <alpha-value>)",
         default: {
           50: "hsl(var(--default-50) / <alpha-value>)",
