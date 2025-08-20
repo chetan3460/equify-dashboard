@@ -20,12 +20,12 @@ import { CSS } from "@dnd-kit/utilities";
 import { useDragContext } from "./DragProvider";
 
 // Sortable item wrapper
-function SortableItem({ 
-  id, 
-  children, 
-  isCustomizeMode, 
+function SortableItem({
+  id,
+  children,
+  isCustomizeMode,
   className = "",
-  dragHandleProps = {} 
+  dragHandleProps = {},
 }) {
   const {
     attributes,
@@ -42,33 +42,67 @@ function SortableItem({
     zIndex: isDragging ? 50 : 1,
   };
 
+  // In customize mode, apply drag listeners to the entire content
+  // In normal mode, apply drag listeners to the drag handle only
+  const dragProps = isCustomizeMode ? { ...attributes, ...listeners } : {};
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       className={`
-        transition-all duration-300 relative
-        ${isCustomizeMode ? "cursor-grab" : ""} 
-        ${isDragging ? "scale-105 shadow-lg opacity-75" : ""} 
+        transition-all duration-300 relative 
+        ${isCustomizeMode ? "cursor-grab " : ""} 
+        ${isDragging ? "scale-105 opacity-75" : ""} 
         ${className}
       `}
+      {...dragProps}
     >
-      {isCustomizeMode && (
+      {!isCustomizeMode && (
         <div
           {...attributes}
           {...listeners}
-          className="absolute top-2 right-2 cursor-grab p-1 z-10 bg-white rounded shadow-sm border"
+          className="absolute top-2 right-2 cursor-grab z-20 w-4 h-4 opacity-0 hover:opacity-100 transition-opacity"
           {...dragHandleProps}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 text-gray-500"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
             fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
           >
-            <path d="M10 4h4v4h-4V4zM10 10h4v4h-4v-4zM10 16h4v4h-4v-4z" />
+            <g clipPath="url(#clip0_376_3320)">
+              <path
+                d="M5.75 4.5C6.16421 4.5 6.5 4.16421 6.5 3.75C6.5 3.33579 6.16421 3 5.75 3C5.33579 3 5 3.33579 5 3.75C5 4.16421 5.33579 4.5 5.75 4.5Z"
+                fill="black"
+              />
+              <path
+                d="M10.25 4.5C10.6642 4.5 11 4.16421 11 3.75C11 3.33579 10.6642 3 10.25 3C9.83579 3 9.5 3.33579 9.5 3.75C9.5 4.16421 9.83579 4.5 10.25 4.5Z"
+                fill="black"
+              />
+              <path
+                d="M5.75 8.75C6.16421 8.75 6.5 8.41421 6.5 8C6.5 7.58579 6.16421 7.25 5.75 7.25C5.33579 7.25 5 7.58579 5 8C5 8.41421 5.33579 8.75 5.75 8.75Z"
+                fill="black"
+              />
+              <path
+                d="M10.25 8.75C10.6642 8.75 11 8.41421 11 8C11 7.58579 10.6642 7.25 10.25 7.25C9.83579 7.25 9.5 7.58579 9.5 8C9.5 8.41421 9.83579 8.75 10.25 8.75Z"
+                fill="black"
+              />
+              <path
+                d="M5.75 13C6.16421 13 6.5 12.6642 6.5 12.25C6.5 11.8358 6.16421 11.5 5.75 11.5C5.33579 11.5 5 11.8358 5 12.25C5 12.6642 5.33579 13 5.75 13Z"
+                fill="black"
+              />
+              <path
+                d="M10.25 13C10.6642 13 11 12.6642 11 12.25C11 11.8358 10.6642 11.5 10.25 11.5C9.83579 11.5 9.5 11.8358 9.5 12.25C9.5 12.6642 9.83579 13 10.25 13Z"
+                fill="black"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_376_3320">
+                <rect width="16" height="16" fill="white" />
+              </clipPath>
+            </defs>
           </svg>
         </div>
       )}
@@ -88,13 +122,13 @@ export const SortableContainer = ({
   onItemsChange,
   renderOverlay,
 }) => {
-  const { 
-    isGlobalDragMode, 
-    registerContainer, 
-    unregisterContainer, 
-    markContainerChanged 
+  const {
+    isGlobalDragMode,
+    registerContainer,
+    unregisterContainer,
+    markContainerChanged,
   } = useDragContext();
-  
+
   const [items, setItems] = useState(initialItems);
   const [originalItems, setOriginalItems] = useState(initialItems);
   const [activeItem, setActiveItem] = useState(null);
@@ -124,11 +158,17 @@ export const SortableContainer = ({
         try {
           const savedOrder = JSON.parse(saved);
           // Reorder items based on saved order
-          if (savedOrder && Array.isArray(savedOrder) && savedOrder.length > 0) {
+          if (
+            savedOrder &&
+            Array.isArray(savedOrder) &&
+            savedOrder.length > 0
+          ) {
             const reorderedItems = [...initialItems];
             // Sort based on saved order
             savedOrder.forEach((orderItem, index) => {
-              const itemIndex = reorderedItems.findIndex(item => item.id === orderItem.id);
+              const itemIndex = reorderedItems.findIndex(
+                (item) => item.id === orderItem.id
+              );
               if (itemIndex !== -1) {
                 const [item] = reorderedItems.splice(itemIndex, 1);
                 reorderedItems.splice(index, 0, item);
@@ -138,7 +178,10 @@ export const SortableContainer = ({
             setOriginalItems(reorderedItems);
           }
         } catch (error) {
-          console.error(`Error loading ${storageKey} from localStorage:`, error);
+          console.error(
+            `Error loading ${storageKey} from localStorage:`,
+            error
+          );
         }
       }
     }
@@ -150,7 +193,10 @@ export const SortableContainer = ({
       onSave: () => {
         if (storageKey) {
           // Only save the order (IDs), not the full component objects
-          const itemOrder = items.map(item => ({ id: item.id, order: items.indexOf(item) }));
+          const itemOrder = items.map((item) => ({
+            id: item.id,
+            order: items.indexOf(item),
+          }));
           localStorage.setItem(storageKey, JSON.stringify(itemOrder));
         }
         setOriginalItems(items);
@@ -165,11 +211,19 @@ export const SortableContainer = ({
         }
       },
     };
-    
+
     registerContainer(containerId, callbacks);
-    
+
     return () => unregisterContainer(containerId);
-  }, [containerId, items, originalItems, storageKey, onItemsChange, registerContainer, unregisterContainer]);
+  }, [
+    containerId,
+    items,
+    originalItems,
+    storageKey,
+    onItemsChange,
+    registerContainer,
+    unregisterContainer,
+  ]);
 
   const handleDragStart = (event) => {
     const active = items.find((item) => item.id === event.active.id);
@@ -202,11 +256,12 @@ export const SortableContainer = ({
         onDragEnd={handleDragEnd}
       >
         <SortableContext items={items} strategy={getSortingStrategy()}>
-          {children(items, (item, index) => (
+          {children(items, (item, index, customClassName = "") => (
             <SortableItem
               key={item.id}
               id={item.id}
               isCustomizeMode={isGlobalDragMode}
+              className={customClassName}
             >
               {item.component || item}
             </SortableItem>
@@ -217,9 +272,7 @@ export const SortableContainer = ({
           {activeItem && renderOverlay ? (
             renderOverlay(activeItem)
           ) : activeItem ? (
-            <div className="transform rotate-6 opacity-90">
-              {activeItem}
-            </div>
+            <div className="transform rotate-6 opacity-90">{activeItem}</div>
           ) : null}
         </DragOverlay>
       </DndContext>

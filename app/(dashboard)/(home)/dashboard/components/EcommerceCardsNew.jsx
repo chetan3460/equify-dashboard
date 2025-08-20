@@ -3,7 +3,7 @@ import React from "react";
 import { SortableContainer } from "@/components/draggable/SortableContainer";
 import { useDragContext } from "@/components/draggable/DragProvider";
 
-// Green Up Arrow
+/* Green Up Arrow */
 const GreenArrow = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +31,7 @@ const GreenArrow = () => (
   </svg>
 );
 
-// Red Down Arrow
+/* Red Down Arrow */
 const RedArrow = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -59,14 +59,14 @@ const RedArrow = () => (
   </svg>
 );
 
-// ✅ Initial data with color + trend
+/* Data */
 const initialCardsData = [
   {
     id: "1",
     title: "Total SMS sent today",
     value: "24.588M",
     change: "12% higher than yesterday",
-    color: "text-success", // green
+    color: "text-success",
     trend: "up",
   },
   {
@@ -74,7 +74,7 @@ const initialCardsData = [
     title: "Avg delivery rate",
     value: "98.7%",
     change: "Stable across vendors",
-    color: "text-info", // blue
+    color: "text-info",
     trend: "up",
   },
   {
@@ -82,7 +82,7 @@ const initialCardsData = [
     title: "Average latency",
     value: "1.2 ms",
     change: "0.3 ms faster than last week",
-    color: "text-info", // blue
+    color: "text-info",
     trend: "up",
   },
   {
@@ -90,7 +90,7 @@ const initialCardsData = [
     title: "Failed messages",
     value: "190K",
     change: "8% increase from yesterday",
-    color: "text-destructive", // red
+    color: "text-destructive",
     trend: "down",
   },
   {
@@ -99,35 +99,64 @@ const initialCardsData = [
     value: "5K",
     change: "",
     color: "text-gray-500",
-    // trend: "neutral",
   },
 ];
 
-// Build components array
-const createCardComponents = (cardsData) => {
-  return cardsData.map((cardData) => ({
-    id: cardData.id,
-    component: <EcommerceCard key={cardData.id} data={cardData} />,
-  }));
-};
+/* Drag Handle SVG Component */
+const DragHandle = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+  >
+    <g clipPath="url(#clip0_376_3320)">
+      <path
+        d="M5.75 4.5C6.16421 4.5 6.5 4.16421 6.5 3.75C6.5 3.33579 6.16421 3 5.75 3C5.33579 3 5 3.33579 5 3.75C5 4.16421 5.33579 4.5 5.75 4.5Z"
+        fill="black"
+      />
+      <path
+        d="M10.25 4.5C10.6642 4.5 11 4.16421 11 3.75C11 3.33579 10.6642 3 10.25 3C9.83579 3 9.5 3.33579 9.5 3.75C9.5 4.16421 9.83579 4.5 10.25 4.5Z"
+        fill="black"
+      />
+      <path
+        d="M5.75 8.75C6.16421 8.75 6.5 8.41421 6.5 8C6.5 7.58579 6.16421 7.25 5.75 7.25C5.33579 7.25 5 7.58579 5 8C5 8.41421 5.33579 8.75 5.75 8.75Z"
+        fill="black"
+      />
+      <path
+        d="M10.25 8.75C10.6642 8.75 11 8.41421 11 8C11 7.58579 10.6642 7.25 10.25 7.25C9.83579 7.25 9.5 7.58579 9.5 8C9.5 8.41421 9.83579 8.75 10.25 8.75Z"
+        fill="black"
+      />
+      <path
+        d="M5.75 13C6.16421 13 6.5 12.6642 6.5 12.25C6.5 11.8358 6.16421 11.5 5.75 11.5C5.33579 11.5 5 11.8358 5 12.25C5 12.6642 5.33579 13 5.75 13Z"
+        fill="black"
+      />
+      <path
+        d="M10.25 13C10.6642 13 11 12.6642 11 12.25C11 11.8358 10.6642 11.5 10.25 11.5C9.83579 11.5 9.5 11.8358 9.5 12.25C9.5 12.6642 9.83579 13 10.25 13Z"
+        fill="black"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_376_3320">
+        <rect width="16" height="16" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
 
-// Card component
-const EcommerceCard = ({ data }) => {
-  const { isGlobalDragMode } = useDragContext();
-
+/* Card Content - The draggable inner part */
+const EcommerceCardContent = ({ data, isCustomizeMode = false }) => {
   return (
-    <div
-      className={`
-        rounded-20 p-4 bg-card transition-all duration-300
-        ${
-          isGlobalDragMode
-            ? "border-2 border-dashed border-gray-400 hover:border-blue-400"
-            : "border border-transparent hover:shadow-lg"
-        }
-        relative group
-      `}
-    >
-      <div className="text-xs font-semibold  text-default-600 relative z-10">
+    <div className="rounded-20 p-4 bg-card shadow transition-all duration-300 group relative">
+      {/* Drag handle - appears in customize mode */}
+      {isCustomizeMode && (
+        <div className="absolute top-2 right-2 z-10 opacity-75 hover:opacity-100 transition-opacity cursor-grab">
+          <DragHandle />
+        </div>
+      )}
+      
+      <div className="text-xs font-semibold text-default-600">
         {data.title}
       </div>
 
@@ -146,20 +175,64 @@ const EcommerceCard = ({ data }) => {
           <span>{data.change}</span>
         </div>
       )}
-
-      {/* Drag indicator */}
-      {isGlobalDragMode && (
-        <div className="absolute top-2 left-2 opacity-60">
-          <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-        </div>
-      )}
     </div>
   );
 };
+const EcommerceCard = ({ data, children }) => {
+  const { isGlobalDragMode } = useDragContext();
 
-// Cards container
+  if (isGlobalDragMode) {
+    // In customize mode: show dashed border container with draggable inner content
+    return (
+      <div className="relative transition-all duration-300">
+        {/* Fixed dashed border container */}
+        <div className="border-2 border-dashed border-gray-400 rounded-20 p-1 min-h-[120px] transition-colors hover:border-blue-400">
+          {/* Draggable inner content will be positioned here */}
+          {children || <EcommerceCardContent data={data} isCustomizeMode={isGlobalDragMode} />}
+        </div>
+      </div>
+    );
+  } else {
+    // Normal mode: clean card without dashed borders
+    return (
+      <div className="relative transition-all duration-300">
+        <div className="rounded-20 p-4 bg-card shadow transition-all duration-300 group hover:shadow-lg">
+          <div className="text-xs font-semibold text-default-600">
+            {data.title}
+          </div>
+
+          {/* Value + trend arrow */}
+          <div className="flex items-center gap-1">
+            <div className="text-2xl font-bold text-default-900">
+              {data.value}
+            </div>
+            {data.trend === "up" && <GreenArrow />}
+            {data.trend === "down" && <RedArrow />}
+          </div>
+
+          {/* Change text */}
+          {data.change && (
+            <div
+              className={`flex items-center gap-1 mt-1 text-[11px] ${data.color}`}
+            >
+              <span>{data.change}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+};
+
+/* Container */
 const EcommerceCardsNew = () => {
-  const cardComponents = createCardComponents(initialCardsData);
+  const { isGlobalDragMode } = useDragContext();
+
+  const cardComponents = initialCardsData.map((card) => ({
+    id: card.id,
+    data: card, // Store the data separately for customize mode
+    component: <EcommerceCard key={card.id} data={card} />,
+  }));
 
   return (
     <SortableContainer
@@ -169,14 +242,38 @@ const EcommerceCardsNew = () => {
       strategy="grid"
       className="w-full"
       renderOverlay={(activeItem) => (
-        <div className="bg-white rounded-xl p-4 shadow-lg scale-105 rotate-3">
-          {activeItem.component}
+        <div className="scale-105 rotate-3">
+          <EcommerceCardContent data={activeItem.data} isCustomizeMode={true} />
         </div>
       )}
     >
       {(items, SortableItem) => (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {items.map((item, index) => SortableItem(item, index))}
+          {items.map((item, index) => {
+            if (isGlobalDragMode) {
+              // In customize mode: render fixed containers with draggable inner content
+              return (
+                <EcommerceCard key={item.id} data={item.data}>
+                  {SortableItem(
+                    {
+                      ...item,
+                      component: (
+                        <EcommerceCardContent 
+                          data={item.data} 
+                          isCustomizeMode={isGlobalDragMode}
+                        />
+                      ),
+                    },
+                    index,
+                    "absolute inset-0 z-10"
+                  )}
+                </EcommerceCard>
+              );
+            } else {
+              // Normal mode: render regular sortable items
+              return SortableItem(item, index);
+            }
+          })}
         </div>
       )}
     </SortableContainer>
