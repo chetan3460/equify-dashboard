@@ -2,7 +2,7 @@ const { dark } = require('react-syntax-highlighter/dist/esm/styles/hljs');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  important: true,
+  // important: true,
   darkMode: ["class"],
   content: [
     "./pages/**/*.{js,jsx,css,,md,mdx}",
@@ -33,13 +33,13 @@ module.exports = {
     },
     extend: {
       colors: {
-
         dark: "#201D1A",
         lightGray: "#595B61",
         darkGray: "#ADADAD",
         midGray: "#6D6863",
         purple: "#4E47E1",
         lightpurle: "#A39EF9",
+        gray800: "#1F2937",
         border: "hsl(var(--border) / <alpha-value>)",
         default: {
           50: "hsl(var(--default-50) / <alpha-value>)",
@@ -80,17 +80,17 @@ module.exports = {
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
-          700: "#be185d",
+          700: "#B12F00",
           foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",
         },
         success: {
           DEFAULT: "hsl(var(--success) / <alpha-value>)",
-          700: "#15803d",
+          700: "#25803A",
           foreground: "hsl(var(--success-foreground) / <alpha-value>)",
         },
         info: {
           DEFAULT: "hsl(var(--info) / <alpha-value>)",
-          700: "#0f766e",
+          700: "#0067B1",
           foreground: "hsl(var(--info-foreground) / <alpha-value>)",
         },
         warning: {
@@ -122,6 +122,7 @@ module.exports = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        '20': '20px',
       },
       keyframes: {
         "accordion-down": {

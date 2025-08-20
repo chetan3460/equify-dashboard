@@ -28,16 +28,16 @@
   --accent: 240 4.8% 95.9%;
   --accent-foreground: 240 5.9% 10%;
 
-  --destructive: 0 84.2% 60.2%;
+  --destructive: 0 84.2% 60.2%; /* #B12F00 in HSL */
   --destructive-foreground: 0 0% 98%;
 
-  --success: 142.1 76.2% 36.3%;
+  --success: 134 55% 32%; /* #25803A in HSL */
   --success-foreground: 355.7 100% 97.3%;
 
   --warning: 24.6 95% 53.1%;
   --warning-foreground: 33.3 100% 96.5%;
 
-  --info: 188.7 94.5% 42.7%;
+  --info: 205 100% 35%; /* #0067B1 in HSL */
   --info-foreground: 183.2 100% 96.3%;
 
   --ring: 245 84% 56%;
@@ -48,10 +48,10 @@
   --default-300: 240 4.9% 83.9%;
   --default-400: 240 5% 64.9%;
   --default-500: 240 3.8% 46.1%;
-  --default-600: 240 5.2% 33.9%;
+  --default-600: 219 11% 64%; /* #6D6863 in HSL */
   --default-700: 240 5.3% 26.1%;
   --default-800: 240 3.7% 15.9%;
-  --default-900: 240 5.9% 10%;
+  --default-900: 30 10% 11%; /* #201D1A in HSL */
   --default-950: 240 10% 3.9%;
 
   --radius: 1.25rem;
@@ -74,7 +74,7 @@
   --input: 240 3.7% 15.9%;
 
   --primary: 241 65% 55%;
-  --primary-foreground: 0 0% 98%;
+  --primary-foreground: 219 11% 64%; /* #989FAC in HSL */
 
   --secondary: 240 5.3% 26.1%;
   --secondary-foreground: 0 0% 98%;
@@ -82,16 +82,22 @@
   --accent: 240 3.7% 15.9%;
   --accent-foreground: 0 0% 98%;
 
-  --destructive: 0 62.8% 30.6%;
+  --success: 134 60% 49%; /* #25803A in HSL */
+  --success-foreground: 355.7 100% 97.3%;
+
+  --info: 205 97% 53%; /* #149BFC in HSL */
+  --info-foreground: 183.2 100% 96.3%;
+
+  --destructive: 16 97% 48%; /* #F04304 in HSL */
   --destructive-foreground: 0 0% 98%;
 
   --ring: 240 4.9% 83.9%;
 
   --default-950: 0 0% 98%;
-  --default-900: 240 4.8% 95.9%;
+  --default-900: 30 10% 89%; /* #E5E2DF in HSL */
   --default-800: 240 5.9% 90%;
   --default-700: 240 4.9% 83.9%;
-  --default-600: 240 5% 64.9%;
+  --default-600: 219 11% 64%; /* #989FAC in HSL */
   --default-500: 240 3.8% 46.1%;
   --default-300: 240 5.2% 33.9%;
   --default-200: 240 5.3% 26.1%;
