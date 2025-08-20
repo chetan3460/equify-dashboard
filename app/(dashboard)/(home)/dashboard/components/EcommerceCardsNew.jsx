@@ -1,7 +1,21 @@
 "use client";
 import React from "react";
-import { SortableContainer } from "@/components/draggable/SortableContainer";
 import { useDragContext } from "@/components/draggable/DragProvider";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 /* Green Up Arrow */
 const GreenArrow = () => (
@@ -178,17 +192,13 @@ const EcommerceCardContent = ({ data, isCustomizeMode = false }) => {
     </div>
   );
 };
-const EcommerceCard = ({ data, children }) => {
-  const { isGlobalDragMode } = useDragContext();
-
-  if (isGlobalDragMode) {
-    // In customize mode: show dashed border container with draggable inner content
+const EcommerceCard = ({ data, isCustomizeMode }) => {
+  if (isCustomizeMode) {
+    // In customize mode: show card with dashed border and drag handle
     return (
       <div className="relative transition-all duration-300">
-        {/* Fixed dashed border container */}
         <div className="border-2 border-dashed border-gray-400 rounded-20 p-1 min-h-[120px] transition-colors hover:border-blue-400">
-          {/* Draggable inner content will be positioned here */}
-          {children || <EcommerceCardContent data={data} isCustomizeMode={isGlobalDragMode} />}
+          <EcommerceCardContent data={data} isCustomizeMode={true} />
         </div>
       </div>
     );
@@ -224,59 +234,153 @@ const EcommerceCard = ({ data, children }) => {
   }
 };
 
-/* Container */
-const EcommerceCardsNew = () => {
-  const { isGlobalDragMode } = useDragContext();
+/* Simple Sortable Item for Cards */
+function CardSortableItem({ id, children, isCustomizeMode }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
 
-  const cardComponents = initialCardsData.map((card) => ({
-    id: card.id,
-    data: card, // Store the data separately for customize mode
-    component: <EcommerceCard key={card.id} data={card} />,
-  }));
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : 1,
+  };
+
+  const dragProps = isCustomizeMode ? { ...attributes, ...listeners } : {};
 
   return (
-    <SortableContainer
-      containerId="ecommerce-cards"
-      items={cardComponents}
-      storageKey="dashboard-ecommerce-cards"
-      strategy="grid"
-      className="w-full"
-      renderOverlay={(activeItem) => (
-        <div className="scale-105 rotate-3">
-          <EcommerceCardContent data={activeItem.data} isCustomizeMode={true} />
-        </div>
-      )}
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`
+        transition-all duration-300 relative
+        ${isCustomizeMode ? "cursor-grab" : ""}
+        ${isDragging ? "scale-105 opacity-75" : ""}
+      `}
+      {...dragProps}
     >
-      {(items, SortableItem) => (
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {items.map((item, index) => {
-            if (isGlobalDragMode) {
-              // In customize mode: render fixed containers with draggable inner content
-              return (
-                <EcommerceCard key={item.id} data={item.data}>
-                  {SortableItem(
-                    {
-                      ...item,
-                      component: (
-                        <EcommerceCardContent 
-                          data={item.data} 
-                          isCustomizeMode={isGlobalDragMode}
-                        />
-                      ),
-                    },
-                    index,
-                    "absolute inset-0 z-10"
-                  )}
-                </EcommerceCard>
-              );
-            } else {
-              // Normal mode: render regular sortable items
-              return SortableItem(item, index);
+      {children}
+    </div>
+  );
+}
+
+/* Container */
+const EcommerceCardsNew = () => {
+  const { isGlobalDragMode, registerContainer, unregisterContainer, markContainerChanged } = useDragContext();
+  const [items, setItems] = React.useState(initialCardsData);
+  const [originalItems, setOriginalItems] = React.useState(initialCardsData);
+  const [activeItem, setActiveItem] = React.useState(null);
+  const containerId = "ecommerce-cards";
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { 
+      activationConstraint: { distance: 8 } 
+    })
+  );
+
+  // Register this container with the DragProvider
+  React.useEffect(() => {
+    const callbacks = {
+      onSave: () => {
+        // Save the current order to localStorage
+        const itemOrder = items.map((item, index) => ({
+          id: item.id,
+          order: index,
+        }));
+        localStorage.setItem('dashboard-ecommerce-cards', JSON.stringify(itemOrder));
+        setOriginalItems(items);
+      },
+      onCancel: () => {
+        // Revert to original order
+        setItems(originalItems);
+      },
+    };
+
+    registerContainer(containerId, callbacks);
+
+    return () => unregisterContainer(containerId);
+  }, [items, originalItems, registerContainer, unregisterContainer]);
+
+  // Load saved order from localStorage on mount
+  React.useEffect(() => {
+    const saved = localStorage.getItem('dashboard-ecommerce-cards');
+    if (saved) {
+      try {
+        const savedOrder = JSON.parse(saved);
+        if (savedOrder && Array.isArray(savedOrder) && savedOrder.length > 0) {
+          const reorderedItems = [...initialCardsData];
+          savedOrder.forEach((orderItem, index) => {
+            const itemIndex = reorderedItems.findIndex(
+              (item) => item.id === orderItem.id
+            );
+            if (itemIndex !== -1) {
+              const [item] = reorderedItems.splice(itemIndex, 1);
+              reorderedItems.splice(index, 0, item);
             }
-          })}
+          });
+          setItems(reorderedItems);
+          setOriginalItems(reorderedItems);
+        }
+      } catch (error) {
+        console.error('Error loading saved order:', error);
+      }
+    }
+  }, []);
+
+  const handleDragStart = (event) => {
+    const active = items.find((item) => item.id === event.active.id);
+    setActiveItem(active);
+  };
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    
+    if (!over || active.id === over.id) {
+      setActiveItem(null);
+      return;
+    }
+
+    setItems((currentItems) => {
+      const oldIndex = currentItems.findIndex((item) => item.id === active.id);
+      const newIndex = currentItems.findIndex((item) => item.id === over.id);
+      return arrayMove(currentItems, oldIndex, newIndex);
+    });
+
+    setActiveItem(null);
+    // Mark this container as changed to trigger the confirmation popup
+    markContainerChanged(containerId);
+  };
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext items={items} strategy={rectSortingStrategy}>
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {items.map((item) => (
+            <CardSortableItem key={item.id} id={item.id} isCustomizeMode={isGlobalDragMode}>
+              <EcommerceCard data={item} isCustomizeMode={isGlobalDragMode} />
+            </CardSortableItem>
+          ))}
         </div>
-      )}
-    </SortableContainer>
+      </SortableContext>
+
+      <DragOverlay>
+        {activeItem && (
+          <div className="scale-105 rotate-3">
+            <EcommerceCardContent data={activeItem} isCustomizeMode={true} />
+          </div>
+        )}
+      </DragOverlay>
+    </DndContext>
   );
 };
 

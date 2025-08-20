@@ -134,7 +134,12 @@ export const SortableContainer = ({
   const [activeItem, setActiveItem] = useState(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+    useSensor(PointerSensor, { 
+      activationConstraint: { 
+        distance: 8,
+        tolerance: 5 
+      } 
+    })
   );
 
   // Choose sorting strategy
