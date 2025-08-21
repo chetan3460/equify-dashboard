@@ -12,7 +12,7 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      sans: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      poppins: ['Poppins', 'sans-serif'],
     },
     container: {
       center: true,
