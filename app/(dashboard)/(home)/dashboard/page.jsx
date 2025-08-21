@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 
 // SMS Volume Chart Components - Organized Structure
-import { SMSVolumeChart, StylingGuide } from "./components/sms-volume-chart";
+import { SMSVolumeChart } from "./components/sms-volume-chart";
 
 // Other Components
 import LineChartWithPadding from "./components/linechart-with-padding";
@@ -55,9 +55,6 @@ const Dashboard = () => {
 
       {/* SMS Volume Chart - ORGANIZED COMPONENTS */}
       <SMSVolumeChart smsData={smsData} height={400} />
-
-      {/* STYLING GUIDE - ORGANIZED COMPONENT */}
-      {/* <StylingGuide /> */}
 
       <Card className="bg-card">
         <CardHeader>

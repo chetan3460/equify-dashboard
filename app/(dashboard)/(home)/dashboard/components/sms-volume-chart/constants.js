@@ -114,6 +114,14 @@ export const SMS_COLORS = {
       { offset: "94.13%", color: "#E56464" },
     ],
   },
+  RETRY: {
+    solid: "#FDBB2D",
+    gradient: "linear-gradient(270deg, #FDBB2D 1.67%, #F77500 117.65%)",
+    stops: [
+      { offset: "1.67%", color: "#FDBB2D" },
+      { offset: "117.65%", color: "#F77500" },
+    ],
+  },
 };
 
 // LEGEND CONFIGURATION
@@ -121,6 +129,7 @@ export const LEGEND_ITEMS = [
   { key: "TOTAL", label: "Total SMS", dataKey: "total" },
   { key: "DELIVERED", label: "Delivered", dataKey: "delivered" },
   { key: "FAILED", label: "Failed", dataKey: "failed" },
+  { key: "RETRY", label: "Retry", dataKey: "retry" },
 ];
 
 // HOVER DIMENSIONS

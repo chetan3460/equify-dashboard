@@ -7,24 +7,23 @@
 
 // Main Components
 export { default as SMSVolumeChart } from './SMSVolumeChart';
-export { default as StylingGuide } from './StylingGuide';
 export { CustomTooltip } from './CustomTooltip';
 export { CustomDot } from './CustomDot';
 
 // Constants
-export { 
-  SMS_COLORS, 
-  DOT_SIZES, 
-  CHART_CONFIG, 
+export {
+  SMS_COLORS,
+  DOT_SIZES,
+  CHART_CONFIG,
   THEME_COLORS,
   SMS_DATA_TEMPLATE,
-  LEGEND_ITEMS 
+  LEGEND_ITEMS
 } from './constants';
 
 // Utilities
-export { 
-  formatYAxis, 
-  formatNumber, 
+export {
+  formatYAxis,
+  formatNumber,
   transformSMSData,
   calculateSuccessRate,
   calculateFailureRate,
