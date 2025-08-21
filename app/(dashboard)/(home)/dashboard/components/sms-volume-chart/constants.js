@@ -144,7 +144,7 @@ export const CHART_CONFIG = {
   DEFAULT_HEIGHT: 384,
   STROKE_WIDTH: 2,
   GRID_DASH: "3 3",
-  MARGIN: { TOP: 20, RIGHT: 60, LEFT: 20, BOTTOM: 20 },
+  MARGIN: { TOP: 20, RIGHT: 60, LEFT: 0, BOTTOM: 20 },
 };
 
 // THEME COLORS
@@ -153,12 +153,5 @@ export const THEME_COLORS = {
   DARK: { AXIS: "#fff", GRID: "#374151", TEXT: "#9CA3AF" },
 };
 
-// TEMPLATE
-export const SMS_DATA = [
-  { time: "12:00", total: 155130, delivered: 77434, failed: 22575, retry: 55121 },
-  { time: "13:00", total: 155130, delivered: 77434, failed: 22575, retry: 55121 },
-  { time: "14:00", total: 155130, delivered: 77434, failed: 22575, retry: 55121 },
-  { time: "15:00", total: 155130, delivered: 77434, failed: 22575, retry: 55121 },
-];
 
 

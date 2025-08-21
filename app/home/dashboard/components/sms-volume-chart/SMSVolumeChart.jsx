@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTheme } from "next-themes";
 import {
   LineChart,
@@ -30,11 +30,12 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import DashboardSelect from "@/components/dasboard-select";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import DashboardSelect from "../dasboard-select";
+import OptionsDropdown from "../OptionsDropdown";
+import ChartInsight, { PRESET_INSIGHTS } from "../ChartInsight";
 
-// ✅ Custom Tick Component with Tailwind classes
-const CustomTick = ({ x, y, payload, mode, isYAxis = false }) => {
+// ✅ Custom Tick Component with Tailwind classes (memoized)
+const CustomTick = React.memo(({ x, y, payload, mode, isYAxis = false }) => {
   return (
     <text
       x={x}
@@ -47,57 +48,38 @@ const CustomTick = ({ x, y, payload, mode, isYAxis = false }) => {
       {payload.value}
     </text>
   );
-};
+});
+CustomTick.displayName = "CustomTick";
 
-const SMSVolumeChart = ({ smsData, height = CHART_CONFIG.DEFAULT_HEIGHT }) => {
+// Accept either normalized array via `data` or legacy keyed object via `smsData`
+const SMSVolumeChart = ({ data, smsData, height = CHART_CONFIG.DEFAULT_HEIGHT }) => {
   const { theme: mode } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
-  const chartData = [
-    { time: "10:00", total: 45000, delivered: 38000, failed: 7000, retry: 0 },
-    { time: "11:00", total: 89000, delivered: 72000, failed: 17000, retry: 0 },
-    {
-      time: "12:00",
-      total: smsData["12:00"]?.total || 0,
-      delivered: smsData["12:00"]?.delivered || 0,
-      failed: smsData["12:00"]?.failed || 0,
-      retry: smsData["12:00"]?.retry || 0,
-    },
-    {
-      time: "13:00",
-      total: smsData["13:00"]?.total || 0,
-      delivered: smsData["13:00"]?.delivered || 0,
-      failed: smsData["13:00"]?.failed || 0,
-      retry: smsData["13:00"]?.retry || 0,
-    },
-    {
-      time: "14:00",
-      total: smsData["14:00"]?.total || 0,
-      delivered: smsData["14:00"]?.delivered || 0,
-      failed: smsData["14:00"]?.failed || 0,
-      retry: smsData["14:00"]?.retry || 0,
-    },
-    {
-      time: "15:00",
-      total: smsData["15:00"]?.total || 0,
-      delivered: smsData["15:00"]?.delivered || 0,
-      failed: smsData["15:00"]?.failed || 0,
-      retry: smsData["15:00"]?.retry || 0,
-    },
-    {
-      time: "16:00",
-      total: 140000,
-      delivered: 110000,
-      failed: 30000,
-      retry: 55121,
-    },
-    {
-      time: "17:00",
-      total: 95000,
-      delivered: 78000,
-      failed: 17000,
-      retry: 12200,
-    },
-  ];
+  // Derive chart data once per input change
+  const chartData = useMemo(() => {
+    if (Array.isArray(data) && data.length) {
+      return data; // already normalized: [{ time, total, delivered, failed, retry }]
+    }
+    const safe = smsData || {};
+    return [
+      { time: "10:00", total: 45000, delivered: 38000, failed: 7000, retry: 0 },
+      { time: "11:00", total: 89000, delivered: 72000, failed: 17000, retry: 0 },
+      ...["12:00", "13:00", "14:00", "15:00"].map((t) => ({
+        time: t,
+        total: safe?.[t]?.total ?? 0,
+        delivered: safe?.[t]?.delivered ?? 0,
+        failed: safe?.[t]?.failed ?? 0,
+        retry: safe?.[t]?.retry ?? 0,
+      })),
+      { time: "16:00", total: 140000, delivered: 110000, failed: 30000, retry: 55121 },
+      { time: "17:00", total: 95000, delivered: 78000, failed: 17000, retry: 12200 },
+    ];
+  }, [data, smsData]);
+
+  // Prevent potential theme hydration mismatch flicker
+  if (!mounted) return null;
 
   return (
     <Card>
@@ -116,7 +98,12 @@ const SMSVolumeChart = ({ smsData, height = CHART_CONFIG.DEFAULT_HEIGHT }) => {
       <CardContent>
         <SMSLegend />
 
-        <div className="relative" style={{ height: `${height}px` }}>
+        <div
+          className="relative"
+          style={{ height: `${height}px` }}
+          aria-label="SMS volume over time"
+          role="img"
+        >
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={chartData}
@@ -204,11 +191,7 @@ const SMSVolumeChart = ({ smsData, height = CHART_CONFIG.DEFAULT_HEIGHT }) => {
           </ResponsiveContainer>
         </div>
 
-        <div className="py-1 px-2 bg-[#E2F5FD] dark:bg-[#0D475F] rounded-[8px] inline-block mt-3">
-          <p className="text-xs font-medium text-[#0067B1] dark:text-[#149BFC]">
-            Peak traffic at 5 pm as expected
-          </p>
-        </div>
+        <ChartInsight message={PRESET_INSIGHTS.peakTraffic} />
       </CardContent>
     </Card>
   );

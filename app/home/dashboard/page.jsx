@@ -1,22 +1,7 @@
 "use client";
-import React from "react";
+
 import { useState } from "react";
-
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-
-// SMS Volume Chart Components - Organized Structure
-// import { SMSVolumeChart } from "./components/sms-volume-chart";
-
-import TitleSection from "./components/TitleSection";
-import EcommerceCardsNew from "./components/EcommerceCardsNew";
-
-import Tabs from "./Tabs";
+import Tabs from "./components/Tabs";
 
 // SMS Volume Components
 import OverallSMSVolume from "./components/charts/SMSVolume/OverallSMSVolume";
@@ -43,15 +28,14 @@ import KafkaStatus from "./components/charts/Applications/KafkaStatus";
 import DatabaseStatus from "./components/charts/Applications/DatabaseStatus";
 import RedisStatus from "./components/charts/Applications/RedisStatus";
 import WebserverStatus from "./components/charts/Applications/WebserverStatus";
-const tabs = [
-  "SMS volume",
-  "Service providers",
-  "System health",
-  "Applications",
-];
+import { SMS_COLORS } from "./components/sms-volume-chart/constants";
 
-const Dashboard = () => {
-  // Your provided SMS Volume data - CLEAN AND ORGANIZED
+const tabs = ["SMS volume", "Service providers", "System health", "Applications"];
+
+export default function DashboardPage() {
+  const [activeTab, setActiveTab] = useState("SMS volume");
+
+  // SMS Volume data from the original dashboard
   const smsData = {
     lastUpdated: "15:15:45",
     "12:00": {
@@ -79,55 +63,63 @@ const Dashboard = () => {
       retry: 55121,
     },
   };
-  const [activeTab, setActiveTab] = useState("SMS volume");
 
-  // SMS Volume data from the original dashboard
-  // const smsData = {
-  //   lastUpdated: "15:15:45",
-  //   "12:00": {
-  //     total: 155130,
-  //     delivered: 77434,
-  //     failed: 22575,
-  //     retry: 55121,
-  //   },
-  //   "13:00": {
-  //     total: 155130,
-  //     delivered: 77434,
-  //     failed: 22575,
-  //     retry: 55121,
-  //   },
-  //   "14:00": {
-  //     total: 155130,
-  //     delivered: 77434,
-  //     failed: 22575,
-  //     retry: 55121,
-  //   },
-  //   "15:00": {
-  //     total: 155130,
-  //     delivered: 77434,
-  //     failed: 22575,
-  //     retry: 55121,
-  //   },
-  // };
+  // Department data for pie chart
+  const departmentData = {
+    lastUpdated: "01:15:45",
+    Marketing: {
+      success: 77442,
+      failed: 77704,
+      total: 155146
+    },
+    Support: {
+      success: 16606,
+      failed: 3362,
+      total: 19968
+    },
+    HR: {
+      success: 20818,
+      failed: 4191,
+      total: 25009
+    },
+    Admin: {
+      success: 77442,
+      failed: 77704,
+      total: 155146
+    },
+    Credit: {
+      success: 16606,
+      failed: 3362,
+      total: 19968
+    },
+    Loan: {
+      success: 20818,
+      failed: 4191,
+      total: 25009
+    }
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "SMS volume":
+        // Use shared gradient stops for consistency
+        const providerGradientStops = SMS_COLORS.TOTAL.stops; // blue gradient
+        const deptGradientStops = SMS_COLORS.DELIVERED.stops; // green gradient
         return (
           <div className="space-y-6">
             {/* Original SMS Volume Chart */}
-
+            <SMSVolumeChart smsData={smsData} height={400} />
+            
             {/* Additional SMS Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2   gap-y-2 gap-x-2 ">
-              <div className="">
-                <SMSVolumeChart smsData={smsData} height={400} />
-                {/* <OverallSMSVolume /> */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="xl:col-span-2">
+                <OverallSMSVolume />
               </div>
               <div>
-                <SMSByProvider />
+                <SMSByProvider gradientId="provider-gradient-1" gradientStops={providerGradientStops} />
               </div>
               <div className="lg:col-span-2 xl:col-span-3">
-                <SMSByDepartment />
+                <SMSByDepartment deptData={departmentData} />
               </div>
             </div>
           </div>
@@ -193,43 +185,27 @@ const Dashboard = () => {
         return null;
     }
   };
+
   return (
-    <div className="space-y-6">
-      {/* Header Section */}
-      <TitleSection />
-      {/* Draggable SMS Stats Cards */}
-      <EcommerceCardsNew />
+    <div className="min-h-screen bg-[#F4F6FB] dark:bg-background">
+      <div className="container p-4 md:p-6 lg:p-8">
+        {/* Tab Navigation */}
+        <Tabs 
+          tabs={tabs} 
+          activeTab={activeTab} 
+          onTabClick={setActiveTab} 
+        />
 
-      {/* SMS Volume Chart - ORGANIZED COMPONENTS */}
-      {/* <SMSVolumeChart smsData={smsData} height={400} /> */}
-
-      {/* <Card className="bg-card">
-        <CardHeader>
-          <CardTitle>Line Chart With XAxis Padding</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <LineChartWithPadding />
-        </CardContent>
-      </Card> */}
-
-      <div className="">
-        <div className="">
-          {/* Tab Navigation */}
-          <Tabs tabs={tabs} activeTab={activeTab} onTabClick={setActiveTab} />
-
-          {/* Tab Content */}
-          <div
-            role="tabpanel"
-            id={`tabpanel-${activeTab}`}
-            aria-labelledby={`tab-${activeTab}`}
-            className="grid gap-5"
-          >
-            {renderTabContent()}
-          </div>
+        {/* Tab Content */}
+        <div
+          role="tabpanel"
+          id={`tabpanel-${activeTab}`}
+          aria-labelledby={`tab-${activeTab}`}
+          className="grid gap-5"
+        >
+          {renderTabContent()}
         </div>
       </div>
     </div>
   );
-};
-
-export default Dashboard;
+}
