@@ -42,8 +42,7 @@ function SortableItem({
     zIndex: isDragging ? 50 : 1,
   };
 
-  // In customize mode, apply drag listeners to the entire content
-  // In normal mode, apply drag listeners to the drag handle only
+  // In customize mode, apply drag listeners to entire item as well as the handle
   const dragProps = isCustomizeMode ? { ...attributes, ...listeners } : {};
 
   return (
@@ -52,60 +51,12 @@ function SortableItem({
       style={style}
       className={`
         transition-all duration-300 relative 
-        ${isCustomizeMode ? "cursor-grab " : ""} 
+        ${isCustomizeMode ? "cursor-grab border-2 border-dashed border-gray-400 rounded-20 p-1 min-h-[120px] hover:border-blue-400" : ""} 
         ${isDragging ? "scale-105 opacity-75" : ""} 
         ${className}
       `}
       {...dragProps}
     >
-      {!isCustomizeMode && (
-        <div
-          {...attributes}
-          {...listeners}
-          className="absolute top-2 right-2 cursor-grab z-20 w-4 h-4 opacity-0 hover:opacity-100 transition-opacity"
-          {...dragHandleProps}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-          >
-            <g clipPath="url(#clip0_376_3320)">
-              <path
-                d="M5.75 4.5C6.16421 4.5 6.5 4.16421 6.5 3.75C6.5 3.33579 6.16421 3 5.75 3C5.33579 3 5 3.33579 5 3.75C5 4.16421 5.33579 4.5 5.75 4.5Z"
-                fill="black"
-              />
-              <path
-                d="M10.25 4.5C10.6642 4.5 11 4.16421 11 3.75C11 3.33579 10.6642 3 10.25 3C9.83579 3 9.5 3.33579 9.5 3.75C9.5 4.16421 9.83579 4.5 10.25 4.5Z"
-                fill="black"
-              />
-              <path
-                d="M5.75 8.75C6.16421 8.75 6.5 8.41421 6.5 8C6.5 7.58579 6.16421 7.25 5.75 7.25C5.33579 7.25 5 7.58579 5 8C5 8.41421 5.33579 8.75 5.75 8.75Z"
-                fill="black"
-              />
-              <path
-                d="M10.25 8.75C10.6642 8.75 11 8.41421 11 8C11 7.58579 10.6642 7.25 10.25 7.25C9.83579 7.25 9.5 7.58579 9.5 8C9.5 8.41421 9.83579 8.75 10.25 8.75Z"
-                fill="black"
-              />
-              <path
-                d="M5.75 13C6.16421 13 6.5 12.6642 6.5 12.25C6.5 11.8358 6.16421 11.5 5.75 11.5C5.33579 11.5 5 11.8358 5 12.25C5 12.6642 5.33579 13 5.75 13Z"
-                fill="black"
-              />
-              <path
-                d="M10.25 13C10.6642 13 11 12.6642 11 12.25C11 11.8358 10.6642 11.5 10.25 11.5C9.83579 11.5 9.5 11.8358 9.5 12.25C9.5 12.6642 9.83579 13 10.25 13Z"
-                fill="black"
-              />
-            </g>
-            <defs>
-              <clipPath id="clip0_376_3320">
-                <rect width="16" height="16" fill="white" />
-              </clipPath>
-            </defs>
-          </svg>
-        </div>
-      )}
       {children}
     </div>
   );
@@ -134,11 +85,11 @@ export const SortableContainer = ({
   const [activeItem, setActiveItem] = useState(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { 
-      activationConstraint: { 
-        distance: 8,
-        tolerance: 5 
-      } 
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 4,
+        tolerance: 5,
+      },
     })
   );
 
@@ -155,7 +106,7 @@ export const SortableContainer = ({
     }
   };
 
-  // Load from storage on mount
+  // Load from storage on mount and whenever initialItems change
   useEffect(() => {
     if (storageKey) {
       const saved = localStorage.getItem(storageKey);
@@ -181,6 +132,7 @@ export const SortableContainer = ({
             });
             setItems(reorderedItems);
             setOriginalItems(reorderedItems);
+            return;
           }
         } catch (error) {
           console.error(
@@ -189,6 +141,13 @@ export const SortableContainer = ({
           );
         }
       }
+      // If no saved order, sync with latest initialItems
+      setItems(initialItems);
+      setOriginalItems(initialItems);
+    } else {
+      // No storageKey: always sync with latest initialItems
+      setItems(initialItems);
+      setOriginalItems(initialItems);
     }
   }, [storageKey, initialItems]);
 
@@ -235,6 +194,16 @@ export const SortableContainer = ({
     setActiveItem(active);
   };
 
+  // Normalize className to a span group key (only col-span tokens matter)
+  const getSpanGroup = (cls) => {
+    if (!cls || typeof cls !== "string") return "default";
+    const tokens = cls
+      .split(/\s+/)
+      .filter((c) => /^(?:sm:|md:|lg:|xl:)?col-span-/.test(c))
+      .sort();
+    return tokens.length ? tokens.join("|") : "default";
+  };
+
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (!over || active.id === over.id) {
@@ -245,6 +214,14 @@ export const SortableContainer = ({
     setItems((currentItems) => {
       const oldIndex = currentItems.findIndex((item) => item.id === active.id);
       const newIndex = currentItems.findIndex((item) => item.id === over.id);
+
+      // Restrict reordering to items with matching span groups
+      const aGroup = getSpanGroup(currentItems[oldIndex]?.className);
+      const bGroup = getSpanGroup(currentItems[newIndex]?.className);
+      if (aGroup !== bGroup) {
+        return currentItems; // no change
+      }
+
       return arrayMove(currentItems, oldIndex, newIndex);
     });
 
@@ -260,7 +237,7 @@ export const SortableContainer = ({
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext items={items} strategy={getSortingStrategy()}>
+        <SortableContext items={items.map((it) => it.id)} strategy={getSortingStrategy()}>
           {children(items, (item, index, customClassName = "") => (
             <SortableItem
               key={item.id}
@@ -277,7 +254,7 @@ export const SortableContainer = ({
           {activeItem && renderOverlay ? (
             renderOverlay(activeItem)
           ) : activeItem ? (
-            <div className="transform rotate-6 opacity-90">{activeItem}</div>
+            <div className="transform rotate-6 opacity-90">{activeItem.component || activeItem}</div>
           ) : null}
         </DragOverlay>
       </DndContext>

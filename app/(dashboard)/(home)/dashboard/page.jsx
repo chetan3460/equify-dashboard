@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 import {
   Card,
@@ -42,6 +42,7 @@ import KafkaStatus from "./components/charts/Applications/KafkaStatus";
 import DatabaseStatus from "./components/charts/Applications/DatabaseStatus";
 import RedisStatus from "./components/charts/Applications/RedisStatus";
 import WebserverStatus from "./components/charts/Applications/WebserverStatus";
+import { SortableContainer } from "@/components/draggable";
 const tabs = [
   "SMS volume",
   "Service providers",
@@ -129,6 +130,82 @@ const Dashboard = () => {
   const [deptSelectedPeriod, setDeptSelectedPeriod] = useState("Today");
   const [providerSelectedPeriod, setProviderSelectedPeriod] = useState("Today");
 
+  const chartHeight = 300;
+
+  // Build draggable items for SMS volume tab
+  const smsChartItems = useMemo(
+    () => [
+      {
+        id: "overall-sms",
+        className: "h-full",
+        component: (
+          <OverallSMSVolume
+            smsData={smsData}
+            height={chartHeight}
+            selectedPeriod={selectedPeriod}
+            onPeriodChange={setSelectedPeriod}
+          />
+        ),
+      },
+      {
+        id: "dept-sms",
+        className: "h-full",
+        component: (
+          <SMSByDepartment
+            height={chartHeight}
+            selectedPeriod={deptSelectedPeriod}
+            onPeriodChange={setDeptSelectedPeriod}
+          />
+        ),
+      },
+      {
+        id: "provider-sms",
+        className: "lg:col-span-2 h-full",
+        component: (
+          <SMSByProvider
+            height={chartHeight}
+            providerData={providerData}
+            selectedPeriod={providerSelectedPeriod}
+            onPeriodChange={setProviderSelectedPeriod}
+          />
+        ),
+      },
+    ],
+    [smsData, selectedPeriod, deptSelectedPeriod, providerSelectedPeriod, providerData]
+  );
+
+  const serviceProviderItems = useMemo(
+    () => [
+      { id: "provider-status", className: "lg:col-span-2 xl:col-span-4", component: <ProviderStatus /> },
+      { id: "provider-traffic", className: "lg:col-span-2 xl:col-span-2", component: <ProviderTraffic /> },
+      { id: "delivery-reports", className: "lg:col-span-2 xl:col-span-2", component: <DeliveryReports /> },
+      { id: "api-calls-today", className: "", component: <APICallsToday /> },
+      { id: "ongoing-tps", className: "", component: <OngoingTPS /> },
+      { id: "avg-latency", className: "", component: <AvgLatency /> },
+      { id: "successful-transactions", className: "", component: <SuccessfulTransactions /> },
+      { id: "api-calls-by-provider", className: "lg:col-span-2 xl:col-span-4", component: <APICallsByProvider /> },
+    ],
+    []
+  );
+
+  const systemHealthItems = useMemo(
+    () => [
+      { id: "server-stats", className: "", component: <ServerStatistics /> },
+      { id: "system-api-calls-today", className: "", component: <SystemHealthAPICallsToday /> },
+    ],
+    []
+  );
+
+  const applicationItems = useMemo(
+    () => [
+      { id: "kafka-status", className: "", component: <KafkaStatus /> },
+      { id: "database-status", className: "", component: <DatabaseStatus /> },
+      { id: "redis-status", className: "", component: <RedisStatus /> },
+      { id: "webserver-status", className: "", component: <WebserverStatus /> },
+    ],
+    []
+  );
+
   // SMS Volume data from the original dashboard
   // const smsData = {
   //   lastUpdated: "15:15:45",
@@ -166,89 +243,84 @@ const Dashboard = () => {
             {/* Original SMS Volume Chart */}
 
             {/* Additional SMS Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 items-stretch  gap-y-2 gap-x-2 ">
-              <div className="h-full">
-                <OverallSMSVolume
-                  smsData={smsData}
-                  height={300}
-                  selectedPeriod={selectedPeriod}
-                  onPeriodChange={setSelectedPeriod}
-                />{" "}
-              </div>
-              <div className="h-full">
-                <SMSByDepartment
-                  height={300}
-                  selectedPeriod={deptSelectedPeriod}
-                  onPeriodChange={setDeptSelectedPeriod}
-                />
-              </div>
-              <div className="lg:col-span-2 h-full">
-                <SMSByProvider
-                  height={300}
-                  providerData={providerData}
-                  selectedPeriod={providerSelectedPeriod}
-                  onPeriodChange={setProviderSelectedPeriod}
-                />
-              </div>
-            </div>
+            <SortableContainer
+              containerId="sms-volume-charts"
+              items={smsChartItems}
+              storageKey="sms-volume-charts-order"
+              strategy="grid"
+              renderOverlay={(activeItem) => (
+                <div className="scale-105 rotate-3">
+                  {activeItem.component || activeItem}
+                </div>
+              )}
+            >
+              {(items, SortableItem) => (
+                <div className="grid grid-cols-1 lg:grid-cols-2 items-stretch gap-y-2 gap-x-2">
+                  {items.map((item, index) => SortableItem(item, index, item.className))}
+                </div>
+              )}
+            </SortableContainer>
           </div>
         );
       case "Service providers":
         return (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-            <div className="lg:col-span-2 xl:col-span-4">
-              <ProviderStatus />
-            </div>
-            <div className="lg:col-span-2 xl:col-span-2">
-              <ProviderTraffic />
-            </div>
-            <div className="lg:col-span-2 xl:col-span-2">
-              <DeliveryReports />
-            </div>
-            <div>
-              <APICallsToday />
-            </div>
-            <div>
-              <OngoingTPS />
-            </div>
-            <div>
-              <AvgLatency />
-            </div>
-            <div>
-              <SuccessfulTransactions />
-            </div>
-            <div className="lg:col-span-2 xl:col-span-4">
-              <APICallsByProvider />
-            </div>
-          </div>
+          <SortableContainer
+            containerId="service-provider-cards"
+            items={serviceProviderItems}
+            storageKey="service-provider-cards-order"
+            strategy="grid"
+            renderOverlay={(activeItem) => (
+              <div className="scale-105 rotate-3">
+                {activeItem.component || activeItem}
+              </div>
+            )}
+          >
+            {(items, SortableItem) => (
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+                {items.map((item, index) => SortableItem(item, index, item.className))}
+              </div>
+            )}
+          </SortableContainer>
         );
       case "System health":
         return (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div>
-              <ServerStatistics />
-            </div>
-            <div>
-              <SystemHealthAPICallsToday />
-            </div>
-          </div>
+          <SortableContainer
+            containerId="system-health-cards"
+            items={systemHealthItems}
+            storageKey="system-health-cards-order"
+            strategy="grid"
+            renderOverlay={(activeItem) => (
+              <div className="scale-105 rotate-3">
+                {activeItem.component || activeItem}
+              </div>
+            )}
+          >
+            {(items, SortableItem) => (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {items.map((item, index) => SortableItem(item, index, item.className))}
+              </div>
+            )}
+          </SortableContainer>
         );
       case "Applications":
         return (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-            <div>
-              <KafkaStatus />
-            </div>
-            <div>
-              <DatabaseStatus />
-            </div>
-            <div>
-              <RedisStatus />
-            </div>
-            <div>
-              <WebserverStatus />
-            </div>
-          </div>
+          <SortableContainer
+            containerId="application-cards"
+            items={applicationItems}
+            storageKey="application-cards-order"
+            strategy="grid"
+            renderOverlay={(activeItem) => (
+              <div className="scale-105 rotate-3">
+                {activeItem.component || activeItem}
+              </div>
+            )}
+          >
+            {(items, SortableItem) => (
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+                {items.map((item, index) => SortableItem(item, index, item.className))}
+              </div>
+            )}
+          </SortableContainer>
         );
       default:
         return null;
