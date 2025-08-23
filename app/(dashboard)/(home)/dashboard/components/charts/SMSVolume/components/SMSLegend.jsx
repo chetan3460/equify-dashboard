@@ -1,5 +1,5 @@
 "use client";
-import { LEGEND_ITEMS, SMS_COLORS } from "./constants";
+import { LEGEND_ITEMS, SMS_COLORS } from "../utils/constants";
 
 const SMSLegend = () => {
   return (
@@ -11,7 +11,7 @@ const SMSLegend = () => {
             className="w-3 h-3 rounded-full"
             style={{ background: SMS_COLORS[item.key].gradient }}
           />
-          <span className="text-sm text-muted-foreground">{item.label}</span>
+          <span className="text-default-900">{item.label}</span>
         </div>
       ))}
     </div>

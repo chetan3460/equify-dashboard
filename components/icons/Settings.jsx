@@ -1,0 +1,35 @@
+import React from 'react';
+
+const Settings = ({ 
+  width = 12, 
+  height = 12, 
+  className = "", 
+  ...props 
+}) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={width}
+    height={height}
+    viewBox="0 0 12 12"
+    fill="none"
+    className={className}
+    {...props}
+  >
+    <path
+      d="M1.5 4.55505V7.44005C1.5 8.50005 1.5 8.50005 2.5 9.17505L5.25 10.7651C5.665 11.0051 6.34 11.0051 6.75 10.7651L9.5 9.17505C10.5 8.50005 10.5 8.50005 10.5 7.44505V4.55505C10.5 3.50005 10.5 3.50005 9.5 2.82505L6.75 1.23505C6.34 0.995054 5.665 0.995054 5.25 1.23505L2.5 2.82505C1.5 3.50005 1.5 3.50005 1.5 4.55505Z"
+      stroke="currentColor"
+      strokeWidth="0.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M6 7.5C6.82843 7.5 7.5 6.82843 7.5 6C7.5 5.17157 6.82843 4.5 6 4.5C5.17157 4.5 4.5 5.17157 4.5 6C4.5 6.82843 5.17157 7.5 6 7.5Z"
+      stroke="currentColor"
+      strokeWidth="0.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export default Settings;

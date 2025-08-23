@@ -8,6 +8,7 @@ import OverallSMSVolume from "./components/charts/SMSVolume/OverallSMSVolume";
 import SMSByDepartment from "./components/charts/SMSVolume/SMSByDepartment";
 import SMSByProvider from "./components/charts/SMSVolume/SMSByProvider";
 import SMSVolumeChart from "./components/sms-volume-chart/SMSVolumeChart";
+import TestGradient from "./components/charts/SMSVolume/TestGradient";
 
 // Service Provider Components
 import ProviderStatus from "./components/charts/ServiceProviders/ProviderStatus";
@@ -30,10 +31,16 @@ import RedisStatus from "./components/charts/Applications/RedisStatus";
 import WebserverStatus from "./components/charts/Applications/WebserverStatus";
 import { SMS_COLORS } from "./components/sms-volume-chart/constants";
 
-const tabs = ["SMS volume", "Service providers", "System health", "Applications"];
+const tabs = [
+  "SMS volume",
+  "Service providers",
+  "System health",
+  "Applications",
+];
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("SMS volume");
+  const [selectedPeriod, setSelectedPeriod] = useState("Today");
 
   // SMS Volume data from the original dashboard
   const smsData = {
@@ -70,33 +77,33 @@ export default function DashboardPage() {
     Marketing: {
       success: 77442,
       failed: 77704,
-      total: 155146
+      total: 155146,
     },
     Support: {
       success: 16606,
       failed: 3362,
-      total: 19968
+      total: 19968,
     },
     HR: {
       success: 20818,
       failed: 4191,
-      total: 25009
+      total: 25009,
     },
     Admin: {
       success: 77442,
       failed: 77704,
-      total: 155146
+      total: 155146,
     },
     Credit: {
       success: 16606,
       failed: 3362,
-      total: 19968
+      total: 19968,
     },
     Loan: {
       success: 20818,
       failed: 4191,
-      total: 25009
-    }
+      total: 25009,
+    },
   };
 
   const renderTabContent = () => {
@@ -108,18 +115,29 @@ export default function DashboardPage() {
         return (
           <div className="space-y-6">
             {/* Original SMS Volume Chart */}
-            <SMSVolumeChart smsData={smsData} height={400} />
-            
+            <SMSVolumeChart
+              smsData={smsData}
+              height={400}
+              selectedPeriod={selectedPeriod}
+              onPeriodChange={setSelectedPeriod}
+            />
+
+            {/* Test Gradients */}
+            {/* <TestGradient /> */}
+
             {/* Additional SMS Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               <div className="xl:col-span-2">
-                <OverallSMSVolume />
+                {/* <OverallSMSVolume smsData={smsData} /> */}
               </div>
               <div>
-                <SMSByProvider gradientId="provider-gradient-1" gradientStops={providerGradientStops} />
+                {/* <SMSByProvider
+                  gradientId="provider-gradient-1"
+                  gradientStops={providerGradientStops}
+                /> */}
               </div>
               <div className="lg:col-span-2 xl:col-span-3">
-                <SMSByDepartment deptData={departmentData} />
+                {/* <SMSByDepartment deptData={departmentData} /> */}
               </div>
             </div>
           </div>
@@ -190,11 +208,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-[#F4F6FB] dark:bg-background">
       <div className="container p-4 md:p-6 lg:p-8">
         {/* Tab Navigation */}
-        <Tabs 
-          tabs={tabs} 
-          activeTab={activeTab} 
-          onTabClick={setActiveTab} 
-        />
+        <Tabs tabs={tabs} activeTab={activeTab} onTabClick={setActiveTab} />
 
         {/* Tab Content */}
         <div

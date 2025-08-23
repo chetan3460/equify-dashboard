@@ -1,5 +1,5 @@
 import React from "react";
-import { DOT_SIZES } from "./constants";
+import { DOT_SIZES } from "../utils/constants";
 
 /**
  * Active (hover) dot — filled with gradient, slightly bigger.

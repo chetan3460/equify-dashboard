@@ -52,30 +52,69 @@ const CustomTick = React.memo(({ x, y, payload, mode, isYAxis = false }) => {
 CustomTick.displayName = "CustomTick";
 
 // Accept either normalized array via `data` or legacy keyed object via `smsData`
-const SMSVolumeChart = ({ data, smsData, height = CHART_CONFIG.DEFAULT_HEIGHT }) => {
+const SMSVolumeChart = ({
+  data,
+  smsData,
+  height = CHART_CONFIG.DEFAULT_HEIGHT,
+}) => {
   const { theme: mode } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
   // Derive chart data once per input change
+  // const chartData = useMemo(() => {
+  //   if (Array.isArray(data) && data.length) {
+  //     return data; // already normalized: [{ time, total, delivered, failed, retry }]
+  //   }
+  //   const safe = smsData || {};
+  //   return [
+  //     { time: "10:00", total: 45000, delivered: 38000, failed: 7000, retry: 0 },
+  //     { time: "11:00", total: 89000, delivered: 72000, failed: 17000, retry: 0 },
+  //     ...["12:00", "13:00", "14:00", "15:00"].map((t) => ({
+  //       time: t,
+  //       total: safe?.[t]?.total ?? 0,
+  //       delivered: safe?.[t]?.delivered ?? 0,
+  //       failed: safe?.[t]?.failed ?? 0,
+  //       retry: safe?.[t]?.retry ?? 0,
+  //     })),
+  //     { time: "16:00", total: 140000, delivered: 110000, failed: 30000, retry: 55121 },
+  //     { time: "17:00", total: 95000, delivered: 78000, failed: 17000, retry: 12200 },
+  //   ];
+  // }, [data, smsData]);
+
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   const chartData = useMemo(() => {
     if (Array.isArray(data) && data.length) {
-      return data; // already normalized: [{ time, total, delivered, failed, retry }]
+      return data; // already normalized
     }
+
     const safe = smsData || {};
-    return [
-      { time: "10:00", total: 45000, delivered: 38000, failed: 7000, retry: 0 },
-      { time: "11:00", total: 89000, delivered: 72000, failed: 17000, retry: 0 },
-      ...["12:00", "13:00", "14:00", "15:00"].map((t) => ({
-        time: t,
-        total: safe?.[t]?.total ?? 0,
-        delivered: safe?.[t]?.delivered ?? 0,
-        failed: safe?.[t]?.failed ?? 0,
-        retry: safe?.[t]?.retry ?? 0,
-      })),
-      { time: "16:00", total: 140000, delivered: 110000, failed: 30000, retry: 55121 },
-      { time: "17:00", total: 95000, delivered: 78000, failed: 17000, retry: 12200 },
+
+    const times = [
+      "10:00",
+      "11:00",
+      "12:00",
+      "13:00",
+      "14:00",
+      "15:00",
+      "16:00",
+      "17:00",
     ];
+
+    return times.map((t) => {
+      const total = safe?.[t]?.total ?? getRandomInt(40000, 150000);
+      const delivered =
+        safe?.[t]?.delivered ?? getRandomInt(Math.floor(total * 0.7), total);
+      const failed =
+        safe?.[t]?.failed ?? getRandomInt(0, Math.floor(total * 0.25));
+      const retry =
+        safe?.[t]?.retry ?? getRandomInt(0, Math.floor(failed * 0.5));
+
+      return { time: t, total, delivered, failed, retry };
+    });
   }, [data, smsData]);
 
   // Prevent potential theme hydration mismatch flicker

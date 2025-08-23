@@ -1,12 +1,9 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 
-const DashboardSelect = () => {
+const DashboardSelect = ({ value = "Today", onChange, options = ["Today", "This week", "This month"] }) => {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState("Select Day");
   const dropdownRef = useRef(null);
-
-  const options = ["Today", "This week", "Jan 14"];
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -30,7 +27,7 @@ const DashboardSelect = () => {
                    rounded-[4px]  
                    text-default-900"
       >
-        {selected}
+        {value}
         {/* Arrow */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +56,7 @@ const DashboardSelect = () => {
             <li
               key={option}
               onClick={() => {
-                setSelected(option);
+                onChange?.(option);
                 setOpen(false);
               }}
               className="cursor-pointer px-3 py-2 text-sm 

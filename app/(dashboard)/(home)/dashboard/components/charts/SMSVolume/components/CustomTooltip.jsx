@@ -1,5 +1,5 @@
 import React from "react";
-import { formatNumber } from "./utils";
+import { formatNumber } from "../utils/utils";
 
 const SMS_COLORS = {
   total: "#00B6F1",
@@ -20,8 +20,8 @@ export const CustomTooltip = ({ active, payload, label }) => {
     <div
       className="
         inline-flex flex-col items-start gap-[5.7px]
-        p-[7.6px] rounded-[3.8px] border border-[#DADADA]
-        bg-white shadow-md
+        p-2 rounded-[4px] border border-[#DADADA]
+        bg-white dark:bg-[#33445B] dark:border-[#4E6079]
       "
       style={{ fontFamily: "Poppins, sans-serif", fontSize: "11.4px" }}
     >

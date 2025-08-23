@@ -1,5 +1,10 @@
 import React from "react";
-import { DOT_SIZES } from "./constants";
+
+const DOT_SIZES = {
+  NORMAL: 4,
+  HOVER: 6.118,
+  HOVER_HEIGHT: 10.406,
+};
 
 /**
  * Custom Dot Component for SMS Volume Chart

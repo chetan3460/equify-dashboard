@@ -22,7 +22,6 @@ import Tabs from "./Tabs";
 import OverallSMSVolume from "./components/charts/SMSVolume/OverallSMSVolume";
 import SMSByDepartment from "./components/charts/SMSVolume/SMSByDepartment";
 import SMSByProvider from "./components/charts/SMSVolume/SMSByProvider";
-import SMSVolumeChart from "./components/sms-volume-chart/SMSVolumeChart";
 
 // Service Provider Components
 import ProviderStatus from "./components/charts/ServiceProviders/ProviderStatus";
@@ -79,7 +78,56 @@ const Dashboard = () => {
       retry: 55121,
     },
   };
+
+  // Provider data based on your specification
+  const providerData = {
+    lastUpdated: "01:15:45",
+    Airtel: {
+      success: 20822,
+      failed: 4191,
+      total: 25013
+    },
+    Jio: {
+      success: 40011,
+      failed: 15024,
+      total: 55035
+    },
+    VI: {
+      success: 16609,
+      failed: 3362,
+      total: 19971
+    },
+    BSNL: {
+      success: 20822,
+      failed: 4191,
+      total: 25013
+    },
+    Infobip: {
+      success: 40011,
+      failed: 15024,
+      total: 55035
+    },
+    Tanla: {
+      success: 16609,
+      failed: 3362,
+      total: 19971
+    },
+    Synch: {
+      success: 40011,
+      failed: 15024,
+      total: 55035
+    },
+    Equence: {
+      success: 16609,
+      failed: 3362,
+      total: 19971
+    }
+  };
+
   const [activeTab, setActiveTab] = useState("SMS volume");
+  const [selectedPeriod, setSelectedPeriod] = useState("Today");
+  const [deptSelectedPeriod, setDeptSelectedPeriod] = useState("Today");
+  const [providerSelectedPeriod, setProviderSelectedPeriod] = useState("Today");
 
   // SMS Volume data from the original dashboard
   // const smsData = {
@@ -119,15 +167,28 @@ const Dashboard = () => {
 
             {/* Additional SMS Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2   gap-y-2 gap-x-2 ">
-              <div className="">
-                <SMSVolumeChart smsData={smsData} height={400} />
-                {/* <OverallSMSVolume /> */}
+              <div>
+                <OverallSMSVolume
+                  smsData={smsData}
+                  height={300}
+                  selectedPeriod={selectedPeriod}
+                  onPeriodChange={setSelectedPeriod}
+                />{" "}
               </div>
               <div>
-                <SMSByProvider />
+                <SMSByDepartment
+                  height={300}
+                  selectedPeriod={deptSelectedPeriod}
+                  onPeriodChange={setDeptSelectedPeriod}
+                />
               </div>
-              <div className="lg:col-span-2 xl:col-span-3">
-                <SMSByDepartment />
+              <div className="lg:col-span-2">
+                <SMSByProvider
+                  height={300}
+                  providerData={providerData}
+                  selectedPeriod={providerSelectedPeriod}
+                  onPeriodChange={setProviderSelectedPeriod}
+                />
               </div>
             </div>
           </div>
@@ -200,32 +261,18 @@ const Dashboard = () => {
       {/* Draggable SMS Stats Cards */}
       <EcommerceCardsNew />
 
-      {/* SMS Volume Chart - ORGANIZED COMPONENTS */}
-      {/* <SMSVolumeChart smsData={smsData} height={400} /> */}
-
-      {/* <Card className="bg-card">
-        <CardHeader>
-          <CardTitle>Line Chart With XAxis Padding</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <LineChartWithPadding />
-        </CardContent>
-      </Card> */}
-
       <div className="">
-        <div className="">
-          {/* Tab Navigation */}
-          <Tabs tabs={tabs} activeTab={activeTab} onTabClick={setActiveTab} />
+        {/* Tab Navigation */}
+        <Tabs tabs={tabs} activeTab={activeTab} onTabClick={setActiveTab} />
 
-          {/* Tab Content */}
-          <div
-            role="tabpanel"
-            id={`tabpanel-${activeTab}`}
-            aria-labelledby={`tab-${activeTab}`}
-            className="grid gap-5"
-          >
-            {renderTabContent()}
-          </div>
+        {/* Tab Content */}
+        <div
+          role="tabpanel"
+          id={`tabpanel-${activeTab}`}
+          aria-labelledby={`tab-${activeTab}`}
+          className="grid gap-5"
+        >
+          {renderTabContent()}
         </div>
       </div>
     </div>
