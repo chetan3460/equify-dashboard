@@ -12,7 +12,10 @@ import DashboardSelect from "@/components/dasboard-select";
 import OptionsDropdown from "@/components/OptionsDropdown";
 
 const ChartInsight = ({ message }) => (
-  <div className="py-1 px-2 bg-[#E2F5FD] dark:bg-[#0D475F] rounded-[8px] inline-block mt-3">
+  <div
+    className="py-1 px-2 bg-[#E2F5FD] dark:bg-[#0D475F] rounded-[8px] inline-block mt-3 max-w-max
+"
+  >
     <div className="text-xs font-medium text-[#0067B1] dark:text-[#149BFC]">
       {message}
     </div>
@@ -132,15 +135,25 @@ const CustomTick = ({ x, y, payload, textAnchor = "end", theme }) => {
   );
 };
 
-export default function SMSByProvider() {
+export default function SMSByProvider({
+  height = 384,
+  providerData,
+  selectedPeriod,
+  onPeriodChange,
+}) {
   const { theme } = useTheme();
 
   const data = useMemo(() => {
-    return Object.entries(providerObj)
+    const obj = providerData || providerObj;
+    return Object.entries(obj)
       .filter(([k]) => k !== "lastUpdated")
-      .map(([name, { total }]) => ({ name, total }))
+      .map(([name, val]) => {
+        const total =
+          typeof val === "object" && val !== null ? val.total ?? 0 : 0;
+        return { name, total };
+      })
       .sort((a, b) => b.total - a.total);
-  }, []);
+  }, [providerData]);
 
   const EndLabel = (props) => {
     const { x, y, width, height, value } = props;
@@ -160,23 +173,25 @@ export default function SMSByProvider() {
   };
 
   return (
-    <Card>
+    <Card className="h-full flex flex-col">
       <div className="w-full">
         <div className="flex items-center justify-between">
           <CardHeader>
             <CardTitle>SMS volume by service provider</CardTitle>
             <CardDescription>
-              Last updated (hh:mm:ss): {providerObj.lastUpdated}
+              Last updated (hh:mm:ss):{" "}
+              {(providerData && providerData.lastUpdated) ||
+                providerObj.lastUpdated}
             </CardDescription>
           </CardHeader>
           <div className="flex items-center gap-2">
-            <DashboardSelect />
+            <DashboardSelect value={selectedPeriod} onChange={onPeriodChange} />
             <OptionsDropdown />
           </div>
         </div>
 
-        <CardContent>
-          <div style={{ height: 384 }}>
+        <CardContent className="flex-1 flex flex-col">
+          <div style={{ height }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={data}

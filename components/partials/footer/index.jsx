@@ -25,7 +25,7 @@ const Footer = ({ handleOpenSearch }) => {
     return (
       <div className="xl:mx-20 mx-6">
         <FooterLayout
-          className={cn(" rounded-md border", {
+          className={cn(" rounded-md", {
             "xl:ml-[72px]": collapsed,
             "xl:ml-[272px]": !collapsed,
             "sticky bottom-0": footerType === "sticky",
@@ -40,7 +40,7 @@ const Footer = ({ handleOpenSearch }) => {
     return (
       <FooterLayout
         className={cn("", {
-          "xl:ml-[248px]": !collapsed,
+          "xl:ml-[244px]": !collapsed,
           "xl:ml-[72px]": collapsed,
           "sticky bottom-0": footerType === "sticky",
         })}
@@ -81,16 +81,16 @@ const FooterContent = () => {
   return (
     <div className="block md:flex md:justify-between text-muted-foreground">
       <p className="sm:mb-0 text-xs md:text-sm">
-        COPYRIGHT © {new Date().getFullYear()} DashTail All rights Reserved
+        COPYRIGHT © {new Date().getFullYear()} Equence All rights Reserved
       </p>
       <p className="mb-0 text-xs md:text-sm">
-        Hand-crafted & Made by{" "}
+        Design by{" "}
         <a
           className="text-primary"
           target="__blank"
           href="https://codeshaper.net"
         >
-          Codeshaper
+          Screenroot
         </a>
       </p>
     </div>

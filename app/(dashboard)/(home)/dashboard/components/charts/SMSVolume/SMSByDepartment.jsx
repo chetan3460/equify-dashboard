@@ -35,7 +35,8 @@ const formatNumber = (num) => {
 // Chart Insight component placeholder
 const ChartInsight = ({ message, variant }) => (
   <div
-    className={`py-1 px-2 bg-[#E2F5FD] dark:bg-[#0D475F] rounded-[8px] inline-block mt-3`}
+    className={`py-1 px-2 bg-[#E2F5FD] dark:bg-[#0D475F] rounded-[8px] inline-block mt-3 max-w-max
+`}
   >
     <div className="text-xs font-medium text-[#0067B1] dark:text-[#149BFC]">
       {message}
@@ -212,7 +213,7 @@ export default function SMSByDepartment({
   }, [deptData]);
 
   return (
-    <Card>
+    <Card className="h-full flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between">
         <CardHeader>
@@ -229,7 +230,7 @@ export default function SMSByDepartment({
         </div>
       </div>
 
-      <CardContent>
+      <CardContent className="flex-1 flex flex-col">
         {/* Chart Container */}
         <div className="relative" style={{ height: `${height}px` }}>
           <div className="flex md:flex-row flex-col items-center gap-6 h-full">

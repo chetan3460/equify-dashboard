@@ -210,7 +210,7 @@ const OverallSMSVolume = ({
   const chartData = getChartData(selectedPeriod);
 
   return (
-    <Card>
+    <Card className="h-full flex flex-col">
       <div className="flex items-center justify-between">
         <CardHeader>
           <CardTitle>Overall SMS volume</CardTitle>
@@ -223,7 +223,7 @@ const OverallSMSVolume = ({
           <OptionsDropdown />
         </div>
       </div>
-      <CardContent>
+      <CardContent className="flex-1 flex flex-col">
         <SMSLegend />
 
         <div className="relative" style={{ height: `${height}px` }}>
@@ -314,7 +314,10 @@ const OverallSMSVolume = ({
           </ResponsiveContainer>
         </div>
 
-        <div className="py-1 px-2 bg-[#E2F5FD] dark:bg-[#0D475F] rounded-[8px] inline-block mt-3">
+        <div
+          className="py-1 px-2 bg-[#E2F5FD] dark:bg-[#0D475F] rounded-[8px] inline-block mt-3 max-w-max
+"
+        >
           <p className="text-xs font-medium text-[#0067B1] dark:text-[#149BFC]">
             Peak traffic at 5 pm as expected
           </p>

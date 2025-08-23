@@ -166,8 +166,8 @@ const Dashboard = () => {
             {/* Original SMS Volume Chart */}
 
             {/* Additional SMS Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2   gap-y-2 gap-x-2 ">
-              <div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 items-stretch  gap-y-2 gap-x-2 ">
+              <div className="h-full">
                 <OverallSMSVolume
                   smsData={smsData}
                   height={300}
@@ -175,14 +175,14 @@ const Dashboard = () => {
                   onPeriodChange={setSelectedPeriod}
                 />{" "}
               </div>
-              <div>
+              <div className="h-full">
                 <SMSByDepartment
                   height={300}
                   selectedPeriod={deptSelectedPeriod}
                   onPeriodChange={setDeptSelectedPeriod}
                 />
               </div>
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2 h-full">
                 <SMSByProvider
                   height={300}
                   providerData={providerData}
