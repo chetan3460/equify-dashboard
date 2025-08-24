@@ -2,11 +2,12 @@
 import React, { useState, useEffect } from "react";
 import {
   DndContext,
-  closestCenter,
   PointerSensor,
   useSensor,
   useSensors,
   DragOverlay,
+  rectIntersection,
+  MeasuringStrategy,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -51,7 +52,7 @@ function SortableItem({
       style={style}
       className={`
         transition-all duration-300 relative 
-        ${isCustomizeMode ? "cursor-grab border-2 border-dashed border-gray-400 rounded-20 p-1 min-h-[120px] hover:border-blue-400" : ""} 
+        ${isCustomizeMode ? "cursor-grab select-none touch-none border-2 border-dashed border-gray-400 rounded-20 p-1 min-h-[120px] hover:border-blue-400" : ""} 
         ${isDragging ? "scale-105 opacity-75" : ""} 
         ${className}
       `}
@@ -72,6 +73,7 @@ export const SortableContainer = ({
   storageKey,
   onItemsChange,
   renderOverlay,
+  restrictBySpan = true,
 }) => {
   const {
     isGlobalDragMode,
@@ -87,8 +89,8 @@ export const SortableContainer = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 4,
-        tolerance: 5,
+        delay: 120,
+        tolerance: 8,
       },
     })
   );
@@ -215,11 +217,13 @@ export const SortableContainer = ({
       const oldIndex = currentItems.findIndex((item) => item.id === active.id);
       const newIndex = currentItems.findIndex((item) => item.id === over.id);
 
-      // Restrict reordering to items with matching span groups
-      const aGroup = getSpanGroup(currentItems[oldIndex]?.className);
-      const bGroup = getSpanGroup(currentItems[newIndex]?.className);
-      if (aGroup !== bGroup) {
-        return currentItems; // no change
+      // Restrict reordering to items with matching span groups (configurable)
+      if (restrictBySpan) {
+        const aGroup = getSpanGroup(currentItems[oldIndex]?.className);
+        const bGroup = getSpanGroup(currentItems[newIndex]?.className);
+        if (aGroup !== bGroup) {
+          return currentItems; // no change
+        }
       }
 
       return arrayMove(currentItems, oldIndex, newIndex);
@@ -233,7 +237,8 @@ export const SortableContainer = ({
     <div className={className}>
       <DndContext
         sensors={sensors}
-        collisionDetection={closestCenter}
+        collisionDetection={rectIntersection}
+        measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >

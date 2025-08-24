@@ -141,6 +141,8 @@ export default function SMSByProvider({
   providerData,
   selectedPeriod,
   onPeriodChange,
+  selectOptions = ["Today", "This week", "This month"],
+  optionsMenuItems,
 }) {
   const { theme } = useTheme();
   const { isGlobalDragMode } = useDragContext();
@@ -223,7 +225,7 @@ export default function SMSByProvider({
                     />
                   </g>
                   <defs>
-<clipPath id="clip0_376_3320">
+                    <clipPath id="clip0_376_3320">
                       <rect width="16" height="16" fill="white" />
                     </clipPath>
                   </defs>
@@ -234,8 +236,9 @@ export default function SMSByProvider({
                 <DashboardSelect
                   value={selectedPeriod}
                   onChange={onPeriodChange}
+                  options={selectOptions}
                 />
-                <OptionsDropdown />
+                <OptionsDropdown items={optionsMenuItems} />
               </>
             )}
           </div>

@@ -1,0 +1,32 @@
+"use client";
+import React, { useMemo } from "react";
+import { SortableContainer } from "@/components/draggable";
+import ServerStatistics from "./components/ServerStatistics";
+import APICallsToday from "./components/APICallsToday";
+
+export default function SystemHealth() {
+  const items = useMemo(
+    () => [
+      { id: "server-stats", className: "", component: <ServerStatistics /> },
+      { id: "system-api-calls-today", className: "", component: <APICallsToday /> },
+    ],
+    []
+  );
+
+  return (
+    <SortableContainer
+      containerId="v2-system-health"
+      items={items}
+      storageKey="v2-system-health-order"
+      strategy="grid"
+      restrictBySpan={false}
+    >
+      {(gridItems, SortableItem) => (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {gridItems.map((item, index) => SortableItem(item, index, item.className))}
+        </div>
+      )}
+    </SortableContainer>
+  );
+}
+

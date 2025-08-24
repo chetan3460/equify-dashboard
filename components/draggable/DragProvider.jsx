@@ -15,16 +15,16 @@ export const DragProvider = ({ children }) => {
   const [isGlobalDragMode, setIsGlobalDragMode] = useState(false);
   const [pendingChanges, setPendingChanges] = useState(new Set());
   const [showConfirmation, setShowConfirmation] = useState(false);
-  
+
   // Store callbacks for each draggable container
   const [containerCallbacks, setContainerCallbacks] = useState(new Map());
 
   const registerContainer = useCallback((containerId, callbacks) => {
-    setContainerCallbacks(prev => new Map(prev).set(containerId, callbacks));
+    setContainerCallbacks((prev) => new Map(prev).set(containerId, callbacks));
   }, []);
 
   const unregisterContainer = useCallback((containerId) => {
-    setContainerCallbacks(prev => {
+    setContainerCallbacks((prev) => {
       const newMap = new Map(prev);
       newMap.delete(containerId);
       return newMap;
@@ -32,7 +32,7 @@ export const DragProvider = ({ children }) => {
   }, []);
 
   const markContainerChanged = useCallback((containerId) => {
-    setPendingChanges(prev => new Set(prev).add(containerId));
+    setPendingChanges((prev) => new Set(prev).add(containerId));
   }, []);
 
   const toggleDragMode = useCallback(() => {
@@ -52,13 +52,13 @@ export const DragProvider = ({ children }) => {
 
   const saveChanges = useCallback(() => {
     // Call save for all containers that have pending changes
-    pendingChanges.forEach(containerId => {
+    pendingChanges.forEach((containerId) => {
       const callbacks = containerCallbacks.get(containerId);
       if (callbacks?.onSave) {
         callbacks.onSave();
       }
     });
-    
+
     setIsGlobalDragMode(false);
     setShowConfirmation(false);
     setPendingChanges(new Set());
@@ -66,13 +66,13 @@ export const DragProvider = ({ children }) => {
 
   const cancelChanges = useCallback(() => {
     // Call cancel for all containers that have pending changes
-    pendingChanges.forEach(containerId => {
+    pendingChanges.forEach((containerId) => {
       const callbacks = containerCallbacks.get(containerId);
       if (callbacks?.onCancel) {
         callbacks.onCancel();
       }
     });
-    
+
     setIsGlobalDragMode(false);
     setShowConfirmation(false);
     setPendingChanges(new Set());
@@ -90,9 +90,5 @@ export const DragProvider = ({ children }) => {
     markContainerChanged,
   };
 
-  return (
-    <DragContext.Provider value={value}>
-      {children}
-    </DragContext.Provider>
-  );
+  return <DragContext.Provider value={value}>{children}</DragContext.Provider>;
 };

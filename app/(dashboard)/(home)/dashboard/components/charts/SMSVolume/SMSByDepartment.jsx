@@ -127,6 +127,8 @@ export default function SMSByDepartment({
   selectedPeriod = "Today",
   onPeriodChange,
   height = 384, // Default height matching line chart
+  selectOptions = ["Today", "This week", "This month"],
+  optionsMenuItems,
 }) {
   const [currentPeriod, setCurrentPeriod] = useState(selectedPeriod);
   const { isGlobalDragMode } = useDragContext();
@@ -244,8 +246,8 @@ export default function SMSByDepartment({
             </div>
           ) : (
             <>
-              <DashboardSelect value={currentPeriod} onChange={handlePeriodChange} />
-              <OptionsDropdown />
+              <DashboardSelect value={currentPeriod} onChange={handlePeriodChange} options={selectOptions} />
+              <OptionsDropdown items={optionsMenuItems} />
             </>
           )}
         </div>

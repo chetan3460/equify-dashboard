@@ -86,43 +86,43 @@ const Dashboard = () => {
     Airtel: {
       success: 20822,
       failed: 4191,
-      total: 25013
+      total: 25013,
     },
     Jio: {
       success: 40011,
       failed: 15024,
-      total: 55035
+      total: 55035,
     },
     VI: {
       success: 16609,
       failed: 3362,
-      total: 19971
+      total: 19971,
     },
     BSNL: {
       success: 20822,
       failed: 4191,
-      total: 25013
+      total: 25013,
     },
     Infobip: {
       success: 40011,
       failed: 15024,
-      total: 55035
+      total: 55035,
     },
     Tanla: {
       success: 16609,
       failed: 3362,
-      total: 19971
+      total: 19971,
     },
     Synch: {
       success: 40011,
       failed: 15024,
-      total: 55035
+      total: 55035,
     },
     Equence: {
       success: 16609,
       failed: 3362,
-      total: 19971
-    }
+      total: 19971,
+    },
   };
 
   const [activeTab, setActiveTab] = useState("SMS volume");
@@ -171,19 +171,45 @@ const Dashboard = () => {
         ),
       },
     ],
-    [smsData, selectedPeriod, deptSelectedPeriod, providerSelectedPeriod, providerData]
+    [
+      smsData,
+      selectedPeriod,
+      deptSelectedPeriod,
+      providerSelectedPeriod,
+      providerData,
+    ]
   );
 
   const serviceProviderItems = useMemo(
     () => [
-      { id: "provider-status", className: "lg:col-span-2 xl:col-span-4", component: <ProviderStatus /> },
-      { id: "provider-traffic", className: "lg:col-span-2 xl:col-span-2", component: <ProviderTraffic /> },
-      { id: "delivery-reports", className: "lg:col-span-2 xl:col-span-2", component: <DeliveryReports /> },
+      {
+        id: "provider-status",
+        className: "lg:col-span-2 xl:col-span-4",
+        component: <ProviderStatus />,
+      },
+      {
+        id: "provider-traffic",
+        className: "lg:col-span-2 xl:col-span-2",
+        component: <ProviderTraffic />,
+      },
+      {
+        id: "delivery-reports",
+        className: "lg:col-span-2 xl:col-span-2",
+        component: <DeliveryReports />,
+      },
       { id: "api-calls-today", className: "", component: <APICallsToday /> },
       { id: "ongoing-tps", className: "", component: <OngoingTPS /> },
       { id: "avg-latency", className: "", component: <AvgLatency /> },
-      { id: "successful-transactions", className: "", component: <SuccessfulTransactions /> },
-      { id: "api-calls-by-provider", className: "lg:col-span-2 xl:col-span-4", component: <APICallsByProvider /> },
+      {
+        id: "successful-transactions",
+        className: "",
+        component: <SuccessfulTransactions />,
+      },
+      {
+        id: "api-calls-by-provider",
+        className: "lg:col-span-2 xl:col-span-4",
+        component: <APICallsByProvider />,
+      },
     ],
     []
   );
@@ -191,7 +217,11 @@ const Dashboard = () => {
   const systemHealthItems = useMemo(
     () => [
       { id: "server-stats", className: "", component: <ServerStatistics /> },
-      { id: "system-api-calls-today", className: "", component: <SystemHealthAPICallsToday /> },
+      {
+        id: "system-api-calls-today",
+        className: "",
+        component: <SystemHealthAPICallsToday />,
+      },
     ],
     []
   );
@@ -205,35 +235,6 @@ const Dashboard = () => {
     ],
     []
   );
-
-  // SMS Volume data from the original dashboard
-  // const smsData = {
-  //   lastUpdated: "15:15:45",
-  //   "12:00": {
-  //     total: 155130,
-  //     delivered: 77434,
-  //     failed: 22575,
-  //     retry: 55121,
-  //   },
-  //   "13:00": {
-  //     total: 155130,
-  //     delivered: 77434,
-  //     failed: 22575,
-  //     retry: 55121,
-  //   },
-  //   "14:00": {
-  //     total: 155130,
-  //     delivered: 77434,
-  //     failed: 22575,
-  //     retry: 55121,
-  //   },
-  //   "15:00": {
-  //     total: 155130,
-  //     delivered: 77434,
-  //     failed: 22575,
-  //     retry: 55121,
-  //   },
-  // };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -256,7 +257,9 @@ const Dashboard = () => {
             >
               {(items, SortableItem) => (
                 <div className="grid grid-cols-1 lg:grid-cols-2 items-stretch gap-y-2 gap-x-2">
-                  {items.map((item, index) => SortableItem(item, index, item.className))}
+                  {items.map((item, index) =>
+                    SortableItem(item, index, item.className)
+                  )}
                 </div>
               )}
             </SortableContainer>
@@ -276,8 +279,10 @@ const Dashboard = () => {
             )}
           >
             {(items, SortableItem) => (
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-                {items.map((item, index) => SortableItem(item, index, item.className))}
+              <div className="grid grid-cols-1 md:grid-cols-2  gap-6">
+                {items.map((item, index) =>
+                  SortableItem(item, index, item.className)
+                )}
               </div>
             )}
           </SortableContainer>
@@ -297,7 +302,9 @@ const Dashboard = () => {
           >
             {(items, SortableItem) => (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {items.map((item, index) => SortableItem(item, index, item.className))}
+                {items.map((item, index) =>
+                  SortableItem(item, index, item.className)
+                )}
               </div>
             )}
           </SortableContainer>
@@ -317,7 +324,9 @@ const Dashboard = () => {
           >
             {(items, SortableItem) => (
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-                {items.map((item, index) => SortableItem(item, index, item.className))}
+                {items.map((item, index) =>
+                  SortableItem(item, index, item.className)
+                )}
               </div>
             )}
           </SortableContainer>

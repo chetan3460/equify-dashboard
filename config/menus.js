@@ -42,6 +42,11 @@ export const menusConfig = {
           icon: Graph,
         },
         {
+          title: "Dashboard V2",
+          href: "/dashboard-v2",
+          icon: Graph,
+        },
+        {
           title: "Ecommerce",
           href: "/ecommerce",
           icon: Cart,
@@ -234,6 +239,11 @@ export const menusConfig = {
           {
             title: "Analytics",
             href: "/dashboard",
+            icon: Graph,
+          },
+          {
+            title: "Dashboard V2",
+            href: "/dashboard-v2",
             icon: Graph,
           },
           {
@@ -433,6 +443,11 @@ export const menusConfig = {
           {
             title: "Analytics",
             href: "/dashboard",
+            icon: Graph,
+          },
+          {
+            title: "Dashboard V2",
+            href: "/dashboard-v2",
             icon: Graph,
           },
           {
