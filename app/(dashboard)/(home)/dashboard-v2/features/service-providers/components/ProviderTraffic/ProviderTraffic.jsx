@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 import { useTheme } from "next-themes";
 import {
   Card,
@@ -7,6 +9,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
+import DashboardSelect from "@/components/dasboard-select";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 
@@ -27,7 +30,7 @@ const CustomTooltip = ({ active, payload, label, chartConfig }) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className="p-2 rounded-md"
+        className="p-2 rounded-[4px]"
         style={{
           backgroundColor: chartConfig.tooltip.contentStyle.backgroundColor,
           border: chartConfig.tooltip.contentStyle.border,
@@ -86,19 +89,29 @@ const CustomLegend = ({ payload }) => {
   );
 };
 
-export default function ProviderTraffic({ optionsMenuItems }) {
+export default function ProviderTraffic({
+  deptData,
+  selectedPeriod = "Today",
+  onPeriodChange,
+  height = 384,
+  selectOptions = ["Today", "This week", "This month"],
+  optionsMenuItems,
+}) {
   const { isGlobalDragMode } = useDragContext();
   const { theme } = useTheme();
-  const chartConfig = getChartConfig(theme);
+  const [currentPeriod, setCurrentPeriod] = useState(selectedPeriod);
 
+  const chartConfig = getChartConfig(theme);
+  const handlePeriodChange = (newPeriod) => {
+    setCurrentPeriod(newPeriod);
+    onPeriodChange?.(newPeriod);
+  };
   return (
     <Card className="h-full flex flex-col">
       <div className="flex items-center justify-between">
         <CardHeader>
           <CardTitle>Service Provider Traffic</CardTitle>
-          <CardDescription>
-            Distribution of SMS traffic across providers
-          </CardDescription>
+          <CardDescription>Last updated (hh:mm:ss)</CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">
           {isGlobalDragMode ? (
@@ -106,7 +119,14 @@ export default function ProviderTraffic({ optionsMenuItems }) {
               <DragHandleIcon />
             </div>
           ) : (
-            <OptionsDropdown items={optionsMenuItems} />
+            <>
+              <DashboardSelect
+                value={currentPeriod}
+                onChange={handlePeriodChange}
+                options={selectOptions}
+              />
+              <OptionsDropdown items={optionsMenuItems} />
+            </>
           )}
         </div>
       </div>

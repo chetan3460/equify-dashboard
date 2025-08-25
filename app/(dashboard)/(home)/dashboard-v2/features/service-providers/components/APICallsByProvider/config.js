@@ -21,7 +21,7 @@ export function getChartConfig(theme) {
             contentStyle: {
                 backgroundColor: isDark ? "#33445B" : "#fff",
                 borderRadius: "4px",
-                border: isDark ? "1px solid #4E6079" : "1px solid #fff",
+                border: isDark ? "1px solid #4E6079" : "1px solid #DADADA",
             },
             labelStyle: {
                 color: isDark ? "#E5E2DF" : "#201D1A",
@@ -51,8 +51,8 @@ export function getChartConfig(theme) {
             },
         ],
         legend: {
-            successBg: "linear-gradient(53deg, #318E33 8.75%, #8AF5A8 90.78%)",
-            failedBg: "linear-gradient(228deg, #FF8F80 11.9%, #E56464 94.13%)",
+            successBg: "linear-gradient(269deg, #3EECAC 0.8%, #42A5F5 268.75%)",
+            failedBg: "linear-gradient(115deg, #FF6A88 -0.89%, #FF99AC 83.78%)",
         },
     };
 }

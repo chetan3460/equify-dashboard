@@ -118,7 +118,9 @@ export default function APICallsToday({ optionsMenuItems }) {
               />
               <Tooltip
                 cursor={chartConfig.tooltip.cursor}
-                content={<CustomTooltip chartConfig={chartConfig} />}
+                content={
+                  <CustomTooltip chartConfig={chartConfig} cursor={false} />
+                }
               />
               <Line
                 type="monotone"

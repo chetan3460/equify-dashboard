@@ -17,7 +17,7 @@ export const chartData = Object.keys(rawData)
     .map((key) => {
         const item = rawData[key];
         return {
-            name: key, // Use key directly; no trimming needed if clean
+            name: key,
             success: item.success ?? 0,
             failed: item.failed ?? 0,
         };

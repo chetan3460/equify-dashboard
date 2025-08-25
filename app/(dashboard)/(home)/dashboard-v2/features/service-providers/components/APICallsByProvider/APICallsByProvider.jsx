@@ -39,7 +39,7 @@ const CustomTooltip = ({ active, payload, chartConfig }) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className="rounded-md p-2"
+        className="rounded-[4px] p-2 "
         style={{
           backgroundColor: chartConfig.tooltip.contentStyle.backgroundColor,
           border: chartConfig.tooltip.contentStyle.border,
@@ -54,7 +54,7 @@ const CustomTooltip = ({ active, payload, chartConfig }) => {
               {entry.name}:
             </span>
             <span
-              className="text-base font-semibold"
+              className="text-xs font-normal"
               style={{ color: chartConfig.tooltip.itemStyle.color }}
             >
               {entry.value.toLocaleString()}
@@ -72,10 +72,12 @@ const CustomLegend = ({ chartConfig }) => (
     <div className="flex items-center gap-2">
       <span
         style={{
-          width: 23,
-          height: 8,
+          width: 12,
+          height: 12,
           borderRadius: "1.9px",
-          background: chartConfig.legend.successBg,
+          background:
+            chartConfig.legend?.successBg ||
+            "linear-gradient(269deg, #3EECAC 0.8%, #42A5F5 268.75%)",
         }}
       />
       <span className="text-xs text-default-900">Successful</span>
@@ -83,10 +85,12 @@ const CustomLegend = ({ chartConfig }) => (
     <div className="flex items-center gap-2">
       <span
         style={{
-          width: 23,
-          height: 8,
+          width: 12,
+          height: 12,
           borderRadius: "1.9px",
-          background: chartConfig.legend.failedBg,
+          background:
+            chartConfig.legend?.failedBg ||
+            "linear-gradient(115deg, #FF6A88 -0.89%, #FF99AC 83.78%)",
         }}
       />
       <span className="text-xs text-default-900">Failed</span>
@@ -103,8 +107,8 @@ export default function APICallsByProvider({ optionsMenuItems }) {
     <Card className="h-full flex flex-col">
       <div className="flex items-center justify-between">
         <CardHeader>
-          <CardTitle>API Calls by Provider</CardTitle>
-          <CardDescription>Today's API calls per provider</CardDescription>
+          <CardTitle>API calls by service provider today</CardTitle>
+          <CardDescription>Last updated (hh:mm:ss) </CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">
           {isGlobalDragMode ? (
@@ -137,7 +141,10 @@ export default function APICallsByProvider({ optionsMenuItems }) {
                 tick={<CustomTick chartConfig={chartConfig} />}
               />
               <YAxis tick={<CustomTick chartConfig={chartConfig} vertical />} />
-              <Tooltip content={<CustomTooltip chartConfig={chartConfig} />} />
+              <Tooltip
+                content={<CustomTooltip chartConfig={chartConfig} />}
+                cursor={false}
+              />
 
               {/* Define Gradients */}
               <defs>
@@ -159,11 +166,13 @@ export default function APICallsByProvider({ optionsMenuItems }) {
               {/* Bars */}
               <Bar
                 dataKey="success"
+                name="Successful"
                 radius={[4, 4, 0, 0]}
                 fill="url(#gradSuccess)"
               />
               <Bar
                 dataKey="failed"
+                name="Failed"
                 radius={[4, 4, 0, 0]}
                 fill="url(#gradFailed)"
               />

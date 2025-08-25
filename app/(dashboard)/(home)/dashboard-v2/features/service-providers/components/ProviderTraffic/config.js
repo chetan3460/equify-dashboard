@@ -130,7 +130,7 @@ export function getChartConfig(theme) {
             cursor: { fill: "rgba(0,0,0,0.05)" },
             contentStyle: {
                 backgroundColor: isDark ? "#33445B" : "#fff",
-                borderRadius: "0",
+                borderRadius: "4px",
                 border: isDark ? "1px solid #4E6079" : "1px solid #DADADA",
             },
             labelStyle: {
