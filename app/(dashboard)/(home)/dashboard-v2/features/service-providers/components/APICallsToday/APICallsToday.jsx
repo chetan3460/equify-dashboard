@@ -47,7 +47,7 @@ const CustomTooltip = ({ active, payload, label, chartConfig }) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className="rounded-md p-2"
+        className="rounded-[4px] p-2"
         style={{
           backgroundColor: chartConfig.tooltip.contentStyle.backgroundColor,
           border: chartConfig.tooltip.contentStyle.border,
@@ -106,7 +106,6 @@ export default function APICallsToday({ optionsMenuItems }) {
               <CartesianGrid
                 stroke={chartConfig.grid.stroke}
                 strokeDasharray="3 3"
-                vertical={false}
               />
               <XAxis
                 dataKey="time"
