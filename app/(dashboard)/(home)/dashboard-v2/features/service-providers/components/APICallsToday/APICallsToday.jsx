@@ -47,7 +47,7 @@ const CustomTooltip = ({ active, payload, label, chartConfig }) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className="rounded-md p-2 shadow-sm"
+        className="rounded-md p-2"
         style={{
           backgroundColor: chartConfig.tooltip.contentStyle.backgroundColor,
           border: chartConfig.tooltip.contentStyle.border,
@@ -62,7 +62,7 @@ const CustomTooltip = ({ active, payload, label, chartConfig }) => {
         {payload.map((entry, index) => (
           <p
             key={`tooltip-item-${index}`}
-            className="text-xs font-normal"
+            className="text-xs font-bold"
             style={{ color: chartConfig.tooltip.itemStyle.color }}
           >
             {entry.value.toLocaleString()}

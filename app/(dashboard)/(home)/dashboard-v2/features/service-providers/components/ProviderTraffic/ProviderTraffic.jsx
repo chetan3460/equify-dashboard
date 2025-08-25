@@ -1,71 +1,178 @@
-/**
- * Provider Traffic Chart Component
- *
- * This component displays traffic patterns across different service providers over time
- * Chart Type: Multi-line Chart (Recharts LineChart)
- * Dummy Data: Hourly traffic data for multiple providers
- */
+import { useTheme } from "next-themes";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { useDragContext } from "@/components/draggable/DragProvider";
+import OptionsDropdown from "@/components/OptionsDropdown";
+import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
+
+import {
+  PieChart,
+  Pie,
+  Cell,
   Tooltip,
-  Legend,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
 
-const data = [
-  { time: "00:00", twilio: 1200, sns: 800, messagebird: 600, vonage: 400 },
-  { time: "04:00", twilio: 800, sns: 600, messagebird: 400, vonage: 300 },
-  { time: "08:00", twilio: 2200, sns: 1800, messagebird: 1200, vonage: 900 },
-  { time: "12:00", twilio: 3200, sns: 2500, messagebird: 1800, vonage: 1200 },
-  { time: "16:00", twilio: 2800, sns: 2200, messagebird: 1600, vonage: 1000 },
-  { time: "20:00", twilio: 1800, sns: 1400, messagebird: 1000, vonage: 700 },
-];
+import { data } from "./data";
+import { gradients } from "./config";
+import { getChartConfig } from "./config";
 
-export default function ProviderTraffic() {
-  return (
-    <div className="p-4 border rounded-md shadow bg-white">
-      <h3 className="text-lg font-semibold mb-2">Service provider traffic</h3>
-      <div className="h-80">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="time" />
-            <YAxis />
-            <Tooltip
-              formatter={(value) => [value.toLocaleString(), "Messages"]}
-            />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="twilio"
-              stroke="#3B82F6"
-              strokeWidth={2}
-            />
-            <Line
-              type="monotone"
-              dataKey="sns"
-              stroke="#10B981"
-              strokeWidth={2}
-            />
-            <Line
-              type="monotone"
-              dataKey="messagebird"
-              stroke="#F59E0B"
-              strokeWidth={2}
-            />
-            <Line
-              type="monotone"
-              dataKey="vonage"
-              stroke="#EF4444"
-              strokeWidth={2}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+const CustomTooltip = ({ active, payload, label, chartConfig }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div
+        className="p-2 rounded-md"
+        style={{
+          backgroundColor: chartConfig.tooltip.contentStyle.backgroundColor,
+          border: chartConfig.tooltip.contentStyle.border,
+        }}
+      >
+        {/* Show label (x-axis or nameKey) */}
+
+        {/* Show each value with its series name */}
+        {payload.map((entry, index) => (
+          <div
+            key={`tooltip-item-${index}`}
+            className="flex items-center justify-between gap-1"
+          >
+            {/* Series name */}
+            <span
+              className="text-xs font-normal"
+              style={{ color: chartConfig.tooltip.labelStyle.color }}
+            >
+              {entry.name}:
+            </span>
+
+            {/* Value */}
+            <span
+              className="font-semibold text-base"
+              style={{ color: chartConfig.tooltip.itemStyle.color }}
+            >
+              {entry.value.toLocaleString()}
+            </span>
+          </div>
+        ))}
       </div>
-    </div>
+    );
+  }
+  return null;
+};
+
+// Custom Legend with gradient circles
+const CustomLegend = ({ payload }) => {
+  return (
+    <ul className="grid grid-cols-2 md:grid-cols-3 justify-center self-center items-center gap-2  text-default-900 text-sm">
+      {payload.map((entry, index) => (
+        <li key={`item-${index}`} className="flex items-center gap-2">
+          {/* SVG circle for gradient swatch */}
+          <svg width="14" height="14">
+            <circle
+              cx="7"
+              cy="7"
+              r="6"
+              fill={entry.color} // supports solid + gradient (url(#gradX))
+            />
+          </svg>
+          <span>{entry.value}</span>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default function ProviderTraffic({ optionsMenuItems }) {
+  const { isGlobalDragMode } = useDragContext();
+  const { theme } = useTheme();
+  const chartConfig = getChartConfig(theme);
+
+  return (
+    <Card className="h-full flex flex-col">
+      <div className="flex items-center justify-between">
+        <CardHeader>
+          <CardTitle>Service Provider Traffic</CardTitle>
+          <CardDescription>
+            Distribution of SMS traffic across providers
+          </CardDescription>
+        </CardHeader>
+        <div className="flex items-center gap-2">
+          {isGlobalDragMode ? (
+            <div className="cursor-grab flex items-center">
+              <DragHandleIcon />
+            </div>
+          ) : (
+            <OptionsDropdown items={optionsMenuItems} />
+          )}
+        </div>
+      </div>
+
+      <CardContent>
+        <div className="h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              {/* Gradient defs */}
+              <defs>
+                {gradients.map((grad) =>
+                  grad.type === "linearGradient" ? (
+                    <linearGradient key={grad.id} id={grad.id} {...grad.props}>
+                      {grad.stops.map((stop, i) => (
+                        <stop
+                          key={i}
+                          offset={stop.offset}
+                          stopColor={stop.color}
+                        />
+                      ))}
+                    </linearGradient>
+                  ) : (
+                    <radialGradient key={grad.id} id={grad.id} {...grad.props}>
+                      {grad.stops.map((stop, i) => (
+                        <stop
+                          key={i}
+                          offset={stop.offset}
+                          stopColor={stop.color}
+                        />
+                      ))}
+                    </radialGradient>
+                  )
+                )}
+              </defs>
+
+              {/* Pie */}
+              <Pie
+                data={data}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                innerRadius="50%"
+                outerRadius="80%"
+                paddingAngle={0}
+                stroke="none" // ⬅ removes white border
+              >
+                {data.map((_, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={`url(#grad${index % gradients.length})`}
+                    stroke="none"
+                  />
+                ))}
+              </Pie>
+
+              {/* Tooltip + Legend */}
+              <Tooltip
+                cursor={chartConfig.tooltip.cursor}
+                content={<CustomTooltip chartConfig={chartConfig} />}
+              />
+              <Legend content={<CustomLegend />} />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
