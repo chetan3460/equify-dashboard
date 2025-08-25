@@ -13,14 +13,31 @@ import SuccessfulTransactions from "./components/SuccessfulTransactions/Successf
 export default function ServiceProviders() {
   const items = useMemo(
     () => [
-      { id: "provider-status", className: "lg:col-span-2 xl:col-span-4", component: <ProviderStatus /> },
-      { id: "provider-traffic", className: "lg:col-span-2 xl:col-span-2", component: <ProviderTraffic /> },
-      { id: "delivery-reports", className: "lg:col-span-2 xl:col-span-2", component: <DeliveryReports /> },
+      {
+        id: "provider-status",
+        className: "",
+        component: <ProviderStatus />,
+      },
+      {
+        id: "provider-traffic",
+        className: "",
+        component: <ProviderTraffic />,
+      },
       { id: "api-calls-today", className: "", component: <APICallsToday /> },
+
+      { id: "delivery-reports", className: "", component: <DeliveryReports /> },
       { id: "ongoing-tps", className: "", component: <OngoingTPS /> },
       { id: "avg-latency", className: "", component: <AvgLatency /> },
-      { id: "successful-transactions", className: "", component: <SuccessfulTransactions /> },
-      { id: "api-calls-by-provider", className: "lg:col-span-2 xl:col-span-4", component: <APICallsByProvider /> },
+      {
+        id: "successful-transactions",
+        className: "",
+        component: <SuccessfulTransactions />,
+      },
+      {
+        id: "api-calls-by-provider",
+        className: "",
+        component: <APICallsByProvider />,
+      },
     ],
     []
   );
@@ -34,11 +51,12 @@ export default function ServiceProviders() {
       restrictBySpan={false}
     >
       {(gridItems, SortableItem) => (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-          {gridItems.map((item, index) => SortableItem(item, index, item.className))}
+        <div className="grid grid-cols-1 lg:grid-cols-2  gap-6">
+          {gridItems.map((item, index) =>
+            SortableItem(item, index, item.className)
+          )}
         </div>
       )}
     </SortableContainer>
   );
 }
-

@@ -1,36 +1,138 @@
 /**
- * API Calls Today Metric Card Component
- * 
- * This component displays the total number of API calls made today
- * Chart Type: Metric card with large number display
- * Dummy Data: Total API calls count for today
+ * Total API Calls Today Chart
+ *
+ * Single line chart showing API call counts over time.
  */
+import React from "react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { useDragContext } from "@/components/draggable/DragProvider";
+import OptionsDropdown from "@/components/OptionsDropdown";
+import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 
-export default function APICallsToday() {
-  const apiCallsCount = 125456;
-  const yesterdayCount = 118234;
-  const percentageChange = ((apiCallsCount - yesterdayCount) / yesterdayCount * 100).toFixed(1);
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
+
+import { useTheme } from "next-themes";
+import { rawData, chartData } from "./data";
+import { getChartConfig } from "./config";
+
+const CustomTick = ({ x, y, payload, vertical = false, chartConfig }) => {
+  return (
+    <text
+      x={x}
+      y={y + (vertical ? 0 : 10)} // push X-axis ticks down
+      textAnchor={vertical ? "end" : "middle"}
+      className="text-xs font-normal"
+      fill={chartConfig.axis.tick.fill}
+    >
+      {payload.value}
+    </text>
+  );
+};
+
+const CustomTooltip = ({ active, payload, label, chartConfig }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div
+        className="rounded-md p-2 shadow-sm"
+        style={{
+          backgroundColor: chartConfig.tooltip.contentStyle.backgroundColor,
+          border: chartConfig.tooltip.contentStyle.border,
+        }}
+      >
+        <p
+          className="text-xs font-medium mb-1"
+          style={{ color: chartConfig.tooltip.labelStyle.color }}
+        >
+          {label}
+        </p>
+        {payload.map((entry, index) => (
+          <p
+            key={`tooltip-item-${index}`}
+            className="text-xs font-normal"
+            style={{ color: chartConfig.tooltip.itemStyle.color }}
+          >
+            {entry.value.toLocaleString()}
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
+export default function APICallsToday({ optionsMenuItems }) {
+  const { isGlobalDragMode } = useDragContext();
+  const { theme } = useTheme();
+  const chartConfig = getChartConfig(theme);
 
   return (
-    <div className="p-4 border rounded-md shadow bg-white">
-      <h3 className="text-lg font-semibold mb-2">API Calls Today</h3>
-      <div className="space-y-2">
-        <div className="text-3xl font-bold text-blue-600">
-          {apiCallsCount.toLocaleString()}
-        </div>
-        <div className="flex items-center space-x-2">
-          <span className={`text-sm font-medium ${
-            percentageChange >= 0 ? 'text-green-600' : 'text-red-600'
-          }`}>
-            {percentageChange >= 0 ? '+' : ''}{percentageChange}%
-          </span>
-          <span className="text-sm text-gray-500">vs yesterday</span>
-        </div>
-        <div className="text-xs text-gray-400">
-          Last updated: {new Date().toLocaleTimeString()}
+    <Card className="h-full flex flex-col">
+      <div className="flex items-center justify-between">
+        <CardHeader>
+          <CardTitle>Total API calls today</CardTitle>
+          <CardDescription>
+            Last updated (hh:mm:ss): {rawData.lastUpdated}
+          </CardDescription>
+        </CardHeader>
+        <div className="flex items-center gap-2">
+          {isGlobalDragMode ? (
+            <div className="cursor-grab flex items-center">
+              <DragHandleIcon />
+            </div>
+          ) : (
+            <OptionsDropdown items={optionsMenuItems} />
+          )}
         </div>
       </div>
-    </div>
+
+      <CardContent className="flex-1 flex flex-col">
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chartData}>
+              <CartesianGrid
+                stroke={chartConfig.grid.stroke}
+                strokeDasharray="3 3"
+                vertical={false}
+              />
+              <XAxis
+                dataKey="time"
+                stroke={chartConfig.axis.stroke}
+                tick={<CustomTick chartConfig={chartConfig} />}
+              />
+              <YAxis
+                stroke={chartConfig.axis.stroke}
+                tick={<CustomTick chartConfig={chartConfig} vertical />}
+              />
+              <Tooltip
+                cursor={chartConfig.tooltip.cursor}
+                content={<CustomTooltip chartConfig={chartConfig} />}
+              />
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke={chartConfig.lineColor}
+                strokeWidth={chartConfig.strokeWidth}
+                dot={chartConfig.dot}
+                activeDot={chartConfig.activeDot}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
-
