@@ -1,5 +1,7 @@
 // data.js
 export const rawData = {
+    "lastUpdated": "01:15:45",
+
     Airtel: 25,
     Jio: 25,
     VI: 5,

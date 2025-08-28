@@ -19,102 +19,28 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  LabelList,
   CartesianGrid,
   Cell,
 } from "recharts";
 
-const providerObj = {
-  lastUpdated: "01:15:45",
-  Airtel: { total: 25013 },
-  Jio: { total: 55035 },
-  VI: { total: 19971 },
-  Bsnl: { total: 25013 },
-  Infobip: { total: 55035 },
-  Tanla: { total: 19971 },
-  Synch: { total: 55035 },
-  Equence: { total: 19971 },
-};
+import { providerObj, gradientSpecByName } from "./data";
+import { getChartConfig } from "./config";
 
+// Format axis values (1K, 1M etc.)
 const formatAxis = (n) => {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
   if (n >= 1_000) return Math.round(n / 1_000) + "K";
   return n.toLocaleString();
 };
 
-const gradientSpecByName = {
-  Airtel: {
-    type: "radial",
-    stops: [
-      ["0%", "#FF6A88"],
-      ["100%", "#FF99AC"],
-    ],
-  },
-  Jio: {
-    type: "linear",
-    angle: 268,
-    stops: [
-      ["0%", "#3EECAC"],
-      ["100%", "#42A5F5"],
-    ],
-  },
-  VI: {
-    type: "linear",
-    angle: 270,
-    stops: [
-      ["0%", "#FDBB2D"],
-      ["100%", "#F77500"],
-    ],
-  },
-  Bsnl: {
-    type: "linear",
-    angle: 79,
-    stops: [
-      ["0%", "#42A5F5"],
-      ["100%", "#18C9EC"],
-    ],
-  },
-  Infobip: {
-    type: "linear",
-    angle: 104,
-    stops: [
-      ["0%", "#A259FF"],
-      ["100%", "#C084FC"],
-    ],
-  },
-  Tanla: {
-    type: "linear",
-    angle: 167,
-    stops: [
-      ["0%", "#FFE159"],
-      ["100%", "#FBD217"],
-    ],
-  },
-  Synch: {
-    type: "linear",
-    angle: 104,
-    stops: [
-      ["0%", "#60C345"],
-      ["100%", "#5CDA3A"],
-    ],
-  },
-  Equence: {
-    type: "linear",
-    angle: 268,
-    stops: [
-      ["0%", "#3EECAC"],
-      ["100%", "#42A5F5"],
-    ],
-  },
-};
-
-const CustomTick = ({ x, y, payload, textAnchor = "end", theme }) => (
+const CustomTick = ({ x, y, payload, textAnchor = "end", chartConfig }) => (
   <text
     x={x}
     y={y}
     dy={4}
     textAnchor={textAnchor}
-    fill={theme === "dark" ? "#E5E5E5" : "#111827"}
+    fill={chartConfig.axis.tick.fill}
+    fontSize={chartConfig.axis.tick.fontSize}
     className="text-xs font-normal"
   >
     {payload.value}
@@ -131,6 +57,7 @@ export default function SMSByProvider({
 }) {
   const { theme } = useTheme();
   const { isGlobalDragMode } = useDragContext();
+  const chartConfig = getChartConfig(theme);
 
   const data = useMemo(() => {
     const obj = providerData || providerObj;
@@ -150,7 +77,7 @@ export default function SMSByProvider({
           <CardHeader>
             <CardTitle>SMS volume by service provider</CardTitle>
             <CardDescription>
-              Last updated (hh:mm:ss):{" "}
+              Last updated :{" "}
               {(providerData && providerData.lastUpdated) ||
                 providerObj.lastUpdated}
             </CardDescription>
@@ -231,41 +158,42 @@ export default function SMSByProvider({
                 </defs>
 
                 <CartesianGrid
-                  stroke={theme === "dark" ? "#666" : "#DADADA"}
-                  strokeDasharray="3 3"
-                  strokeWidth={0.5}
+                  stroke={chartConfig.grid.stroke}
+                  strokeDasharray={chartConfig.grid.strokeDasharray}
+                  strokeWidth={chartConfig.grid.strokeWidth}
                 />
+
                 <XAxis
                   type="number"
                   tickFormatter={formatAxis}
-                  axisLine={{ stroke: "#666" }}
-                  tickLine={{ stroke: "#666" }}
+                  axisLine={{ stroke: chartConfig.axis.stroke }}
+                  tickLine={{ stroke: chartConfig.axis.stroke }}
                   tick={(props) => (
-                    <CustomTick {...props} theme={theme} textAnchor="middle" />
+                    <CustomTick
+                      {...props}
+                      chartConfig={chartConfig}
+                      textAnchor="middle"
+                    />
                   )}
                 />
+
                 <YAxis
                   type="category"
                   dataKey="name"
-                  axisLine={{ stroke: "#666" }}
-                  tickLine={{ stroke: "#666" }}
-                  tick={(props) => <CustomTick {...props} theme={theme} />}
+                  axisLine={{ stroke: chartConfig.axis.stroke }}
+                  tickLine={{ stroke: chartConfig.axis.stroke }}
+                  tick={(props) => (
+                    <CustomTick {...props} chartConfig={chartConfig} />
+                  )}
                 />
+
                 <Tooltip
-                  cursor={{ fill: "rgba(0,0,0,0.05)" }}
-                  contentStyle={{
-                    backgroundColor: theme === "dark" ? "#33445B" : "#fff",
-                    borderRadius: "4px",
-                    border:
-                      theme === "dark" ? "1px solid #4E6079" : "1px solid #fff",
-                  }}
-                  labelStyle={{
-                    color: theme === "dark" ? "#E5E2DF" : "#201D1A",
-                  }}
-                  itemStyle={{
-                    color: theme === "dark" ? "#E5E2DF" : "#201D1A",
-                  }}
+                  cursor={chartConfig.tooltip.cursor}
+                  contentStyle={chartConfig.tooltip.contentStyle}
+                  labelStyle={chartConfig.tooltip.labelStyle}
+                  itemStyle={chartConfig.tooltip.itemStyle}
                 />
+
                 <Bar dataKey="total" barSize={20} radius={[0, 4, 4, 0]}>
                   {data.map((d, i) => (
                     <Cell key={d.name} fill={`url(#grad-${i})`} />

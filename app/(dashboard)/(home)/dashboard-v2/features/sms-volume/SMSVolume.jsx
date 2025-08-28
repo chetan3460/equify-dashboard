@@ -83,7 +83,13 @@ export default function SMSVolume() {
         ),
       },
     ],
-    [smsData, providerData, selectedPeriod, deptSelectedPeriod, providerSelectedPeriod]
+    [
+      smsData,
+      providerData,
+      selectedPeriod,
+      deptSelectedPeriod,
+      providerSelectedPeriod,
+    ]
   );
 
   return (
@@ -96,10 +102,11 @@ export default function SMSVolume() {
     >
       {(gridItems, SortableItem) => (
         <div className="grid grid-cols-1 lg:grid-cols-2 items-stretch gap-y-2 gap-x-2">
-          {gridItems.map((item, index) => SortableItem(item, index, item.className))}
+          {gridItems.map((item, index) =>
+            SortableItem(item, index, item.className)
+          )}
         </div>
       )}
     </SortableContainer>
   );
 }
-

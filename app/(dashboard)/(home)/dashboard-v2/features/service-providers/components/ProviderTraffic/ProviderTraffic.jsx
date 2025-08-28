@@ -22,7 +22,8 @@ import {
   Legend,
 } from "recharts";
 
-import { data } from "./data";
+import { data, rawData } from "./data";
+
 import { gradients } from "./config";
 import { getChartConfig } from "./config";
 
@@ -111,7 +112,9 @@ export default function ProviderTraffic({
       <div className="flex items-center justify-between">
         <CardHeader>
           <CardTitle>Service Provider Traffic</CardTitle>
-          <CardDescription>Last updated (hh:mm:ss)</CardDescription>
+          <CardDescription>
+            Last updated : {rawData.lastUpdated}
+          </CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">
           {isGlobalDragMode ? (

@@ -34,7 +34,7 @@ export default function ServiceProviders() {
       },
       {
         id: "successful-transactions",
-        className: "",
+        className: "lg:col-span-2 h-full",
         component: <SuccessfulTransactions />,
       },
       {

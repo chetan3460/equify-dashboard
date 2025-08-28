@@ -22,3 +22,4 @@ export const chartData = Object.keys(rawData)
             failed: item.failed ?? 0,
         };
     });
+

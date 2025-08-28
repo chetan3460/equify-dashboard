@@ -85,7 +85,7 @@ export default function APICallsToday({ optionsMenuItems }) {
         <CardHeader>
           <CardTitle>Total API calls today</CardTitle>
           <CardDescription>
-            Last updated (hh:mm:ss): {rawData.lastUpdated}
+            Last updated : {rawData.lastUpdated}
           </CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">

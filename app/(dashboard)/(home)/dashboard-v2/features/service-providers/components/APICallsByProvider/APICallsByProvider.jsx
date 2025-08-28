@@ -20,7 +20,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { chartData } from "./data";
+import { chartData, rawData } from "./data"; // ⬅️ import rawData
 import { getChartConfig } from "./config";
 
 const CustomTick = ({ x, y, payload, vertical = false, chartConfig }) => (
@@ -108,7 +108,9 @@ export default function APICallsByProvider({ optionsMenuItems }) {
       <div className="flex items-center justify-between">
         <CardHeader>
           <CardTitle>API calls by service provider today</CardTitle>
-          <CardDescription>Last updated (hh:mm:ss) </CardDescription>
+          <CardDescription>
+            Last updated : {rawData.lastUpdated}
+          </CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">
           {isGlobalDragMode ? (

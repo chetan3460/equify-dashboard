@@ -1,3 +1,4 @@
+
 /**
  * Returns chart config based on current theme
  * @param {"light"|"dark"} theme
