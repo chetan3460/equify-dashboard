@@ -1,14 +1,18 @@
 "use client";
 import React, { useMemo } from "react";
 import { SortableContainer } from "@/components/draggable";
-import ServerStatistics from "./components/ServerStatistics";
-import APICallsToday from "./components/APICallsToday";
+import ServerStatistics from "./components/ServerStatistics/ServerStatistics";
+import APICallsToday from "./components/APICallsToday/APICallsToday";
 
 export default function SystemHealth() {
   const items = useMemo(
     () => [
       { id: "server-stats", className: "", component: <ServerStatistics /> },
-      { id: "system-api-calls-today", className: "", component: <APICallsToday /> },
+      {
+        id: "system-api-calls-today",
+        className: "",
+        component: <APICallsToday />,
+      },
     ],
     []
   );
@@ -22,11 +26,12 @@ export default function SystemHealth() {
       restrictBySpan={false}
     >
       {(gridItems, SortableItem) => (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {gridItems.map((item, index) => SortableItem(item, index, item.className))}
+        <div className="grid grid-cols-1  gap-6">
+          {gridItems.map((item, index) =>
+            SortableItem(item, index, item.className)
+          )}
         </div>
       )}
     </SortableContainer>
   );
 }
-
