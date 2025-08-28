@@ -6,6 +6,8 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
@@ -68,12 +70,30 @@ export default function OngoingTPS({ optionsMenuItems }) {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader>
-        <CardTitle>Ongoing TPS by Service Provider</CardTitle>
-        <CardDescription>
-          Last updated: {new Date().toLocaleTimeString()}
-        </CardDescription>
-      </CardHeader>
+      <div className="flex items-center justify-between">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <CardTitle>Ongoing TPS by Service Provider</CardTitle>
+            <Badge color="live">
+              <div></div> Live
+            </Badge>
+          </div>
+
+          <CardDescription>
+            Last updated: {new Date().toLocaleTimeString()}
+          </CardDescription>
+        </CardHeader>
+
+        <div className="flex items-center gap-2">
+          {isGlobalDragMode ? (
+            <div className="cursor-grab flex items-center">
+              <DragHandleIcon />
+            </div>
+          ) : (
+            <OptionsDropdown items={optionsMenuItems} />
+          )}
+        </div>
+      </div>
 
       <CardContent className="flex-1">
         <div className="h-80">

@@ -4,22 +4,23 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-full border py-1 px-2  text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       color: {
-        default: "border-transparent bg-primary text-primary-foreground ",
+        default: "border-transparent bg-primary-50 text-primary-foreground",
         destructive:
           "bg-destructive border-transparent text-destructive-foreground",
-        success: "bg-success border-transparent  text-success-foreground ",
-        info: "bg-info border-transparent text-info-foreground ",
-        warning: "bg-warning  border-transparent text-warning-foreground",
-        secondary: "bg-secondary border-transparent text-foreground ",
-        dark: "bg-accent-foreground border-transparent text-accent ",
+        success: "bg-success border-transparent text-success-foreground",
+        info: "bg-info border-transparent text-info-foreground",
+        warning: "bg-warning border-transparent text-warning-foreground",
+        secondary: "bg-secondary border-transparent text-foreground",
+        dark: "bg-accent-foreground border-transparent text-accent",
+        live: "bg-primary-50 border-transparent text-indigo-600", // 🔴 new
       },
       variant: {
-        outline: "border border-current bg-background  ",
-        soft: "text-current bg-opacity-10  hover:text-primary-foreground",
+        outline: "border border-current bg-background",
+        soft: "text-current bg-opacity-10 hover:text-primary-foreground",
       },
     },
     compoundVariants: [
@@ -58,6 +59,11 @@ const badgeVariants = cva(
         variant: "outline",
         color: "default",
         className: "text-primary",
+      },
+      {
+        variant: "outline",
+        color: "live",
+        className: "text-indigo-600",
       },
       // soft button variant
       {
@@ -98,12 +104,18 @@ const badgeVariants = cva(
   }
 );
 
-function Badge({ className, color, variant, ...props }) {
+function Badge({ className, color, variant, children, ...props }) {
   return (
     <div
       className={cn(badgeVariants({ color, variant }), className)}
       {...props}
-    />
+    >
+      {/* Live dot indicator */}
+      {color === "live" && (
+        <span className="mr-1 inline-block w-[6px] h-[6px] rounded-full bg-primary" />
+      )}
+      {children}
+    </div>
   );
 }
 
