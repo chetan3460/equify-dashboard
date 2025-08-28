@@ -27,7 +27,11 @@ export default function ServiceProviders() {
 
       { id: "delivery-reports", className: "", component: <DeliveryReports /> },
       { id: "ongoing-tps", className: "", component: <OngoingTPS /> },
-      { id: "avg-latency", className: "", component: <AvgLatency /> },
+      {
+        id: "avg-latency",
+        className: "lg:col-span-2 h-full",
+        component: <AvgLatency />,
+      },
       {
         id: "successful-transactions",
         className: "",

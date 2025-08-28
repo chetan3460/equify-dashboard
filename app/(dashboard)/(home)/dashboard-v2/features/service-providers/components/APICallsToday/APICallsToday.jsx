@@ -47,7 +47,7 @@ const CustomTooltip = ({ active, payload, label, chartConfig }) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className="rounded-[4px] p-2"
+        className="rounded-[4px] p-2 "
         style={{
           backgroundColor: chartConfig.tooltip.contentStyle.backgroundColor,
           border: chartConfig.tooltip.contentStyle.border,

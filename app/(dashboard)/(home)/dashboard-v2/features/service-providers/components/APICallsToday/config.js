@@ -17,6 +17,9 @@ export function getChartConfig(theme) {
         activeDot: {
             r: 6,
             fill: isDark ? "#E879F9" : "#B100AE",
+            strokeWidth: 1,
+            strokeWidth: "#B100AE",
+
         },
         axis: {
             stroke: "#666",
@@ -30,7 +33,7 @@ export function getChartConfig(theme) {
             contentStyle: {
                 backgroundColor: isDark ? "#33445B" : "#fff",
                 borderRadius: "4px",
-                border: isDark ? "1px solid #4E6079" : "1px solid #fff",
+                border: isDark ? "1px solid #4E6079" : "1px solid #DADADA",
             },
             labelStyle: {
                 color: isDark ? "#E5E2DF" : "#201D1A",
