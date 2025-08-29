@@ -1,10 +1,10 @@
 "use client";
 import React, { useMemo } from "react";
 import { SortableContainer } from "@/components/draggable";
-import KafkaStatus from "./components/KafkaStatus";
-import DatabaseStatus from "./components/DatabaseStatus";
-import RedisStatus from "./components/RedisStatus";
-import WebserverStatus from "./components/WebserverStatus";
+import KafkaStatus from "./components/Kafka/KafkaStatus";
+import DatabaseStatus from "./components/DatabaseStatus/DatabaseStatus";
+import RedisStatus from "./components/RedisStatus/RedisStatus";
+import WebserverStatus from "./components/WebserverStatus/WebserverStatus";
 
 export default function Applications() {
   const items = useMemo(
@@ -26,11 +26,12 @@ export default function Applications() {
       restrictBySpan={false}
     >
       {(gridItems, SortableItem) => (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-          {gridItems.map((item, index) => SortableItem(item, index, item.className))}
+        <div className="grid grid-cols-1  gap-4">
+          {gridItems.map((item, index) =>
+            SortableItem(item, index, item.className)
+          )}
         </div>
       )}
     </SortableContainer>
   );
 }
-

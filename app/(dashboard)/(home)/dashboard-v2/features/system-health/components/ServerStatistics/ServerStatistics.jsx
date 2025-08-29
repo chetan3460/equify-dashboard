@@ -160,7 +160,7 @@ export default function ServerStatistics({ optionsMenuItems }) {
                 {tableKeys.map((key) => {
                   const isSortable = ["host", "memory", "cpu"].includes(key);
                   return (
-                    <TableHead key={key} className="sticky top-0 z-10 bg-primary/10">
+                    <TableHead key={key} className="sticky top-0 z-10 ">
                       {isSortable ? (
                         <button
                           type="button"

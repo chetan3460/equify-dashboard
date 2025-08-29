@@ -14,7 +14,11 @@ const Table = React.forwardRef(({ className, ...props }, ref) => (
 Table.displayName = "Table";
 
 const TableHeader = React.forwardRef(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn("", className)} {...props} />
+  <thead
+    ref={ref}
+    className={cn("bg-primary/10 rounded-[3px]", className)}
+    {...props}
+  />
 ));
 TableHeader.displayName = "TableHeader";
 
@@ -40,7 +44,7 @@ const TableRow = React.forwardRef(({ className, ...props }, ref) => (
   <tr
     ref={ref}
     className={cn(
-      "transition-colors rounded-[4px] data-[state=selected]:bg-muted border-b border-b-[#F1F1F1] dark:border-b-[#374151] hover:bg-muted/50",
+      "transition-colors rounded-[4px] data-[state=selected]:bg-muted border-b border-b-[#F1F1F1] dark:border-b-[#374151] hover:bg-muted/50 ",
       className
     )}
     {...props}

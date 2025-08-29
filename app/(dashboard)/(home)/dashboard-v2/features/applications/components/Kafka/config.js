@@ -1,0 +1,2 @@
+export const columns = { name: { key: "name", label: "Name" }, host: { key: "host", label: "Host name" }, cpu: { key: "cpu", label: "CPU %" }, memory: { key: "memory", label: "Memory %" }, threads: { key: "threads", label: "Threads" }, connections: { key: "connections", label: "Connections" }, heapMb: { key: "heapMb", label: "Heap (MB)" }, health: { key: "topicHealth", label: "Topic Health" }, status: { key: "status", label: "Status" }, }
+export const topicBatchSize = 10
