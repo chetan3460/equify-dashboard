@@ -1,9 +1,5 @@
 /**
  * Kafka Status Component
- *
- * This component displays Kafka service health and metrics
- * Chart Type: Status card with small line chart showing message throughput
- * Dummy Data: Kafka status, throughput, and partition information
  */
 "use client";
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
@@ -40,13 +36,10 @@ function SortArrow({ dir, active }) {
   return (
     <div
       aria-hidden
-      className={`inline-flex items-center justify-center w-5 h-5 rounded-full transition-transform duration-200 ${
-        dir === "asc" ? "rotate-180" : "rotate-0"
-      } ${
-        active
-          ? "bg-[#DADAFA] text-primary"
-          : "hover:bg-[#DADAFA] hover:text-primary"
-      }`}
+      className={`hover:bg-[#DADAFA] hover:text-primary inline-flex items-center justify-center w-5 h-5 rounded-full transition-transform duration-200
+        ${active ? "text-primary" : "hover:bg-[#DADAFA] hover:text-primary"}
+        ${dir === "asc" ? "rotate-0" : "rotate-180"}
+      `}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -74,6 +67,10 @@ export default function Kafka({ optionsMenuItems }) {
   const [visibleCount, setVisibleCount] = useState(topicBatchSize);
   const [loadingMore, setLoadingMore] = useState(false);
 
+  // topic sorting state
+  const [topicSortKey, setTopicSortKey] = useState("topic");
+  const [topicSortDir, setTopicSortDir] = useState("asc");
+
   const sortedRows = useMemo(() => {
     const rows = [...kafkaData.rows];
     rows.sort((a, b) =>
@@ -87,6 +84,24 @@ export default function Kafka({ optionsMenuItems }) {
   const activeRow = openRow != null ? sortedRows[openRow] : null;
   const topics = activeRow?.topics ?? [];
 
+  const sortedTopics = useMemo(() => {
+    if (!topics || topics.length === 0) return [];
+    const list = [...topics];
+    list.sort((a, b) => {
+      let aVal = a[topicSortKey];
+      let bVal = b[topicSortKey];
+      if (typeof aVal === "number" && typeof bVal === "number") {
+        return topicSortDir === "asc" ? aVal - bVal : bVal - aVal;
+      }
+      aVal = (aVal ?? "").toString().toLowerCase();
+      bVal = (bVal ?? "").toString().toLowerCase();
+      if (aVal < bVal) return topicSortDir === "asc" ? -1 : 1;
+      if (aVal > bVal) return topicSortDir === "asc" ? 1 : -1;
+      return 0;
+    });
+    return list;
+  }, [topics, topicSortKey, topicSortDir]);
+
   // infinite scroll in dialog
   const listRef = useRef(null);
   const onScroll = useCallback(() => {
@@ -95,18 +110,18 @@ export default function Kafka({ optionsMenuItems }) {
     const threshold = 56; // px from bottom
     const nearBottom =
       el.scrollTop + el.clientHeight >= el.scrollHeight - threshold;
-    if (nearBottom && visibleCount < topics.length) {
+    if (nearBottom && visibleCount < sortedTopics.length) {
       setLoadingMore(true);
-      // simulate async load; replace with fetch if needed
       setTimeout(() => {
-        setVisibleCount((c) => Math.min(c + topicBatchSize, topics.length));
+        setVisibleCount((c) =>
+          Math.min(c + topicBatchSize, sortedTopics.length)
+        );
         setLoadingMore(false);
       }, 600);
     }
-  }, [loadingMore, visibleCount, topics.length]);
+  }, [loadingMore, visibleCount, sortedTopics.length]);
 
   useEffect(() => {
-    // reset visible when switching rows
     if (openRow != null) setVisibleCount(topicBatchSize);
   }, [openRow]);
 
@@ -150,9 +165,9 @@ export default function Kafka({ optionsMenuItems }) {
                     }
                   }}
                   aria-sort={sortDir === "asc" ? "ascending" : "descending"}
-                  className="cursor-pointer"
+                  className="cursor-pointer flex items-center gap-1"
                 >
-                  {columns.name.label} <SortArrow dir={sortDir} />
+                  {columns.name.label} <SortArrow dir={sortDir} active />
                 </TableHead>
                 <TableHead>{columns.host.label}</TableHead>
                 <TableHead>{columns.cpu.label}</TableHead>
@@ -183,7 +198,7 @@ export default function Kafka({ optionsMenuItems }) {
                       {row.name}
                     </button>
                   </TableCell>
-                  <TableCell className="">{row.host}</TableCell>
+                  <TableCell>{row.host}</TableCell>
                   <TableCell>{row.cpu.toFixed(2)}</TableCell>
                   <TableCell>{row.memory.toFixed(2)}</TableCell>
                   <TableCell>{row.threads.toLocaleString()}</TableCell>
@@ -213,40 +228,68 @@ export default function Kafka({ optionsMenuItems }) {
               {activeRow ? `${activeRow.name} Details` : "Details"}
             </DialogTitle>
           </DialogHeader>
-          <div
-            ref={listRef}
-            onScroll={onScroll}
-            className="max-h-[420px] overflow-auto"
-          >
-            <Table>
-              <TableHeader className="sticky top-0 z-10 bg-primary/10 rounded-[3px]">
-                <TableRow className="rounded-[3px] tex">
-                  <TableHead>Topic</TableHead>
-                  <TableHead className="text-right">No. of messages</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {(topics || []).slice(0, visibleCount).map((t) => (
-                  <TableRow key={t.topic}>
-                    <TableCell className="font-normal">{t.topic}</TableCell>
-                    <TableCell className="text-right">
-                      {t.messages.toLocaleString()}
-                    </TableCell>
+
+          {!topics || topics.length === 0 ? (
+            <div className="p-4 text-center text-muted-foreground">
+              No topics available for this Kafka node.
+            </div>
+          ) : (
+            <div
+              ref={listRef}
+              onScroll={onScroll}
+              className="max-h-[420px] overflow-auto"
+            >
+              <Table>
+                <TableHeader className="sticky top-0 z-10 bg-primary/10 rounded-[3px]">
+                  <TableRow>
+                    <TableHead
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => {
+                        setTopicSortKey("topic");
+                        setTopicSortDir((d) =>
+                          topicSortKey === "topic" && d === "asc"
+                            ? "desc"
+                            : "asc"
+                        );
+                      }}
+                      className="cursor-pointer"
+                    >
+                      Topic{" "}
+                      {topicSortKey === "topic" && (
+                        <SortArrow dir={topicSortDir} active />
+                      )}
+                    </TableHead>
+                    <TableHead className="text-right">
+                      No. of messages
+                    </TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            {loadingMore && (
-              <div className="flex items-center justify-center py-4">
-                <img
-                  src="/images/kafka-spinner.png"
-                  width={20}
-                  height={20}
-                  alt="Loading more topics"
-                />
-              </div>
-            )}
-          </div>
+                </TableHeader>
+
+                <TableBody>
+                  {sortedTopics.slice(0, visibleCount).map((t) => (
+                    <TableRow key={t.topic}>
+                      <TableCell className="font-normal">{t.topic}</TableCell>
+                      <TableCell className="text-right">
+                        {t.messages.toLocaleString()}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+
+              {loadingMore && (
+                <div className="flex items-center justify-center py-4">
+                  <img
+                    src="/images/kafka-spinner.png"
+                    width={20}
+                    height={20}
+                    alt="Loading more topics"
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </Card>
