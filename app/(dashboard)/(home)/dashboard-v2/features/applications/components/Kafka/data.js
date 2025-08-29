@@ -51,5 +51,19 @@ export const kafkaData = {
             exceededThreshold: false,
             topics: [],
         },
+        {
+            "host": "equify-gcp-k4",
+            "timestamp": "2025-08-07T16:30:01",
+            "componentType": "Kafka",
+            "name": "Kafka4",
+            "status": "active",
+            "cpu": 3.3,
+            "memory": 90.6,
+            "threads": 349,
+            "connections": 58,
+            "heapMb": 274.33,
+            "topicHealth": "Warning",
+            "exceededThreshold": true
+        }
     ],
 }
