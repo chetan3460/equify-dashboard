@@ -5,7 +5,7 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-semibold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-0   disabled:opacity-50  whitespace-nowrap disabled:pointer-events-none",
+  "inline-flex items-center justify-center gap-1 rounded-md text-sm font-normal ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-0 disabled:opacity-50 whitespace-nowrap disabled:pointer-events-none",
   {
     variants: {
       color: {
@@ -17,13 +17,13 @@ const buttonVariants = cva(
         info: "bg-info text-info-foreground hover:bg-info/80",
         warning: "bg-warning text-warning-foreground hover:bg-warning/80",
         secondary:
-          "bg-secondary text-muted-foreground dark:text-default-950 hover:bg-secondary/80",
+          "bg-secondary text-muted-foreground dark:text-default-950",
         dark: "bg-accent-foreground text-accent hover:bg-accent-foreground/80",
       },
       variant: {
         outline:
-          "border border-current  bg-transparent hover:text-primary-foreground",
-        soft: " bg-opacity-10  hover:text-primary-foreground",
+          "border border-current rounded-[4px] bg-transparent",
+        soft: "bg-opacity-10 hover:text-primary-foreground",
         ghost: "bg-transparent text-current hover:text-primary-foreground",
       },
       size: {
@@ -32,7 +32,7 @@ const buttonVariants = cva(
         lg: "h-11 rounded-md px-[18px] py-[10px] text-base",
         xl: "h-12 rounded-md px-6 py-3 text-base",
         md: "h-9 rounded-md px-4 py-2",
-        xs: "h-9 rounded-md px-[14px] py-[6px]",
+        xs: "rounded-[4px] px-2 py-1 text-[12px] leading-[19px] tracking-[0.24px]",
         icon: "h-10 w-10",
       },
     },
@@ -70,18 +70,18 @@ const buttonVariants = cva(
         variant: "outline",
         color: "secondary",
         className:
-          "text-muted-foreground dark:bg-transparent hover:bg-default-500  dark:hover:bg-default-500/50 border-default-500",
+          "text-default-900  font-normal   border-[#E0E0E0] dark:border-[#5C5C5C] rounded-[4px]",
       },
       {
         variant: "outline",
         color: "default",
         className:
-          "text-primary  hover:text-primary-foreground hover:border-primary hover:bg-primary",
+          "text-primary hover:text-primary-foreground hover:border-primary hover:bg-primary",
       },
       {
         variant: "outline",
         color: "primary",
-        className: "text-primary  hover:text-primary-foreground",
+        className: "text-default-900 ",
       },
       {
         variant: "soft",
@@ -96,7 +96,7 @@ const buttonVariants = cva(
       {
         variant: "soft",
         color: "destructive",
-        className: "text-destructive  hover:text-destructive-foreground",
+        className: "text-destructive hover:text-destructive-foreground",
       },
       {
         variant: "soft",
@@ -107,7 +107,7 @@ const buttonVariants = cva(
         variant: "soft",
         color: "secondary",
         className:
-          "text-muted-foreground dark:bg-opacity-50  hover:bg-default-500/50  dark:hover:bg-opacity-100",
+          "text-muted-foreground dark:bg-opacity-50 hover:bg-default-500/50 dark:hover:bg-opacity-100",
       },
       {
         variant: "soft",
@@ -117,33 +117,33 @@ const buttonVariants = cva(
       {
         variant: "ghost",
         color: "default",
-        className: " text-primary  ",
+        className: "text-primary",
       },
       {
         variant: "ghost",
         color: "secondary",
         className:
-          " text-muted-foreground dark:bg-transparent hover:bg-default-500/50  dark:hover:bg-default-500/50",
+          "text-muted-foreground dark:bg-transparent hover:bg-default-500/50 dark:hover:bg-default-500/50",
       },
       {
         variant: "ghost",
         color: "success",
-        className: " text-success  hover:text-success-foreground ",
+        className: "text-success hover:text-success-foreground",
       },
       {
         variant: "ghost",
         color: "info",
-        className: " text-info hover:text-info-foreground ",
+        className: "text-info hover:text-info-foreground",
       },
       {
         variant: "ghost",
         color: "warning",
-        className: " text-warning hover:text-warning-foreground ",
+        className: "text-warning hover:text-warning-foreground",
       },
       {
         variant: "ghost",
         color: "destructive",
-        className: " text-destructive  hover:text-destructive-foreground ",
+        className: "text-destructive hover:text-destructive-foreground",
       },
     ],
 

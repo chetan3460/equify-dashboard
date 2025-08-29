@@ -11,6 +11,15 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import ChevronDown from "@/components/icons/ChevronDown";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+} from "@/components/ui/plain-dropdown-menu";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
@@ -94,7 +103,46 @@ export default function APICallsToday({ optionsMenuItems }) {
               <DragHandleIcon />
             </div>
           ) : (
-            <OptionsDropdown items={optionsMenuItems} />
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    color="secondary"
+                    size="xs"
+                    className="inline-flex items-center gap-1"
+                  >
+                    Server 1
+                    <ChevronDown className="ml-1" width={10} height={6} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Select server</DropdownMenuLabel>
+                  <DropdownMenuItem>Server 1</DropdownMenuItem>
+                  <DropdownMenuItem>Server 2</DropdownMenuItem>
+                  <DropdownMenuItem>Server 3</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    color="secondary"
+                    size="xs"
+                    className="inline-flex items-center gap-1"
+                  >
+                    Percentage
+                    <ChevronDown className="ml-1" width={10} height={6} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Display</DropdownMenuLabel>
+                  <DropdownMenuItem>Percentage</DropdownMenuItem>
+                  <DropdownMenuItem>Count</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <OptionsDropdown items={optionsMenuItems} />
+            </>
           )}
         </div>
       </div>
