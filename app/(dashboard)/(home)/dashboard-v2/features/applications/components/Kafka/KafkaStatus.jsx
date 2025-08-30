@@ -28,6 +28,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import Image from "next/image";
 
 /* ---------- thresholds ---------- */
 const MEMORY_THRESHOLD = 90;
@@ -72,30 +73,89 @@ function CriticalBadge() {
 
 /* ---------- Toast Component ---------- */
 function CriticalToast({ node, onClose }) {
-  useEffect(() => {
-    const timer = setTimeout(() => onClose(node.name), 5000); // auto-close
-    return () => clearTimeout(timer);
-  }, [node.name, onClose]);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => onClose(node.name), 5000); // auto-close
+  //   return () => clearTimeout(timer);
+  // }, [node.name, onClose]);
 
   return (
-    <div className="bg-red-50 border border-red-300 px-4 py-3 rounded shadow-md flex flex-col gap-2 w-72">
+    <div className="bg-[#FDF6F7] border border-destructive-700 px-3 py-4 rounded-[6px] shadow-md flex flex-col gap-1 ">
       <div className="flex items-center gap-2">
-        <span className="font-bold text-red-800">System Critical</span>
+        <span className="font-semibold text-base text-default-900 inline-flex items-center gap-1">
+          <Image
+            src="/icons/system-critical.svg"
+            alt=""
+            width={32}
+            height={32}
+            className="shrink-0"
+            priority
+          />
+          System Critical
+        </span>
         <button
           onClick={() => onClose(node.name)}
-          className="ml-auto font-bold text-red-800 hover:text-red-600"
+          className="ml-auto  hover:text-red-600 w-3 h-3 flex items-center justify-center"
+          aria-label="Dismiss system critical notification"
         >
-          ×
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+          >
+            <g clip-path="url(#clip0_376_5106)">
+              <path
+                d="M9.375 2.625L2.625 9.375"
+                stroke="black"
+                stroke-width="0.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9.375 9.375L2.625 2.625"
+                stroke="black"
+                stroke-width="0.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_376_5106">
+                <rect width="12" height="12" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
         </button>
       </div>
-      <div className="text-red-700 text-sm">
-        {node.name}’s memory is at {node.memory}% with {node.threads} threads.
+      <div className="text-default-600 text-xs font-normal">
+        {node.name}’s memory is at{" "}
+        <span className="memory font-medium">{node.memory}%</span>
+        with <span className="threads font-medium"> {node.threads} </span>{" "}
+        threads
       </div>
       <a
         href="#"
-        className="text-red-700 font-medium underline text-sm hover:text-red-900"
+        className="text-primary font-medium  text-xs flex items-center gap-1"
       >
-        Take action →
+        Take action{" "}
+        <span className="flex items-center justify-center w-3 h-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="5"
+            height="10"
+            viewBox="0 0 5 10"
+            fill="none"
+          >
+            <path
+              d="M0.5 1.25L4.25 5L0.5 8.75"
+              stroke="#4E47E1"
+              stroke-width="0.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
       </a>
     </div>
   );
@@ -117,10 +177,8 @@ function SortArrow({ dir = "asc", active = false }) {
   return (
     <div
       aria-hidden
-      className={`ml-1 inline-flex items-center justify-center w-5 h-5 rounded-full transition-transform duration-200 ${
-        active
-          ? "bg-[#DADAFA] text-primary"
-          : "hover:bg-[#DADAFA] hover:text-primary"
+      className={`hover:bg-[#DADAFA] hover:text-primary ml-1 inline-flex items-center justify-center w-5 h-5 rounded-full transition-transform duration-200 ${
+        active ? "text-default-900" : ""
       } ${dir === "asc" ? "rotate-0" : "rotate-180"}`}
     >
       <svg
@@ -408,9 +466,26 @@ export default function Kafka({ optionsMenuItems }) {
                             : "asc"
                         );
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setTopicSortKey("topic");
+                          setTopicSortDir((d) =>
+                            topicSortKey === "topic" && d === "asc"
+                              ? "desc"
+                              : "asc"
+                          );
+                        }
+                      }}
                       className="cursor-pointer"
                     >
-                      <span className="inline-flex items-center">Topic</span>
+                      <span className="inline-flex items-center">
+                        Topic{" "}
+                        <SortArrow
+                          dir={topicSortDir}
+                          active={topicSortKey === "topic"}
+                        />
+                      </span>
                     </TableHead>
                     <TableHead className="text-right">
                       No. of messages
