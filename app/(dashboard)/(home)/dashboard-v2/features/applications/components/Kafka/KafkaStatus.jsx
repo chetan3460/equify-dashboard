@@ -29,6 +29,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import Image from "next/image";
+import { createPortal } from "react-dom";
 
 /* ---------- thresholds ---------- */
 const MEMORY_THRESHOLD = 90;
@@ -73,13 +74,13 @@ function CriticalBadge() {
 
 /* ---------- Toast Component ---------- */
 function CriticalToast({ node, onClose }) {
-  // useEffect(() => {
-  //   const timer = setTimeout(() => onClose(node.name), 5000); // auto-close
-  //   return () => clearTimeout(timer);
-  // }, [node.name, onClose]);
+  useEffect(() => {
+    const timer = setTimeout(() => onClose(node.name), 5000); // auto-close
+    return () => clearTimeout(timer);
+  }, [node.name, onClose]);
 
   return (
-    <div className="bg-[#FDF6F7] border border-destructive-700 px-3 py-4 rounded-[6px] shadow-md flex flex-col gap-1 ">
+    <div className="pointer-events-auto bg-[#FDF6F7] border border-destructive-700 px-3 py-4 rounded-[6px] shadow-md flex flex-col gap-1 w-[360px] max-w-[min(90vw,360px)]">
       <div className="flex items-center gap-2">
         <span className="font-semibold text-base text-default-900 inline-flex items-center gap-1">
           <Image
@@ -130,7 +131,7 @@ function CriticalToast({ node, onClose }) {
       </div>
       <div className="text-default-600 text-xs font-normal">
         {node.name}’s memory is at{" "}
-        <span className="memory font-medium">{node.memory}%</span>
+        <span className="memory font-medium">{node.memory}% </span>
         with <span className="threads font-medium"> {node.threads} </span>{" "}
         threads
       </div>
@@ -163,12 +164,16 @@ function CriticalToast({ node, onClose }) {
 
 /* ---------- Toast Container ---------- */
 function ToastContainer({ toasts, removeToast }) {
-  return (
-    <div className="fixed top-4 right-4 flex flex-col gap-2 z-[9999] pointer-events-auto">
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+  return createPortal(
+    <div className="fixed top-4 right-6 flex flex-col gap-2 z-[999999] pointer-events-none">
       {toasts.map((node) => (
         <CriticalToast key={node.name} node={node} onClose={removeToast} />
       ))}
-    </div>
+    </div>,
+    document.body
   );
 }
 
