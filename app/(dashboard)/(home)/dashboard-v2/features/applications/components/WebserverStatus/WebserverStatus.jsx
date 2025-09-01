@@ -7,90 +7,48 @@
  */
 "use client";
 import { useMemo, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+import { useDragContext } from "@/components/draggable/DragProvider";
+import OptionsDropdown from "@/components/OptionsDropdown";
+import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 import { columns } from "./config";
 import { webservers } from "./data";
+import { useWebserverSorting } from "./hooks/useWebserverSorting";
+import WebserverTable from "./components/WebserverTable";
 
 export default function Webserver() {
   const [sortDir, setSortDir] = useState("asc");
-  const rows = useMemo(() => {
-    const list = [...webservers.rows];
-    list.sort((a, b) =>
-      sortDir === "asc"
-        ? a.service.localeCompare(b.service)
-        : b.service.localeCompare(a.service)
-    );
-    return list;
-  }, [sortDir]);
+  const [sortKey, setSortKey] = useState("service");
+  const { isGlobalDragMode } = useDragContext();
+  const rows = useWebserverSorting(webservers.rows, sortKey, sortDir);
 
   return (
-    <Card className="border-none shadow-sm">
-      <CardHeader className="flex-row items-center justify-between">
-        <CardTitle className="text-lg">Webserver</CardTitle>
-        <div className="text-xs text-muted-foreground">
-          Last updated: {webservers.lastUpdated}
+    <Card className="h-full flex flex-col">
+      <div className="flex items-center justify-between">
+        <CardHeader>
+          <CardTitle>Webserver</CardTitle>
+          <CardDescription>Last updated: {webservers.lastUpdated}</CardDescription>
+        </CardHeader>
+        <div className="flex items-center gap-2">
+          {isGlobalDragMode ? (
+            <div className="cursor-grab flex items-center">
+              <DragHandleIcon />
+            </div>
+          ) : (
+            <OptionsDropdown />
+          )}
         </div>
-      </CardHeader>
+      </div>
       <CardContent>
-        <div className="overflow-hidden rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead
-                  role="button"
-                  tabIndex={0}
-                  onClick={() =>
-                    setSortDir((d) => (d === "asc" ? "desc" : "asc"))
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-                    }
-                  }}
-                  aria-sort={sortDir === "asc" ? "ascending" : "descending"}
-                  className="cursor-pointer"
-                >
-                  {columns.service.label}{" "}
-                  <span aria-hidden className="ml-1">
-                    {sortDir === "asc" ? "↑" : "↓"}
-                  </span>
-                </TableHead>
-                <TableHead>{columns.host.label}</TableHead>
-                <TableHead>{columns.statusCode.label}</TableHead>
-                <TableHead className="text-right">
-                  {columns.status.label}
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {rows.map((r) => (
-                <TableRow key={r.service}>
-                  <TableCell className="font-medium">{r.service}</TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {r.host}
-                  </TableCell>
-                  <TableCell>{r.statusCode}</TableCell>
-                  <TableCell className="text-right">
-                    <Badge
-                      variant={r.status === "Active" ? "default" : "secondary"}
-                    >
-                      {r.status}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <div className="overflow-hidden border">
+          <WebserverTable
+            rows={rows}
+            columns={columns}
+            sortKey={sortKey}
+            sortDir={sortDir}
+            setSortKey={setSortKey}
+            setSortDir={setSortDir}
+          />
         </div>
       </CardContent>
     </Card>
