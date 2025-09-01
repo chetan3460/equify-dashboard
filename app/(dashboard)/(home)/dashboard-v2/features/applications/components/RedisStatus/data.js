@@ -6,7 +6,7 @@ export const redisData = {
             timestamp: "2025-08-07T16:30:01",
             componentType: "Redis",
             name: "Redis1",
-            status: "active",
+            status: "Active",
             cpu: 0.2,
             memory: 0,
             exceededThreshold: false,

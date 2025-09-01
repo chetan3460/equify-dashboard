@@ -56,7 +56,7 @@ export const kafkaData = {
             "timestamp": "2025-08-07T16:30:01",
             "componentType": "Kafka",
             "name": "Kafka4",
-            "status": "active",
+            "status": "Active",
             "cpu": 3.3,
             "memory": 90.6,
             "threads": 349,

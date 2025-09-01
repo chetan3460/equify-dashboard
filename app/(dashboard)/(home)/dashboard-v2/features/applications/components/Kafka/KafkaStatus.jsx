@@ -16,7 +16,7 @@ import { ASSETS, topicBatchSize, MEMORY_THRESHOLD, THREADS_THRESHOLD } from "./c
 import KafkaTable from "./components/KafkaTable";
 import TopicDialog from "./components/TopicDialog";
 import ToastContainer from "./components/ToastContainer";
-import CriticalBadge from "./components/CriticalBadge";
+import CriticalBadge from "../shared/CriticalBadge";
 
 import { useKafkaRowSorting, useTopicSorting } from "./hooks/useKafkaSorting";
 import { useKafkaToasts } from "./hooks/useKafkaToasts";

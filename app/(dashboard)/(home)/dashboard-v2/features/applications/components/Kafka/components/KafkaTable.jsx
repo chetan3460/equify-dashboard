@@ -124,7 +124,8 @@ export default function KafkaTable({
               </TableCell>
               <TableCell
                 className={cn(
-                  row?.memory >= MEMORY_THRESHOLD && "text-red-600 font-bold"
+                  row?.memory >= MEMORY_THRESHOLD &&
+                    "text-destructive-700 font-bold"
                 )}
               >
                 {Number.isFinite(row?.memory)
@@ -133,7 +134,8 @@ export default function KafkaTable({
               </TableCell>
               <TableCell
                 className={cn(
-                  row?.threads >= THREADS_THRESHOLD && "text-red-600 font-bold"
+                  row?.threads >= THREADS_THRESHOLD &&
+                    "text-destructive-700 font-bold"
                 )}
               >
                 {Number.isFinite(row?.threads)
