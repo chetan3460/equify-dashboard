@@ -5,6 +5,7 @@ import KafkaStatus from "./components/Kafka/KafkaStatus";
 import DatabaseStatus from "./components/DatabaseStatus/DatabaseStatus";
 import RedisStatus from "./components/RedisStatus/RedisStatus";
 import WebserverStatus from "./components/WebserverStatus/WebserverStatus";
+import ApplicationsComponent from "./components/Applications/Applications";
 
 export default function Applications() {
   const items = useMemo(
@@ -13,6 +14,7 @@ export default function Applications() {
       { id: "database-status", className: "", component: <DatabaseStatus /> },
       { id: "redis-status", className: "", component: <RedisStatus /> },
       { id: "webserver-status", className: "", component: <WebserverStatus /> },
+      { id: "applications-status", className: "", component: <ApplicationsComponent /> },
     ],
     []
   );

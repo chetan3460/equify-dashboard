@@ -1,41 +1,27 @@
-/**
- * Webserver Status Component
- *
- * This component displays web server health and request metrics
- * Chart Type: Status card with small line chart showing request rate
- * Dummy Data: Webserver status, request rate, and response times
- */
 "use client";
-import { useMemo, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardDescription,
-} from "@/components/ui/card";
+import React, { useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 import { columns } from "./config";
-import { webservers } from "./data";
-import { useWebserverSorting } from "./hooks/useWebserverSorting";
-import WebserverTable from "./components/WebserverTable";
+import { applicationsData } from "./data";
+import { useApplicationsSorting } from "./hooks/useApplicationsSorting";
+import ApplicationsTable from "./components/ApplicationsTable";
 
-export default function Webserver() {
+export default function ApplicationsComponent() {
   const [sortDir, setSortDir] = useState("asc");
-  const [sortKey, setSortKey] = useState("service");
+  const [sortKey, setSortKey] = useState("name");
   const { isGlobalDragMode } = useDragContext();
-  const rows = useWebserverSorting(webservers.rows, sortKey, sortDir);
+
+  const rows = useApplicationsSorting(applicationsData.applications, sortKey, sortDir);
 
   return (
     <Card className="h-full flex flex-col">
       <div className="flex items-center justify-between">
         <CardHeader>
-          <CardTitle>Webserver</CardTitle>
-          <CardDescription>
-            Last updated: {webservers.lastUpdated}
-          </CardDescription>
+          <CardTitle>Applications</CardTitle>
+          <CardDescription>Last updated: {applicationsData.lastUpdated}</CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">
           {isGlobalDragMode ? (
@@ -48,8 +34,8 @@ export default function Webserver() {
         </div>
       </div>
       <CardContent>
-        <div className="overflow-hidden">
-          <WebserverTable
+        <div className="overflow-hidden border">
+          <ApplicationsTable
             rows={rows}
             columns={columns}
             sortKey={sortKey}
