@@ -2,6 +2,7 @@
 // Presentational table for Kafka nodes. Handles sorting UI and row highlighting.
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import SortArrow from "./SortArrow";
 import { MEMORY_THRESHOLD, THREADS_THRESHOLD } from "../constants";
@@ -55,6 +56,7 @@ export default function KafkaTable({ rows, sortDir, setSortDir, columns, onOpenR
             row?.exceededThreshold ||
             (typeof row?.memory === "number" && row.memory >= MEMORY_THRESHOLD) ||
             (typeof row?.threads === "number" && row.threads >= THREADS_THRESHOLD);
+          const statusActive = String(row?.status ?? "").toLowerCase() === "active";
 
           return (
             <TableRow key={row?.name ?? idx} className={cn("hover:bg-muted/40", exceeded && "bg-destructive-foreground/10 dark:bg-red-950/20")}> 
@@ -77,7 +79,11 @@ export default function KafkaTable({ rows, sortDir, setSortDir, columns, onOpenR
                 {Number.isFinite(row?.heapMb ?? row?.heap) ? Number(row?.heapMb ?? row?.heap).toLocaleString() : "-"}
               </TableCell>
               <TableCell>{row?.topicHealth ?? "-"}</TableCell>
-              <TableCell className="text-right">{row?.status ?? "-"}</TableCell>
+              <TableCell className="text-right">
+                <Badge color={statusActive ? "success" : "destructive"}>
+                  {row?.status ?? "-"}
+                </Badge>
+              </TableCell>
             </TableRow>
           );
         })}

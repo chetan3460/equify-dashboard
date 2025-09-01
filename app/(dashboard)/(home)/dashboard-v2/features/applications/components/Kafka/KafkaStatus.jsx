@@ -60,6 +60,7 @@ export default function Kafka({ optionsMenuItems }) {
     if (openRow != null) setVisibleCount(topicBatchSize);
   }, [openRow]);
 
+
   const { isGlobalDragMode } = useDragContext();
 
   /* ---------- Toast notifications (via hook) ---------- */
@@ -68,13 +69,31 @@ export default function Kafka({ optionsMenuItems }) {
     threadsThreshold: THREADS_THRESHOLD,
   });
 
+  // Determine if any Kafka node is in a warning/critical state
+  const hasWarning = (kafkaData.rows ?? []).some(
+    (r) =>
+      Boolean(r?.exceededThreshold) ||
+      (typeof r?.memory === "number" && r.memory >= MEMORY_THRESHOLD) ||
+      (typeof r?.threads === "number" && r.threads >= THREADS_THRESHOLD) ||
+      String(r?.topicHealth ?? "").toLowerCase() === "warning"
+  );
+
   return (
     <>
       <Card className="h-full flex flex-col">
         <div className="flex items-center justify-between">
           <CardHeader>
             <CardTitle>
-              Kafka
+              <span className="inline-flex items-center">
+                Kafka
+                {hasWarning && (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style={{ marginLeft: 6 }}>
+                    <path d="M8.00065 14.6667C11.6673 14.6667 14.6673 11.6667 14.6673 8.00001C14.6673 4.33334 11.6673 1.33334 8.00065 1.33334C4.33398 1.33334 1.33398 4.33334 1.33398 8.00001C1.33398 11.6667 4.33398 14.6667 8.00065 14.6667Z" fill="#E14761" fillOpacity="0.3" stroke="#E14761" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M8 5.33334V8.66668" stroke="#B12F00" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M7.99609 10.6667H8.00208" stroke="#B12F00" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </span>
             </CardTitle>
             <CardDescription>
               Last updated: {kafkaData.lastUpdated}
@@ -128,6 +147,7 @@ export default function Kafka({ optionsMenuItems }) {
             visibleCount={visibleCount}
             onScroll={onScroll}
             listRef={listRef}
+            loadingMore={loadingMore}
           />
         </DialogContent>
       </Dialog>

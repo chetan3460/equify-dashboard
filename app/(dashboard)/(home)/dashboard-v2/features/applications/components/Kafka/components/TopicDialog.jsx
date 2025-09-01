@@ -17,6 +17,7 @@ export default function TopicDialog({
   visibleCount,
   onScroll,
   listRef,
+  loadingMore,
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -28,7 +29,7 @@ export default function TopicDialog({
         {!topics?.length ? (
           <div className="p-4 text-center text-muted-foreground">No topics available for this Kafka node.</div>
         ) : (
-          <div ref={listRef} onScroll={onScroll} className="max-h-[420px] overflow-auto">
+          <div ref={listRef} onScroll={onScroll} className="max-h-[240px] overflow-y-auto overscroll-contain">
             <Table>
               <TableHeader className="sticky top-0 z-10 bg-primary/10">
                 <TableRow>
@@ -64,6 +65,15 @@ export default function TopicDialog({
                 ))}
               </TableBody>
             </Table>
+
+            {loadingMore && (
+              <div className="flex items-center justify-center py-4">
+                <span
+                  className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600 dark:border-gray-700 dark:border-t-gray-200"
+                  aria-label="Loading more topics"
+                />
+              </div>
+            )}
           </div>
         )}
       </DialogContent>
