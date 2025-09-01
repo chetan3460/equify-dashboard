@@ -1,6 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
@@ -14,14 +20,20 @@ export default function ApplicationsComponent() {
   const [sortKey, setSortKey] = useState("name");
   const { isGlobalDragMode } = useDragContext();
 
-  const rows = useApplicationsSorting(applicationsData.applications, sortKey, sortDir);
+  const rows = useApplicationsSorting(
+    applicationsData.applications,
+    sortKey,
+    sortDir
+  );
 
   return (
     <Card className="h-full flex flex-col">
       <div className="flex items-center justify-between">
         <CardHeader>
           <CardTitle>Applications</CardTitle>
-          <CardDescription>Last updated: {applicationsData.lastUpdated}</CardDescription>
+          <CardDescription>
+            Last updated: {applicationsData.lastUpdated}
+          </CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">
           {isGlobalDragMode ? (
@@ -34,7 +46,7 @@ export default function ApplicationsComponent() {
         </div>
       </div>
       <CardContent>
-        <div className="overflow-hidden border">
+        <div className="overflow-hidden">
           <ApplicationsTable
             rows={rows}
             columns={columns}
