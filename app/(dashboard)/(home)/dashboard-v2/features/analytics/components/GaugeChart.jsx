@@ -210,7 +210,7 @@ const GaugeChart = ({
       />
       {/* Overlay center label controlled by valueLabelFontSize to ensure exact sizing */}
       {showCenterValue ? (
-        <div className="pointer-events-none absolute bottom-0 left-0 end-0 flex items-center justify-center">
+        <div className="pointer-events-none absolute bottom-[20px] left-0 end-0 flex items-center justify-center">
           <div
             className="font-semibold"
             style={{

@@ -24,7 +24,11 @@ import RedArrow from "../../ui/icons/ArrowDownTriangle16";
 import DragHandle from "../../ui/icons/DragHandleDots16";
 import { initialCardsData } from "./data/cards";
 import { getNumericValue } from "./utils/numbers";
-import { STORAGE_KEY, CONTAINER_ID, applySavedOrder } from "./components/analytic-cards-helpers";
+import {
+  STORAGE_KEY,
+  CONTAINER_ID,
+  applySavedOrder,
+} from "./components/analytic-cards-helpers";
 
 /*
   AnalyticCards
@@ -54,7 +58,7 @@ function Card({ data, isCustomizeMode = false }) {
       {/* Content */}
       {isGaugeCard ? (
         // Gauge card
-        <div className="mt-0 w-full h-[84px] flex items-center justify-center overflow-hidden">
+        <div className="mt-0 w-full h-[57px] flex items-center justify-center overflow-hidden">
           <GaugeChart
             value={getNumericValue(data.value)}
             maxValue={10000}
@@ -62,7 +66,7 @@ function Card({ data, isCustomizeMode = false }) {
             enableAnimation={true}
             showRealTimeUpdate={false}
             width={"100%"}
-            height={"100%"}
+            height={"100px"}
             arcWidth={0.14}
             centerLabelMode="short"
             showCenterValue={true}
@@ -70,19 +74,23 @@ function Card({ data, isCustomizeMode = false }) {
             showTicks={false}
             valueLabelFontSize={24}
             marginInPercent={0.01}
-            className="w-full text-default-900 dark:text-white"
+            className=" text-default-900 dark:text-white"
           />
         </div>
       ) : (
         // Metric card
         <>
           <div className="flex items-center gap-1">
-            <div className="text-2xl font-bold text-default-900">{data.value}</div>
+            <div className="text-2xl font-bold text-default-900">
+              {data.value}
+            </div>
             {data.trend === "up" && <GreenArrow />}
             {data.trend === "down" && <RedArrow />}
           </div>
           {data.change && (
-            <div className={`flex items-center gap-1 mt-1 text-[11px] ${data.color}`}>
+            <div
+              className={`flex items-center gap-1 mt-1 text-[11px] ${data.color}`}
+            >
               <span>{data.change}</span>
             </div>
           )}
@@ -106,14 +114,27 @@ function Card({ data, isCustomizeMode = false }) {
 // Sortable item wrapper (focuses on drag behavior)
 // -----------------------------
 function SortableItem({ id, children, isCustomizeMode }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
-  const style = { transform: CSS.Transform.toString(transform), transition, zIndex: isDragging ? 50 : 1 };
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : 1,
+  };
   const dragProps = isCustomizeMode ? { ...attributes, ...listeners } : {};
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`transition-all duration-300 relative ${isCustomizeMode ? "cursor-grab select-none touch-none" : ""} ${isDragging ? "scale-105 opacity-75" : ""}`}
+      className={`transition-all duration-300 relative ${
+        isCustomizeMode ? "cursor-grab select-none touch-none" : ""
+      } ${isDragging ? "scale-105 opacity-75" : ""}`}
       {...dragProps}
     >
       {children}
@@ -125,7 +146,12 @@ function SortableItem({ id, children, isCustomizeMode }) {
 // Main component
 // -----------------------------
 export default function AnalyticCards() {
-  const { isGlobalDragMode, registerContainer, unregisterContainer, markContainerChanged } = useDragContext();
+  const {
+    isGlobalDragMode,
+    registerContainer,
+    unregisterContainer,
+    markContainerChanged,
+  } = useDragContext();
 
   // Items ordering state (with original for cancel)
   const [items, setItems] = React.useState(initialCardsData);
@@ -134,7 +160,9 @@ export default function AnalyticCards() {
 
   // DnD sensors (small delay and tolerance to avoid accidental drags)
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { delay: 120, tolerance: 8 } })
+    useSensor(PointerSensor, {
+      activationConstraint: { delay: 120, tolerance: 8 },
+    })
   );
 
   // Register save/cancel with the DragProvider
@@ -161,24 +189,30 @@ export default function AnalyticCards() {
   }, []);
 
   // Drag handlers
-  const handleDragStart = React.useCallback((event) => {
-    setActiveItem(items.find((i) => i.id === event.active.id) || null);
-  }, [items]);
+  const handleDragStart = React.useCallback(
+    (event) => {
+      setActiveItem(items.find((i) => i.id === event.active.id) || null);
+    },
+    [items]
+  );
 
-  const handleDragEnd = React.useCallback((event) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) {
+  const handleDragEnd = React.useCallback(
+    (event) => {
+      const { active, over } = event;
+      if (!over || active.id === over.id) {
+        setActiveItem(null);
+        return;
+      }
+      setItems((curr) => {
+        const oldIndex = curr.findIndex((i) => i.id === active.id);
+        const newIndex = curr.findIndex((i) => i.id === over.id);
+        return arrayMove(curr, oldIndex, newIndex);
+      });
       setActiveItem(null);
-      return;
-    }
-    setItems((curr) => {
-      const oldIndex = curr.findIndex((i) => i.id === active.id);
-      const newIndex = curr.findIndex((i) => i.id === over.id);
-      return arrayMove(curr, oldIndex, newIndex);
-    });
-    setActiveItem(null);
-    markContainerChanged(CONTAINER_ID);
-  }, [markContainerChanged]);
+      markContainerChanged(CONTAINER_ID);
+    },
+    [markContainerChanged]
+  );
 
   // Render grid + overlay
   return (
@@ -192,7 +226,11 @@ export default function AnalyticCards() {
       <SortableContext items={items} strategy={rectSortingStrategy}>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {items.map((item) => (
-            <SortableItem key={item.id} id={item.id} isCustomizeMode={isGlobalDragMode}>
+            <SortableItem
+              key={item.id}
+              id={item.id}
+              isCustomizeMode={isGlobalDragMode}
+            >
               <Card data={item} isCustomizeMode={isGlobalDragMode} />
             </SortableItem>
           ))}
