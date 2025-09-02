@@ -18,7 +18,9 @@ export const TitleSection = () => {
 
       {/* Right side (Refresh Button) */}
       <div className="flex items-center gap-1 cursor-pointer text-purple dark:text-lightpurle">
-        <Refresh16 />
+        <div className="flex items-center justify-center">
+          <Refresh16 />
+        </div>
         <span className="text-xs font-semibold text-purple dark:text-lightpurle">
           Refresh Data
         </span>
@@ -27,4 +29,3 @@ export const TitleSection = () => {
   );
 };
 export default TitleSection;
-

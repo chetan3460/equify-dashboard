@@ -11,6 +11,23 @@ export const providerObj = {
     Equence: { total: 19971 },
 };
 
+/**
+ * Build chart data and lastUpdated for the provider bar chart.
+ */
+export function getProviderChartData(providerData) {
+  const obj = providerData || providerObj;
+  const chartData = Object.entries(obj)
+    .filter(([k]) => k !== "lastUpdated")
+    .map(([name, val]) => ({
+      name,
+      total: typeof val === "object" && val !== null ? val.total ?? 0 : 0,
+    }))
+    .sort((a, b) => b.total - a.total);
+
+  const lastUpdated = (providerData && providerData.lastUpdated) || providerObj.lastUpdated;
+  return { chartData, lastUpdated };
+}
+
 // Gradient definitions for each provider
 export const gradientSpecByName = {
     Airtel: {

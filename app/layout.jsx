@@ -28,9 +28,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <Script src="/suppress-warnings.js" strategy="beforeInteractive" />
-      </head>
+      <head></head>
       <body className={cn("dash-tail-app", poppins.className)}>
         <WarningSuppressor />
         <BodyClassHandler />

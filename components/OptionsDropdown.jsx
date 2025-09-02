@@ -55,7 +55,7 @@ export default function OptionsDropdown({ items, onAction }) {
           viewBox="0 0 16 17"
           fill="none"
         >
-          <g clip-path="url(#clip0_621_439)">
+          <g clipPath="url(#clip0_621_439)">
             <path
               d="M8 9.25C8.41421 9.25 8.75 8.91421 8.75 8.5C8.75 8.08579 8.41421 7.75 8 7.75C7.58579 7.75 7.25 8.08579 7.25 8.5C7.25 8.91421 7.58579 9.25 8 9.25Z"
               fill="currentColor"

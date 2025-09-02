@@ -23,7 +23,7 @@ import {
   Cell,
 } from "recharts";
 
-import { providerObj, gradientSpecByName } from "./data";
+import { getProviderChartData, gradientSpecByName } from "./data";
 import { getChartConfig } from "./config";
 
 // Format axis values (1K, 1M etc.)
@@ -59,16 +59,7 @@ export default function SMSByProvider({
   const { isGlobalDragMode } = useDragContext();
   const chartConfig = getChartConfig(theme);
 
-  const data = useMemo(() => {
-    const obj = providerData || providerObj;
-    return Object.entries(obj)
-      .filter(([k]) => k !== "lastUpdated")
-      .map(([name, val]) => ({
-        name,
-        total: typeof val === "object" && val !== null ? val.total ?? 0 : 0,
-      }))
-      .sort((a, b) => b.total - a.total);
-  }, [providerData]);
+  const { chartData, lastUpdated } = useMemo(() => getProviderChartData(providerData), [providerData]);
 
   return (
     <Card className="h-full flex flex-col">
@@ -77,9 +68,7 @@ export default function SMSByProvider({
           <CardHeader>
             <CardTitle>SMS volume by service provider</CardTitle>
             <CardDescription>
-              Last updated :{" "}
-              {(providerData && providerData.lastUpdated) ||
-                providerObj.lastUpdated}
+              Last updated : {lastUpdated}
             </CardDescription>
           </CardHeader>
           <div className="flex items-center gap-2">
@@ -104,13 +93,13 @@ export default function SMSByProvider({
           <div style={{ height }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={data}
+                data={chartData}
                 layout="vertical"
                 barCategoryGap="10%"
                 margin={{ top: 8, right: 30, left: 0, bottom: 8 }}
               >
                 <defs>
-                  {data.map((d, i) => {
+                  {chartData.map((d, i) => {
                     const spec =
                       gradientSpecByName[d.name] || gradientSpecByName.Airtel;
                     const id = `grad-${i}`;
@@ -195,7 +184,7 @@ export default function SMSByProvider({
                 />
 
                 <Bar dataKey="total" barSize={20} radius={[0, 4, 4, 0]}>
-                  {data.map((d, i) => (
+                  {chartData.map((d, i) => (
                     <Cell key={d.name} fill={`url(#grad-${i})`} />
                   ))}
                 </Bar>
