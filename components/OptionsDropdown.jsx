@@ -1,5 +1,27 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import {
+  Resize12,
+  Export12,
+  Settings12,
+  Refresh12,
+} from "@/app/(dashboard)/(home)/dashboard-v2/ui/icons";
+
+function getIconById(id) {
+  const key = typeof id === "string" ? id.toLowerCase() : id;
+  switch (key) {
+    case "resize":
+      return <Resize12 />;
+    case "export":
+      return <Export12 />;
+    case "settings":
+      return <Settings12 />;
+    case "refresh":
+      return <Refresh12 />;
+    default:
+      return null;
+  }
+}
 
 export default function OptionsDropdown({ items, onAction }) {
   const [open, setOpen] = useState(false);
@@ -63,30 +85,39 @@ export default function OptionsDropdown({ items, onAction }) {
       {/* Dropdown */}
       {open && (
         <div className="options-menu">
-          {(items && items.length > 0
-            ? items
-            : [
-                { id: "resize", label: "Resize" },
-                { id: "export", label: "Export" },
-                { id: "settings", label: "Settings" },
-                { id: "refresh", label: "Refresh" },
-              ]
-          ).map((item, idx) => (
-            <button
-              key={item.id || idx}
-              className={`options-item ${idx === 0 ? "options-item-border" : ""}`}
-              onClick={() => {
-                onAction?.(item.id);
-                item.onClick?.();
-                setOpen(false);
-              }}
-            >
-              {item.icon ? (
-                <span className="options-icon mr-1">{item.icon}</span>
-              ) : null}
-              <span>{item.label}</span>
-            </button>
-          ))}
+          {(() => {
+            const baseItems =
+              items && items.length > 0
+                ? items
+                : [
+                    { id: "resize", label: "Resize" },
+                    { id: "export", label: "Export" },
+                    { id: "settings", label: "Settings" },
+                    { id: "refresh", label: "Refresh" },
+                  ];
+            const itemsWithIcons = baseItems.map((item) => ({
+              ...item,
+              icon: item.icon ?? getIconById(item.id),
+            }));
+            return itemsWithIcons.map((item, idx) => (
+              <button
+                key={item.id || idx}
+                className={`options-item ${
+                  idx === 0 ? "options-item-border" : ""
+                }`}
+                onClick={() => {
+                  onAction?.(item.id);
+                  item.onClick?.();
+                  setOpen(false);
+                }}
+              >
+                {item.icon ? (
+                  <span className="options-icon">{item.icon}</span>
+                ) : null}
+                <span>{item.label}</span>
+              </button>
+            ));
+          })()}
         </div>
       )}
     </div>

@@ -34,6 +34,7 @@ export default function SMSVolume() {
   // Shared per-chart dropdown configurations
   const smsSelectOptions = ["Today", "This week", "This month", "YTD"];
   const defaultMenu = [
+    { id: "Resize", label: "Resize" },
     { id: "export", label: "Export" },
     { id: "settings", label: "Settings" },
     { id: "refresh", label: "Refresh" },
