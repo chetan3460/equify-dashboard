@@ -69,9 +69,11 @@ export default function NotificationMessage() {
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 mt-2 w-96 max-h-[350px] bg-white rounded-[20px] shadow-[0_2px_40px_0_rgba(0,0,0,0.17)] overflow-hidden z-50">
+        <div className="absolute right-0 mt-2 w-96 max-h-[350px] bg-card rounded-[20px] shadow-[0_2px_40px_0_rgba(0,0,0,0.17)] overflow-hidden z-50">
           <div className="p-4 pb-2">
-            <span className="text-base font-semibold">Notification</span>
+            <span className="text-base font-semibold text-default-900">
+              Notification
+            </span>
           </div>
 
           {/* Scroll area */}
@@ -91,10 +93,10 @@ export default function NotificationMessage() {
                   ${i === 0 ? "border-t" : ""} last:border-b-0`}
               >
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs text-dark dark:text-gray-100 truncate">
+                  <div className="text-xs text-default-900 truncate">
                     {item.title}
                   </div>
-                  <div className="flex items-center gap-1 mt-1 text-xs text-primary font-semibold dark:text-dark truncate max-w-[220px]">
+                  <div className="flex items-center gap-1 mt-1 text-xs text-primary font-semibold dark:text-primary truncate max-w-[220px]">
                     {item.action}{" "}
                     <span aria-hidden="true">
                       <svg
@@ -106,7 +108,7 @@ export default function NotificationMessage() {
                       >
                         <path
                           d="M1 0.5L4.50001 3.99999L1 7.5"
-                          stroke="#4E47E1"
+                          stroke="currentColor"
                           stroke-linecap="round"
                           stroke-linejoin="round"
                         />
@@ -118,7 +120,7 @@ export default function NotificationMessage() {
                 {/* Close button: default #595B61, hover red */}
                 <button
                   onClick={() => removeNotification(item.id)}
-                  className="shrink-0 text-[#595B61] hover:text-red-500 transition-colors"
+                  className="shrink-0 text-[#595B61] dark:text-default-900 hover:text-red-500 transition-colors"
                   aria-label="Dismiss notification"
                   title="Dismiss"
                 >
