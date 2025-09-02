@@ -27,8 +27,10 @@ import { getNumericValue } from "./utils";
 
 /* Card Content - The draggable inner part */
 const AnalyticCardContent = ({ data, isCustomizeMode = false }) => {
+  const isGaugeCard = data?.id === "5";
+  const containerClass = `rounded-20 p-4 bg-card shadow transition-all duration-300 group relative`;
   return (
-    <div className="rounded-20 p-4 bg-card shadow transition-all duration-300 group relative">
+    <div className={containerClass}>
       {/* Drag handle - appears in customize mode */}
       {isCustomizeMode && (
         <div className="absolute top-2 right-2 z-10 opacity-75 hover:opacity-100 transition-opacity cursor-grab">
@@ -40,13 +42,22 @@ const AnalyticCardContent = ({ data, isCustomizeMode = false }) => {
 
       {data.id === "5" ? (
         // For Current Total TPS card, show the gauge chart
-        <div className="mt-2">
+        <div className="mt-0 w-full h-[84px] flex items-center justify-center overflow-hidden">
           <GaugeChart
             value={getNumericValue(data.value)}
             maxValue={10000}
             title={data.title}
             enableAnimation={true}
             showRealTimeUpdate={false}
+            width={"100%"}
+            height={"100%"}
+            arcWidth={0.20}
+            centerLabelMode="short"
+            showCenterValue={true}
+            flatCaps={true}
+            showTicks={false}
+            valueLabelFontSize={28}
+            className="w-full max-w-[360px] text-default-900 dark:text-white"
           />
         </div>
       ) : (
@@ -54,14 +65,18 @@ const AnalyticCardContent = ({ data, isCustomizeMode = false }) => {
         <>
           {/* Value + trend arrow */}
           <div className="flex items-center gap-1">
-            <div className="text-2xl font-bold text-default-900">{data.value}</div>
+            <div className="text-2xl font-bold text-default-900">
+              {data.value}
+            </div>
             {data.trend === "up" && <GreenArrow />}
             {data.trend === "down" && <RedArrow />}
           </div>
 
           {/* Change text */}
           {data.change && (
-            <div className={`flex items-center gap-1 mt-1 text-[11px] ${data.color}`}>
+            <div
+              className={`flex items-center gap-1 mt-1 text-[11px] ${data.color}`}
+            >
               <span>{data.change}</span>
             </div>
           )}
@@ -87,7 +102,14 @@ const AnalyticCard = ({ data, isCustomizeMode }) => {
 
 /* Simple Sortable Item for Cards */
 function CardSortableItem({ id, children, isCustomizeMode }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -101,7 +123,9 @@ function CardSortableItem({ id, children, isCustomizeMode }) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`transition-all duration-300 relative ${isCustomizeMode ? "cursor-grab select-none touch-none" : ""} ${isDragging ? "scale-105 opacity-75" : ""}`}
+      className={`transition-all duration-300 relative ${
+        isCustomizeMode ? "cursor-grab select-none touch-none" : ""
+      } ${isDragging ? "scale-105 opacity-75" : ""}`}
       {...dragProps}
     >
       {children}
@@ -111,14 +135,21 @@ function CardSortableItem({ id, children, isCustomizeMode }) {
 
 /* Container */
 const AnalyticCards = () => {
-  const { isGlobalDragMode, registerContainer, unregisterContainer, markContainerChanged } = useDragContext();
+  const {
+    isGlobalDragMode,
+    registerContainer,
+    unregisterContainer,
+    markContainerChanged,
+  } = useDragContext();
   const [items, setItems] = React.useState(initialCardsData);
   const [originalItems, setOriginalItems] = React.useState(initialCardsData);
   const [activeItem, setActiveItem] = React.useState(null);
   const containerId = "analytics-cards";
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { delay: 120, tolerance: 8 } })
+    useSensor(PointerSensor, {
+      activationConstraint: { delay: 120, tolerance: 8 },
+    })
   );
 
   // Register this container with the DragProvider
@@ -126,8 +157,14 @@ const AnalyticCards = () => {
     const callbacks = {
       onSave: () => {
         // Save the current order to localStorage
-        const itemOrder = items.map((item, index) => ({ id: item.id, order: index }));
-        localStorage.setItem("dashboard-analytics-cards", JSON.stringify(itemOrder));
+        const itemOrder = items.map((item, index) => ({
+          id: item.id,
+          order: index,
+        }));
+        localStorage.setItem(
+          "dashboard-analytics-cards",
+          JSON.stringify(itemOrder)
+        );
         setOriginalItems(items);
       },
       onCancel: () => {
@@ -149,7 +186,9 @@ const AnalyticCards = () => {
         if (savedOrder && Array.isArray(savedOrder) && savedOrder.length > 0) {
           const reorderedItems = [...initialCardsData];
           savedOrder.forEach((orderItem, index) => {
-            const itemIndex = reorderedItems.findIndex((item) => item.id === orderItem.id);
+            const itemIndex = reorderedItems.findIndex(
+              (item) => item.id === orderItem.id
+            );
             if (itemIndex !== -1) {
               const [item] = reorderedItems.splice(itemIndex, 1);
               reorderedItems.splice(index, 0, item);
@@ -187,11 +226,21 @@ const AnalyticCards = () => {
   };
 
   return (
-    <DndContext sensors={sensors} collisionDetection={rectIntersection} measuring={{ droppable: { strategy: MeasuringStrategy.Always } }} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={rectIntersection}
+      measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
       <SortableContext items={items} strategy={rectSortingStrategy}>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {items.map((item) => (
-            <CardSortableItem key={item.id} id={item.id} isCustomizeMode={isGlobalDragMode}>
+            <CardSortableItem
+              key={item.id}
+              id={item.id}
+              isCustomizeMode={isGlobalDragMode}
+            >
               <AnalyticCard data={item} isCustomizeMode={isGlobalDragMode} />
             </CardSortableItem>
           ))}
@@ -210,4 +259,3 @@ const AnalyticCards = () => {
 };
 
 export default AnalyticCards;
-

@@ -72,6 +72,9 @@
     --radius: 0.5rem;
 
     --nextra-primary-hue: 250deg;
+
+    /* Theme-aware gauge tail color (used by react-gauge-component) */
+    --gauge-tail-color: hsl(var(--default-300));
   }
 
   .dark {
@@ -125,6 +128,9 @@
     --default-200: 215.3 25% 26.7%;
     --default-100: 217.2 32.6% 17.5%;
     --default-50: 222.2 47.4% 11.2%;
+
+    /* Theme-aware gauge tail color (used by react-gauge-component) */
+    --gauge-tail-color: #2a3440;
   }
 
   * {
@@ -1241,6 +1247,11 @@
 
   .no-scrollbar::-webkit-scrollbar {
     width: 0px;
+  }
+
+  /* Force flat line caps on react-gauge-component arcs */
+  .gauge-component-class path {
+    stroke-linecap: butt !important;
   }
 
   .no-scrollbar::-webkit-scrollbar-thumb {

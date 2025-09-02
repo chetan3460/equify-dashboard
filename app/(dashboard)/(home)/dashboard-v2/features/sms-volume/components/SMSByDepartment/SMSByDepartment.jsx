@@ -77,7 +77,7 @@ function DeptTooltip({ active, payload }) {
   if (!data) return null;
   return (
     <div
-      className="inline-flex flex-col items-start gap-[5.7px] p-2 rounded-[4px] border border-[#DADADA] bg-white dark:bg-[#33445B] dark:border-[#4E6079]"
+      className="inline-flex flex-col items-start gap-[5.7px] p-2 rounded-[4px] border border-[#DADADA] bg-white dark:bg-[#33445B] dark:border-[#4E6079] text-default-900"
       style={{ fontFamily: "Poppins, sans-serif", fontSize: "11.4px" }}
     >
       <p className="text-xs font-bold mb-1">{data.name}</p>
