@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTheme } from "next-themes";
 import {
@@ -71,7 +71,7 @@ const CustomTooltip = ({ active, payload, label, chartConfig }) => {
 // Custom Legend with gradient circles
 const CustomLegend = ({ payload }) => {
   return (
-    <ul className="grid grid-cols-2 md:grid-cols-3 justify-center self-center items-center gap-2  text-default-900 text-sm">
+    <ul className="grid grid-cols-2  justify-center self-center items-center gap-2  text-default-900 text-sm">
       {payload.map((entry, index) => (
         <li key={`item-${index}`} className="flex items-center gap-2">
           {/* SVG circle for gradient swatch */}
@@ -107,9 +107,25 @@ export default function ProviderTraffic({
     setCurrentPeriod(newPeriod);
     onPeriodChange?.(newPeriod);
   };
+
+  // Responsive legend placement
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 767px)");
+    const onChange = (e) => setIsMobile(e.matches);
+    setIsMobile(mq.matches);
+    if (mq.addEventListener) mq.addEventListener("change", onChange);
+    else mq.addListener(onChange);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener("change", onChange);
+      else mq.removeListener(onChange);
+    };
+  }, []);
+
   return (
     <Card className="h-full flex flex-col">
-      <div className="flex items-center justify-between">
+      <div className="flex lg:items-center justify-between lg:flex-row flex-col gap-2">
         <CardHeader>
           <CardTitle>Service Provider Traffic</CardTitle>
           <CardDescription>
@@ -137,7 +153,9 @@ export default function ProviderTraffic({
       <CardContent>
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
+            <PieChart
+              margin={{ right: isMobile ? 0 : 0, bottom: isMobile ? 24 : 0 }}
+            >
               {/* Gradient defs */}
               <defs>
                 {gradients.map((grad) =>
@@ -191,7 +209,13 @@ export default function ProviderTraffic({
                 cursor={chartConfig.tooltip.cursor}
                 content={<CustomTooltip chartConfig={chartConfig} />}
               />
-              <Legend content={<CustomLegend />} />
+              <Legend
+                content={<CustomLegend />}
+                layout={isMobile ? "horizontal" : "vertical"}
+                verticalAlign={isMobile ? "bottom" : "middle"}
+                align={isMobile ? "center" : "right"}
+                wrapperStyle={isMobile ? { width: "100%" } : undefined}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>

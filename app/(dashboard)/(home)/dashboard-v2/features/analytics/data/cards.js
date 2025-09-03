@@ -12,7 +12,7 @@ export const initialCardsData = [
     title: "Avg delivery rate",
     value: "67.8%",
     change: "2% Lower than yesterday",
-    color: "text-destructive",
+    color: "text-destructive-700",
     trend: "down",
   },
   {
@@ -28,7 +28,7 @@ export const initialCardsData = [
     title: "Failed messages",
     value: "23,456",
     change: "12% Higher than yesterday",
-    color: "text-destructive",
+    color: "text-destructive-700",
     trend: "down",
   },
   {

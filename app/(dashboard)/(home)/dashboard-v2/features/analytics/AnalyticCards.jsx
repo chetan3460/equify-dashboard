@@ -58,7 +58,7 @@ function Card({ data, isCustomizeMode = false }) {
       {/* Content */}
       {isGaugeCard ? (
         // Gauge card
-        <div className="mt-0 w-full h-[57px] flex items-center justify-center overflow-hidden">
+        <div className="mt-0 w-full h-[65px] flex items-center justify-center overflow-hidden">
           <GaugeChart
             value={getNumericValue(data.value)}
             maxValue={10000}
@@ -89,9 +89,9 @@ function Card({ data, isCustomizeMode = false }) {
           </div>
           {data.change && (
             <div
-              className={`flex items-center gap-1 mt-1 text-[11px] ${data.color}`}
+              className={`flex items-center gap-1 mt-3 text-[11px] ${data.color}`}
             >
-              <span>{data.change}</span>
+              <span className="font-medium">{data.change}</span>
             </div>
           )}
         </>

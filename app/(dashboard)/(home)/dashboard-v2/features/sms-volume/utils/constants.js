@@ -17,10 +17,10 @@ export const SMS_COLORS = {
   },
   FAILED: {
     solid: "#FF4E98",
-    gradient: "linear-gradient(228deg, #FF8F80 11.9%, #E56464 94.13%)",
+    gradient: "linear-gradient(228deg, #FF4E98 11.9%, #FF4E98 94.13%)",
     stops: [
-      { offset: "11.9%", color: "#FF8F80" },
-      { offset: "94.13%", color: "#E56464" },
+      { offset: "11.9%", color: "#FF4E98" },
+      { offset: "94.13%", color: "#FF4E98" },
     ],
   },
   RETRY: {

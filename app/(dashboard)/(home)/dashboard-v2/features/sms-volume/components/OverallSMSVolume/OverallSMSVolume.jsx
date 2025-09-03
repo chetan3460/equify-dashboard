@@ -67,7 +67,7 @@ const OverallSMSVolume = ({
         </CardHeader>
         <div className="flex items-center gap-2">
           {isGlobalDragMode ? (
-            <div className="opacity-75 hover:opacity-100 transition-opacity cursor-grab flex items-center">
+            <div className=" cursor-grab flex items-center">
               <DragHandleIcon />
             </div>
           ) : (
@@ -161,7 +161,7 @@ const OverallSMSVolume = ({
             </LineChart>
           </ResponsiveContainer>
         </div>
-        <div className="py-1 px-2 bg-[#E2F5FD] dark:bg-[#0D475F] rounded-[8px] inline-block mt-3 max-w-max">
+        <div className="py-1 px-2 bg-[#E2F5FD] dark:bg-[#0D475F] rounded-[8px] inline-block max-w-max">
           <p className="text-xs font-medium text-[#0067B1] dark:text-[#149BFC]">
             Peak traffic at 5 pm as expected
           </p>

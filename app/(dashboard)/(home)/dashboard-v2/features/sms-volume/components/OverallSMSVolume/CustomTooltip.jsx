@@ -30,7 +30,9 @@ export const CustomTooltip = ({ active, payload, label }) => {
 
       <div className="flex items-center justify-between gap-1">
         <span style={{ color: SMS_COLORS.delivered }}>Delivered:</span>
-        <span style={{ color: SMS_COLORS.delivered }}>{formatNumber(delivered)}</span>
+        <span style={{ color: SMS_COLORS.delivered }}>
+          {formatNumber(delivered)}
+        </span>
       </div>
 
       <div className="flex items-center justify-between gap-1">
@@ -47,4 +49,3 @@ export const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default CustomTooltip;
-
