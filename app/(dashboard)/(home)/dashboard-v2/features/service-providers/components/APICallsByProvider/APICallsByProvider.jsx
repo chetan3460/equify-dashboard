@@ -109,7 +109,7 @@ export default function APICallsByProvider({ optionsMenuItems }) {
         <CardHeader>
           <CardTitle>API calls by service provider today</CardTitle>
           <CardDescription>
-            Last updated : {rawData.lastUpdated}
+            Last updated ({rawData.lastUpdated})
           </CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">

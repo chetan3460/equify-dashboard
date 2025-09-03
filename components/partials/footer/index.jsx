@@ -88,7 +88,7 @@ const FooterContent = () => {
         <a
           className="text-primary"
           target="__blank"
-          href="https://codeshaper.net"
+          href="https://screenroot.com/"
         >
           Screenroot
         </a>

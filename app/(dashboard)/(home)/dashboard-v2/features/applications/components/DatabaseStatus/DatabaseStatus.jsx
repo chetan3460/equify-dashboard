@@ -41,7 +41,7 @@ export default function Database() {
         <CardHeader>
           <CardTitle>Database</CardTitle>
           <CardDescription>
-            Last updated: {databaseData.lastUpdated}
+            Last updated ({databaseData.lastUpdated})
           </CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">

@@ -11,7 +11,7 @@ export function getChartConfig(theme) {
             stroke: isDark ? "#666" : "#666",
             tick: {
                 fill: isDark ? "#E5E5E5" : "#111827",
-                fontSize: 12,
+                fontSize: 10,
             },
         },
         bar: {

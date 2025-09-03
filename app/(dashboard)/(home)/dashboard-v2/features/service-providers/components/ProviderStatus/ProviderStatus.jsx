@@ -18,18 +18,8 @@ import {
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
-
-const providerStatus = {
-  lastUpdated: "01:15:45",
-  Airtel: 1,
-  Jio: 1,
-  Vi: 1,
-  BSNL: 0,
-  Synch: 1,
-  "Text Local": 1,
-  Equance: 1,
-  Infobip: 0,
-};
+import { providerStatus, getStatusList } from "./data";
+import { PROVIDER_STATUS_CONFIG } from "./config";
 
 export default function ProviderStatus({ optionsMenuItems }) {
   const { theme } = useTheme();
@@ -46,7 +36,7 @@ export default function ProviderStatus({ optionsMenuItems }) {
         </CardHeader>
         <div className="flex items-center gap-2">
           {isGlobalDragMode ? (
-            <div className="opacity-75 hover:opacity-100 transition-opacity cursor-grab flex items-center">
+            <div className="cursor-grab flex items-center">
               {/* drag icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -96,37 +86,42 @@ export default function ProviderStatus({ optionsMenuItems }) {
 
       {/* Providers with custom scrollbar */}
       <CardContent className="flex-1 flex flex-col">
-        <div className="max-h-[260px] overflow-y-auto space-y-3 pr-2 custom-scrollbar">
-          {Object.entries(providerStatus)
-            .filter(([key]) => key !== "lastUpdated")
-            .map(([name, status], index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between py-3 gap-5 border-b border-b-[#F1F1F1] dark:border-b-[#374151] last:border-0"
-              >
-                <div className="flex items-center space-x-3">
-                  <div
-                    className={`w-[6px] h-[6px] rounded-full ${
-                      status === 1 ? "bg-success-700" : "bg-destructive-700"
-                    }`}
-                  ></div>
-                  <span className="font-medium text-sm text-default-900">
-                    {name}
-                  </span>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <span
-                    className={`px-2 py-1 rounded-[8px] text-xs font-medium ${
-                      status === 1
-                        ? "bg-success-700/20 text-success-700"
-                        : "bg-destructive-700/20 text-destructive-700"
-                    }`}
-                  >
-                    {status === 1 ? "Active" : "Inactive"}
-                  </span>
-                </div>
+        <div
+          className="overflow-y-auto space-y-3 pr-2 custom-scrollbar"
+          style={{ maxHeight: `${PROVIDER_STATUS_CONFIG.scrollMaxHeight}px` }}
+        >
+          {getStatusList(providerStatus).map(({ name, status }, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between py-3 gap-5 border-b border-b-[#F1F1F1] dark:border-b-[#374151] last:border-0"
+            >
+              <div className="flex items-center space-x-3">
+                <div
+                  className={`w-[6px] h-[6px] rounded-full ${
+                    status === 1
+                      ? PROVIDER_STATUS_CONFIG.dot.active
+                      : PROVIDER_STATUS_CONFIG.dot.inactive
+                  }`}
+                ></div>
+                <span className="font-medium text-sm text-default-900">
+                  {name}
+                </span>
               </div>
-            ))}
+              <div className="flex items-center space-x-4">
+                <span
+                  className={`px-2 py-1 rounded-[8px] text-xs font-medium ${
+                    status === 1
+                      ? PROVIDER_STATUS_CONFIG.badge.active
+                      : PROVIDER_STATUS_CONFIG.badge.inactive
+                  }`}
+                >
+                  {status === 1
+                    ? PROVIDER_STATUS_CONFIG.statusLabels.active
+                    : PROVIDER_STATUS_CONFIG.statusLabels.inactive}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

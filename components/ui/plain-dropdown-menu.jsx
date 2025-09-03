@@ -76,77 +76,85 @@ export const DropdownMenuTrigger = React.forwardRef(
     );
   }
 );
-export const DropdownMenuContent = React.forwardRef(function DropdownMenuContent(
-  { align = "start", sideOffset = 4, className, style, children, ...props },
-  forwardedRef
-) {
-  const { open, setOpen, triggerRef, contentRef } = useDropdownCtx();
-  const [mounted, setMounted] = useState(false);
-  const [coords, setCoords] = useState({ top: 0, left: 0 });
-  const ref = mergeRefs(contentRef, forwardedRef);
+export const DropdownMenuContent = React.forwardRef(
+  function DropdownMenuContent(
+    { align = "start", sideOffset = 4, className, style, children, ...props },
+    forwardedRef
+  ) {
+    const { open, setOpen, triggerRef, contentRef } = useDropdownCtx();
+    const [mounted, setMounted] = useState(false);
+    const [coords, setCoords] = useState({ top: 0, left: 0 });
+    const ref = mergeRefs(contentRef, forwardedRef);
 
-  useEffect(() => setMounted(true), []);
+    useEffect(() => setMounted(true), []);
 
-  useEffect(() => {
-    if (!open) return;
+    useEffect(() => {
+      if (!open) return;
 
-    const updatePosition = () => {
-      const triggerEl = triggerRef.current;
-      const contentEl = contentRef.current;
-      if (!triggerEl) return;
-      const rect = triggerEl.getBoundingClientRect();
-      const contentWidth = contentEl?.offsetWidth || 130;
-      let left = rect.left + window.scrollX;
-      if (align === "end") {
-        left = rect.right - contentWidth + window.scrollX;
-      }
-      const top = rect.bottom + sideOffset + window.scrollY;
-      setCoords({ top, left });
-    };
+      const updatePosition = () => {
+        const triggerEl = triggerRef.current;
+        const contentEl = contentRef.current;
+        if (!triggerEl) return;
+        const rect = triggerEl.getBoundingClientRect();
+        const contentWidth = contentEl?.offsetWidth || 130;
+        let left = rect.left + window.scrollX;
+        if (align === "end") {
+          left = rect.right - contentWidth + window.scrollX;
+        }
+        const top = rect.bottom + sideOffset + window.scrollY;
+        setCoords({ top, left });
+      };
 
-    updatePosition();
-    const onResize = () => updatePosition();
-    const onScroll = () => updatePosition();
-    window.addEventListener("resize", onResize);
-    window.addEventListener("scroll", onScroll, true);
-    return () => {
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("scroll", onScroll, true);
-    };
-  }, [open, align, sideOffset, triggerRef, contentRef]);
+      updatePosition();
+      const onResize = () => updatePosition();
+      const onScroll = () => updatePosition();
+      window.addEventListener("resize", onResize);
+      window.addEventListener("scroll", onScroll, true);
+      return () => {
+        window.removeEventListener("resize", onResize);
+        window.removeEventListener("scroll", onScroll, true);
+      };
+    }, [open, align, sideOffset, triggerRef, contentRef]);
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e) => e.key === "Escape" && setOpen(false);
-    const onDown = (e) => {
-      const t = e.target;
-      if (contentRef.current?.contains(t) || triggerRef.current?.contains(t)) return;
-      setOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
-    document.addEventListener("mousedown", onDown);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.removeEventListener("mousedown", onDown);
-    };
-  }, [open, setOpen, contentRef, triggerRef]);
+    useEffect(() => {
+      if (!open) return;
+      const onKey = (e) => e.key === "Escape" && setOpen(false);
+      const onDown = (e) => {
+        const t = e.target;
+        if (contentRef.current?.contains(t) || triggerRef.current?.contains(t))
+          return;
+        setOpen(false);
+      };
+      document.addEventListener("keydown", onKey);
+      document.addEventListener("mousedown", onDown);
+      return () => {
+        document.removeEventListener("keydown", onKey);
+        document.removeEventListener("mousedown", onDown);
+      };
+    }, [open, setOpen, contentRef, triggerRef]);
 
-  if (!mounted || !open) return null;
+    if (!mounted || !open) return null;
 
-  const panel = (
-    <div
-      ref={ref}
-      role="menu"
-      style={{ position: "absolute", top: coords.top, left: coords.left, ...style }}
-      className={cn("options-menu", className)}
-      {...props}
-    >
-      {children}
-    </div>
-  );
+    const panel = (
+      <div
+        ref={ref}
+        role="menu"
+        style={{
+          position: "absolute",
+          top: coords.top,
+          left: coords.left,
+          ...style,
+        }}
+        className={cn("options-menu", className)}
+        {...props}
+      >
+        {children}
+      </div>
+    );
 
-  return createPortal(panel, document.body);
-});
+    return createPortal(panel, document.body);
+  }
+);
 
 export const DropdownMenuItem = React.forwardRef(function DropdownMenuItem(
   { className, onClick, children, ...props },
@@ -163,7 +171,7 @@ export const DropdownMenuItem = React.forwardRef(function DropdownMenuItem(
       role="menuitem"
       tabIndex={0}
       onClick={handleClick}
-      className={cn("options-item", className)}
+      className={cn("options-item cursor-pointer", className)}
       {...props}
     >
       {children}
@@ -186,19 +194,27 @@ export const DropdownMenuLabel = React.forwardRef(function DropdownMenuLabel(
 export const DropdownMenuGroup = ({ children }) => <div>{children}</div>;
 export const DropdownMenuPortal = ({ children }) => <>{children}</>;
 export const DropdownMenuSub = ({ children }) => <div>{children}</div>;
-export const DropdownMenuSubTrigger = React.forwardRef(function DropdownMenuSubTrigger(props, ref) {
-  return <button ref={ref} {...props} />;
-});
-export const DropdownMenuSubContent = React.forwardRef(function DropdownMenuSubContent(props, ref) {
-  return <div ref={ref} {...props} />;
-});
+export const DropdownMenuSubTrigger = React.forwardRef(
+  function DropdownMenuSubTrigger(props, ref) {
+    return <button ref={ref} {...props} />;
+  }
+);
+export const DropdownMenuSubContent = React.forwardRef(
+  function DropdownMenuSubContent(props, ref) {
+    return <div ref={ref} {...props} />;
+  }
+);
 export const DropdownMenuRadioGroup = ({ children }) => <div>{children}</div>;
-export const DropdownMenuCheckboxItem = React.forwardRef(function DropdownMenuCheckboxItem(props, ref) {
-  return <div ref={ref} {...props} />;
-});
-export const DropdownMenuRadioItem = React.forwardRef(function DropdownMenuRadioItem(props, ref) {
-  return <div ref={ref} {...props} />;
-});
+export const DropdownMenuCheckboxItem = React.forwardRef(
+  function DropdownMenuCheckboxItem(props, ref) {
+    return <div ref={ref} {...props} />;
+  }
+);
+export const DropdownMenuRadioItem = React.forwardRef(
+  function DropdownMenuRadioItem(props, ref) {
+    return <div ref={ref} {...props} />;
+  }
+);
 export const DropdownMenuShortcut = ({ className, ...props }) => (
   <span
     className={cn("ml-auto text-xs tracking-widest opacity-60", className)}

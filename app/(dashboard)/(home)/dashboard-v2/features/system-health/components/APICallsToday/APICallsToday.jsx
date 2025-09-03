@@ -80,7 +80,7 @@ export default function SuccessfulTransactions({
           <CardHeader>
             <CardTitle>Network statistics</CardTitle>
             <CardDescription>
-              Last updated: {networkRaw.lastUpdated}
+              Last updated ({networkRaw.lastUpdated})
             </CardDescription>
           </CardHeader>
           <div className="flex items-center gap-2">
@@ -103,7 +103,9 @@ export default function SuccessfulTransactions({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Select server</DropdownMenuLabel>
+                    <DropdownMenuLabel className="cursor-pointer">
+                      Select server
+                    </DropdownMenuLabel>
                     <DropdownMenuItem>Server 1</DropdownMenuItem>
                     <DropdownMenuItem>Server 2</DropdownMenuItem>
                     <DropdownMenuItem>Server 3</DropdownMenuItem>
@@ -115,7 +117,7 @@ export default function SuccessfulTransactions({
                       variant="outline"
                       color="secondary"
                       size="xs"
-                      className="inline-flex items-center gap-1"
+                      className="inline-flex items-center gap-1 cursor-pointer"
                     >
                       Percentage
                       <ChevronDown className="ml-1" width={10} height={6} />
@@ -150,6 +152,7 @@ export default function SuccessfulTransactions({
                   dataKey="time"
                   axisLine={{ stroke: chartConfig.axis.stroke }}
                   tickLine={{ stroke: chartConfig.axis.stroke }}
+                  tickMargin={10}
                   tick={(props) => (
                     <CustomTick
                       {...props}
@@ -163,6 +166,7 @@ export default function SuccessfulTransactions({
                   tickFormatter={(v) => formatMs(v)}
                   axisLine={{ stroke: chartConfig.axis.stroke }}
                   tickLine={{ stroke: chartConfig.axis.stroke }}
+                  tickMargin={10}
                   tick={(props) => (
                     <CustomTick {...props} chartConfig={chartConfig} />
                   )}

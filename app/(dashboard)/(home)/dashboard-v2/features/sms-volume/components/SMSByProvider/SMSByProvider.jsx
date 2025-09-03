@@ -59,7 +59,10 @@ export default function SMSByProvider({
   const { isGlobalDragMode } = useDragContext();
   const chartConfig = getChartConfig(theme);
 
-  const { chartData, lastUpdated } = useMemo(() => getProviderChartData(providerData), [providerData]);
+  const { chartData, lastUpdated } = useMemo(
+    () => getProviderChartData(providerData),
+    [providerData]
+  );
 
   return (
     <Card className="h-full flex flex-col">
@@ -67,9 +70,7 @@ export default function SMSByProvider({
         <div className="flex items-center justify-between">
           <CardHeader>
             <CardTitle>SMS volume by service provider</CardTitle>
-            <CardDescription>
-              Last updated : {lastUpdated}
-            </CardDescription>
+            <CardDescription>Last updated ({lastUpdated})</CardDescription>
           </CardHeader>
           <div className="flex items-center gap-2">
             {isGlobalDragMode ? (
@@ -96,7 +97,7 @@ export default function SMSByProvider({
                 data={chartData}
                 layout="vertical"
                 barCategoryGap="10%"
-                margin={{ top: 8, right: 30, left: 0, bottom: 8 }}
+                margin={{ top: 8, right: 30, left: 0, bottom: 0 }}
               >
                 <defs>
                   {chartData.map((d, i) => {
@@ -155,6 +156,7 @@ export default function SMSByProvider({
                 <XAxis
                   type="number"
                   tickFormatter={formatAxis}
+                  tickMargin={10}
                   axisLine={{ stroke: chartConfig.axis.stroke }}
                   tickLine={{ stroke: chartConfig.axis.stroke }}
                   tick={(props) => (
@@ -169,6 +171,7 @@ export default function SMSByProvider({
                 <YAxis
                   type="category"
                   dataKey="name"
+                  tickMargin={10}
                   axisLine={{ stroke: chartConfig.axis.stroke }}
                   tickLine={{ stroke: chartConfig.axis.stroke }}
                   tick={(props) => (
@@ -190,6 +193,11 @@ export default function SMSByProvider({
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+          </div>
+          <div className="py-1 px-2 bg-[#E2F5FD] dark:bg-[#0D475F] rounded-[8px] inline-block mt-3 max-w-max">
+            <p className="text-xs font-medium text-[#0067B1] dark:text-[#149BFC]">
+              Overall volume 10% higher than last week
+            </p>
           </div>
         </CardContent>
       </div>

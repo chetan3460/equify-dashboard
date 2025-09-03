@@ -5,7 +5,7 @@
  */
 
 export const CHART_CONFIG = {
-  DEFAULT_HEIGHT: 384,
+  DEFAULT_HEIGHT: 400,
 };
 
 export const DEPT_GRADIENTS = [

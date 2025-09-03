@@ -79,6 +79,7 @@ export default function DatabaseTable({
               <TableCell>{Number(row.connections).toLocaleString()}</TableCell>
               <TableCell>
                 <Badge
+                  className="capitalize"
                   color={
                     String(row.status).toLowerCase() === "active"
                       ? "success"

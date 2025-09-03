@@ -9,7 +9,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 import { useDragContext } from "@/components/draggable/DragProvider";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+} from "@/components/ui/plain-dropdown-menu";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 
 import {
@@ -22,7 +28,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { chartData } from "./data";
+import { rawData, chartData } from "./data";
 import { getChartConfig } from "./config";
 
 const CustomTick = ({ x, y, payload, vertical = false, chartConfig }) => (
@@ -63,10 +69,23 @@ const CustomTooltip = ({ active, payload, chartConfig }) => {
   return null;
 };
 
-export default function OngoingTPS({ optionsMenuItems }) {
+export default function OngoingTPS({ optionsMenuItems, height = "100%" }) {
   const { isGlobalDragMode } = useDragContext();
   const { theme } = useTheme();
   const chartConfig = getChartConfig(theme);
+
+  // Support number (pixels) or string (e.g., "auto" -> fill parent)
+  const wrapperStyle =
+    typeof height === "number" ? { height: `${height}px` } : { height: "100%" };
+
+  const resolvedOptions = (optionsMenuItems && optionsMenuItems.length > 0)
+    ? optionsMenuItems
+    : [
+        { id: "resize", label: "Resize" },
+        { id: "export", label: "Export" },
+        { id: "settings", label: "Settings" },
+        { id: "refresh", label: "Refresh" },
+      ];
 
   return (
     <Card className="h-full flex flex-col">
@@ -80,7 +99,7 @@ export default function OngoingTPS({ optionsMenuItems }) {
           </div>
 
           <CardDescription>
-            Last updated: {new Date().toLocaleTimeString()}
+            Last updated ({rawData.lastUpdated})
           </CardDescription>
         </CardHeader>
 
@@ -90,13 +109,67 @@ export default function OngoingTPS({ optionsMenuItems }) {
               <DragHandleIcon />
             </div>
           ) : (
-            <OptionsDropdown items={optionsMenuItems} />
+            <>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  aria-label="Open options"
+                  className="text-default-900 inline-flex items-center justify-center h-8 w-8 rounded hover:bg-default-100"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="17"
+                    viewBox="0 0 16 17"
+                    fill="none"
+                  >
+                    <g clipPath="url(#clip0_621_439)">
+                      <path
+                        d="M8 9.25C8.41421 9.25 8.75 8.91421 8.75 8.5C8.75 8.08579 8.41421 7.75 8 7.75C7.58579 7.75 7.25 8.08579 7.25 8.5C7.25 8.91421 7.58579 9.25 8 9.25Z"
+                        fill="currentColor"
+                      />
+                      <path
+                        d="M8 5C8.41421 5 8.75 4.66421 8.75 4.25C8.75 3.83579 8.41421 3.5 8 3.5C7.58579 3.5 7.25 3.83579 7.25 4.25C7.25 4.66421 7.58579 5 8 5Z"
+                        fill="currentColor"
+                      />
+                      <path
+                        d="M8 13.5C8.41421 13.5 8.75 13.1642 8.75 12.75C8.75 12.3358 8.41421 12 8 12C7.58579 12 7.25 12.3358 7.25 12.75C7.25 13.1642 7.58579 13.5 8 13.5Z"
+                        fill="currentColor"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_621_439">
+                        <rect
+                          width="16"
+                          height="16"
+                          fill="white"
+                          transform="translate(0 0.5)"
+                        />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Options</DropdownMenuLabel>
+                {resolvedOptions.map((item, idx) => (
+                  <DropdownMenuItem
+                    key={item.id || idx}
+                    className="px-2 py-1.5 text-sm"
+                    onClick={item.onClick}
+                  >
+                    {item.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            </>
           )}
         </div>
       </div>
 
       <CardContent className="flex-1">
-        <div className="h-80">
+        <div style={wrapperStyle}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={chartData}

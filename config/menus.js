@@ -7,6 +7,8 @@ export const menusConfig = {
       icon: DashBoard,
       child: [
         { title: "Dashboard V2", href: "/dashboard-v2", icon: Graph },
+        { title: "Interactive", href: "/dashboard-v2/interactive", icon: Graph },
+        { title: "Guides", href: "/dashboard-v2/guides", icon: Graph },
       ],
     },
   ],
@@ -17,6 +19,8 @@ export const menusConfig = {
         icon: DashBoard,
         child: [
           { title: "Dashboard V2", href: "/dashboard-v2", icon: Graph },
+          { title: "Interactive", href: "/dashboard-v2/interactive", icon: Graph },
+          { title: "Guides", href: "/dashboard-v2/guides", icon: Graph },
         ],
       },
     ],
@@ -30,6 +34,8 @@ export const menusConfig = {
         isHide: false,
         child: [
           { title: "Dashboard V2", href: "/dashboard-v2", icon: Graph },
+          { title: "Interactive", href: "/dashboard-v2/interactive", icon: Graph },
+          { title: "Guides", href: "/dashboard-v2/guides", icon: Graph },
         ],
       },
     ],

@@ -28,7 +28,6 @@ const formatNumber = (num) => {
   return num.toString();
 };
 
-
 function DeptTooltip({ active, payload }) {
   if (!active || !payload || payload.length === 0) return null;
   const data = payload[0]?.payload;
@@ -71,18 +70,21 @@ export default function SMSByDepartment({
     onPeriodChange?.(newPeriod);
   };
 
-  const { chartData, lastUpdated } = useMemo(() => getDeptChartData(deptData), [deptData]);
+  const { chartData, lastUpdated } = useMemo(
+    () => getDeptChartData(deptData),
+    [deptData]
+  );
 
   return (
     <Card className="h-full flex flex-col">
       <div className="flex items-center justify-between">
         <CardHeader>
           <CardTitle> SMS Volume by Department</CardTitle>
-          <CardDescription>Last updated: {lastUpdated}</CardDescription>
+          <CardDescription>Last updated ({lastUpdated})</CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">
           {isGlobalDragMode ? (
-            <div className="opacity-75 hover:opacity-100 transition-opacity cursor-grab flex items-center">
+            <div className="cursor-grab flex items-center">
               <DragHandleIcon />
             </div>
           ) : (
@@ -97,10 +99,10 @@ export default function SMSByDepartment({
           )}
         </div>
       </div>
-      <CardContent className="flex-1 flex flex-col">
-        <div className="relative" style={{ height: `${height}px` }}>
+      <CardContent className="flex-1 flex flex-col justify-between">
+        <div className="relative size-full">
           <div className="flex md:flex-row flex-col items-center gap-6 h-full">
-            <div className="flex-1 w-full h-full">
+            <div className="flex-1 w-full h-full ">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <defs>
@@ -153,7 +155,7 @@ export default function SMSByDepartment({
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    outerRadius="80%"
+                    outerRadius="90%"
                     dataKey="value"
                   >
                     {chartData.map((entry, index) => (
@@ -168,7 +170,7 @@ export default function SMSByDepartment({
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="md:flex-1 grid md:grid-cols-1 grid-cols-3 md:gap-1 gap-3 md:mb-0 mb-3">
+            <div className="flex-none  md:w-32 grid md:grid-cols-1 grid-cols-3 md:gap-2 gap-3 md:mb-0 mb-3">
               {chartData.map((entry, index) => (
                 <div key={index} className="flex items-center space-x-3">
                   <div

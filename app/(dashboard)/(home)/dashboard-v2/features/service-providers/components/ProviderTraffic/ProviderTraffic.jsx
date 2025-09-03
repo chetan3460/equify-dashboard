@@ -31,7 +31,7 @@ const CustomTooltip = ({ active, payload, label, chartConfig }) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className="p-2 rounded-[4px]"
+        className="p-2 rounded-[4px] flex flex-col gap-1"
         style={{
           backgroundColor: chartConfig.tooltip.contentStyle.backgroundColor,
           border: chartConfig.tooltip.contentStyle.border,
@@ -43,7 +43,7 @@ const CustomTooltip = ({ active, payload, label, chartConfig }) => {
         {payload.map((entry, index) => (
           <div
             key={`tooltip-item-${index}`}
-            className="flex items-center justify-between gap-1"
+            className="flex  items-center justify-between gap-1"
           >
             {/* Series name */}
             <span
@@ -129,7 +129,7 @@ export default function ProviderTraffic({
         <CardHeader>
           <CardTitle>Service Provider Traffic</CardTitle>
           <CardDescription>
-            Last updated : {rawData.lastUpdated}
+            Last updated ({rawData.lastUpdated})
           </CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">

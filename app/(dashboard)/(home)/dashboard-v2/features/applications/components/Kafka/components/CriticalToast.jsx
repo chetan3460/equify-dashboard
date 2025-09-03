@@ -5,13 +5,13 @@ import Image from "next/image";
 import { useEffect } from "react";
 
 export default function CriticalToast({ node, onClose, iconSrc }) {
-  useEffect(() => {
-    const t = setTimeout(() => onClose(node.name), 5000);
-    return () => clearTimeout(t);
-  }, [node.name, onClose]);
+  // useEffect(() => {
+  //   const t = setTimeout(() => onClose(node.name), 5000);
+  //   return () => clearTimeout(t);
+  // }, [node.name, onClose]);
 
   return (
-    <div className="pointer-events-auto bg-[#FDF6F7] border border-destructive-700 px-3 py-4 rounded-[6px] shadow-md flex flex-col gap-1 w-[360px] max-w-[min(90vw,360px)]">
+    <div className="pointer-events-auto bg-[#FDF6F7] dark:bg-card border border-destructive-700 px-3 py-4 rounded-[6px] shadow-md flex flex-col gap-1 w-[360px] max-w-[min(90vw,360px)]">
       <div className="flex items-center gap-2">
         <span className="font-semibold text-base text-default-900 inline-flex items-center gap-1">
           <Image
@@ -26,19 +26,19 @@ export default function CriticalToast({ node, onClose, iconSrc }) {
         </span>
         <button
           onClick={() => onClose(node.name)}
-          className="ml-auto hover:text-red-600 w-3 h-3 flex items-center justify-center"
-          aria-label="Dismiss system critical notification"
+          className="ml-auto hover:text-red-600  text-default-900 w-3 h-3 flex items-center justify-center"
+          aria-label="Dismiss system critical notification "
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="12"
             height="12"
             viewBox="0 0 12 12"
-            fill="none"
+            fill="currentColor"
           >
             <path
               d="M9.375 2.625L2.625 9.375M9.375 9.375L2.625 2.625"
-              stroke="black"
+              stroke="currentColor"
               strokeWidth="0.75"
               strokeLinecap="round"
               strokeLinejoin="round"

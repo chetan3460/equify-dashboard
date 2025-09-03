@@ -32,7 +32,7 @@ export default function IODetailsTable({ ioDetails }) {
         </div>
       </div>
       <Table>
-        <TableHeader className="bg-[#F2F2FF] rounded-[3px]">
+        <TableHeader className="bg-[#F2F2FF] dark:bg-primary/10  rounded-[3px]">
           <TableRow>
             <TableHead className="p-3">Type</TableHead>
             <TableHead className="p-3">Name</TableHead>

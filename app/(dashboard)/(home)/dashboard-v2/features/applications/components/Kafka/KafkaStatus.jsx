@@ -4,14 +4,25 @@
 // Container component that wires together state, hooks, and presentational components.
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 
 import { kafkaData } from "./config"; // mock/demo data lives here
 import { columns } from "./columns"; // table labels
-import { ASSETS, topicBatchSize, MEMORY_THRESHOLD, THREADS_THRESHOLD } from "./constants"; // small shared config
+import {
+  ASSETS,
+  topicBatchSize,
+  MEMORY_THRESHOLD,
+  THREADS_THRESHOLD,
+} from "./constants"; // small shared config
 
 import KafkaTable from "./components/KafkaTable";
 import TopicDialog from "./components/TopicDialog";
@@ -20,7 +31,12 @@ import CriticalBadge from "../shared/CriticalBadge";
 
 import { useKafkaRowSorting, useTopicSorting } from "./hooks/useKafkaSorting";
 import { useKafkaToasts } from "./hooks/useKafkaToasts";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 /* ---------- Kafka Component ---------- */
 export default function Kafka({ optionsMenuItems }) {
@@ -61,7 +77,6 @@ export default function Kafka({ optionsMenuItems }) {
     if (openRow != null) setVisibleCount(topicBatchSize);
   }, [openRow]);
 
-
   const { isGlobalDragMode } = useDragContext();
 
   /* ---------- Toast notifications (via hook) ---------- */
@@ -87,13 +102,11 @@ export default function Kafka({ optionsMenuItems }) {
             <CardTitle>
               <span className="inline-flex items-center">
                 Kafka
-                {hasWarning && (
-                  <CriticalBadge size={16} className="ml-1" />
-                )}
+                {hasWarning && <CriticalBadge size={16} className="ml-1" />}
               </span>
             </CardTitle>
             <CardDescription>
-              Last updated: {kafkaData.lastUpdated}
+              Last updated ({kafkaData.lastUpdated})
             </CardDescription>
           </CardHeader>
           <div className="flex items-center gap-2">
@@ -121,7 +134,11 @@ export default function Kafka({ optionsMenuItems }) {
       </Card>
 
       {/* Toast notifications */}
-      <ToastContainer toasts={toasts} removeToast={removeToast} iconSrc={ASSETS.systemCriticalIcon} />
+      <ToastContainer
+        toasts={toasts}
+        removeToast={removeToast}
+        iconSrc={ASSETS.systemCriticalIcon}
+      />
 
       {/* Dialog */}
       <Dialog open={openRow != null} onOpenChange={() => setOpenRow(null)}>
