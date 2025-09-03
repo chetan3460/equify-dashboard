@@ -8,12 +8,12 @@ import VerticalHeader from "./vertical-header";
 import NotificationMessage from "./notification-message";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import MobileMenuHandler from "./mobile-menu-handler";
-import ClassicHeader from "./layout/classic-header";
+import Header from "./Header";
 import FullScreen from "./full-screen";
 import CustomizeButton from "./customize-button";
 
 const NavTools = ({ isDesktop }) => (
-  <div className="nav-tools flex items-center gap-6">
+  <div className="nav-tools flex items-center gap-2 md:gap-6">
     <CustomizeButton />
     <NotificationMessage />
     {isDesktop && <FullScreen />}
@@ -25,13 +25,13 @@ const NavTools = ({ isDesktop }) => (
   </div>
 );
 
-const Header = ({ handleOpenSearch }) => {
+const MainHeader = ({ handleOpenSearch }) => {
   const { collapsed, sidebarType } = useSidebar();
   const { navbarType } = useThemeStore();
   const isDesktop = useMediaQuery("(min-width: 1280px)");
 
   return (
-    <ClassicHeader
+    <Header
       className={cn({
         "xl:ml-[244px]": !collapsed,
         "xl:ml-[72px]": collapsed,
@@ -47,8 +47,8 @@ const Header = ({ handleOpenSearch }) => {
           <NavTools isDesktop={isDesktop} />
         </div>
       </div>
-    </ClassicHeader>
+    </Header>
   );
 };
 
-export default Header;
+export default MainHeader;
