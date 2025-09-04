@@ -102,7 +102,7 @@ export default function SMSVolume() {
       restrictBySpan={false}
     >
       {(gridItems, SortableItem) => (
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-stretch gap-y-2 gap-x-2">
+        <div className="grid grid-cols-1 lg:grid-cols-2  gap-4">
           {gridItems.map((item, index) =>
             SortableItem(item, index, item.className)
           )}

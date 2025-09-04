@@ -96,7 +96,7 @@ export default function SuccessfulTransactions({
                       variant="outline"
                       color="secondary"
                       size="xs"
-                      className="inline-flex items-center gap-1"
+                      className="inline-flex items-center gap-1 px-3 py-2 text-xs font-normal"
                     >
                       Server 1
                       <ChevronDown className="ml-1" width={10} height={6} />
@@ -117,7 +117,7 @@ export default function SuccessfulTransactions({
                       variant="outline"
                       color="secondary"
                       size="xs"
-                      className="inline-flex items-center gap-1 cursor-pointer"
+                      className="inline-flex items-center gap-1 cursor-pointer px-3 py-2 text-xs font-normal"
                     >
                       Percentage
                       <ChevronDown className="ml-1" width={10} height={6} />
