@@ -86,14 +86,18 @@ export default function OngoingTPS({ optionsMenuItems, height = 340 }) {
       : { height };
 
   const resolvedOptions =
-    optionsMenuItems && optionsMenuItems.length > 0
+    (optionsMenuItems && optionsMenuItems.length > 0
       ? optionsMenuItems
       : [
           { id: "resize", label: "Resize" },
           { id: "export", label: "Export" },
           { id: "settings", label: "Settings" },
           { id: "refresh", label: "Refresh" },
-        ];
+        ]).map((opt) =>
+      opt.id === "export"
+        ? { ...opt, onClick: () => import("@/lib/csv").then(({ exportCsv }) => exportCsv("ongoing-tps.csv", chartData)) }
+        : opt
+    );
 
   return (
     <Card className="h-full flex flex-col">

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
+import { exportCsv } from "@/lib/csv";
 import DashboardSelect from "@/components/dasboard-select";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 
@@ -114,7 +115,12 @@ export default function APICallsToday({
                 onChange={onPeriodChange}
                 options={selectOptions}
               />
-              <OptionsDropdown items={optionsMenuItems} />
+              <OptionsDropdown
+                items={optionsMenuItems}
+                onAction={(id) => {
+                  if (id === "export") exportCsv("api-calls-today.csv", chartData);
+                }}
+              />
             </>
           )}
         </div>

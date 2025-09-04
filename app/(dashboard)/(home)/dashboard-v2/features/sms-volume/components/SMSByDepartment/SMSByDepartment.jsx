@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import DashboardSelect from "@/components/dasboard-select";
 import OptionsDropdown from "@/components/OptionsDropdown";
+import { exportCsv } from "@/lib/csv";
 import {
   Card,
   CardContent,
@@ -145,7 +146,12 @@ export default function SMSByDepartment({
                 onChange={handlePeriodChange}
                 options={selectOptions}
               />
-              <OptionsDropdown items={optionsMenuItems} />
+              <OptionsDropdown
+                items={optionsMenuItems}
+                onAction={(id) => {
+                  if (id === "export") exportCsv("sms-by-department.csv", chartData);
+                }}
+              />
             </>
           )}
         </div>

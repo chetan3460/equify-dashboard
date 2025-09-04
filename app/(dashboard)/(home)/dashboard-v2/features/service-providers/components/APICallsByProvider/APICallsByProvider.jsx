@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
+import { exportCsv } from "@/lib/csv";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 
 import {
@@ -121,7 +122,12 @@ export default function APICallsByProvider({ optionsMenuItems }) {
               <DragHandleIcon />
             </div>
           ) : (
-            <OptionsDropdown items={optionsMenuItems} />
+            <OptionsDropdown
+              items={optionsMenuItems}
+              onAction={(id) => {
+                if (id === "export") exportCsv("api-calls-by-provider.csv", chartData);
+              }}
+            />
           )}
         </div>
       </div>

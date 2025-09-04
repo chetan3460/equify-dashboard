@@ -35,6 +35,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/plain-dropdown-menu";
 import OptionsDropdown from "@/components/OptionsDropdown";
+import { exportCsv } from "@/lib/csv";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 
@@ -119,7 +120,12 @@ const OverallSMSVolume = ({
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <OptionsDropdown items={optionsMenuItems} />
+              <OptionsDropdown
+                items={optionsMenuItems}
+                onAction={(id) => {
+                  if (id === "export") exportCsv("overall-sms-volume.csv", chartData);
+                }}
+              />
             </>
           )}
         </div>

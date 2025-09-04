@@ -128,6 +128,13 @@ export default function DeliveryReports({
         { id: "refresh", label: "Refresh" },
       ];
 
+  // Wire export action
+  const optionsWithActions = resolvedOptions.map((opt) =>
+    opt.id === "export"
+      ? { ...opt, onClick: () => import("@/lib/csv").then(({ exportCsv }) => exportCsv("delivery-reports.csv", chartData)) }
+      : opt
+  );
+
   const handlePeriodChange = (newPeriod) => {
     setCurrentPeriod(newPeriod);
     onPeriodChange?.(newPeriod);
@@ -196,7 +203,7 @@ export default function DeliveryReports({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuLabel>Options</DropdownMenuLabel>
-                  {resolvedOptions.map((item, idx) => (
+                  {optionsWithActions.map((item, idx) => (
                     <DropdownMenuItem
                       key={item.id || idx}
                       className="px-2 py-1.5 text-sm"

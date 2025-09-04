@@ -11,6 +11,7 @@ import {
 import { useDragContext } from "@/components/draggable/DragProvider";
 import DashboardSelect from "@/components/dasboard-select";
 import OptionsDropdown from "@/components/OptionsDropdown";
+import { exportCsv } from "@/lib/csv";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 
 import {
@@ -144,7 +145,12 @@ export default function ProviderTraffic({
                 onChange={handlePeriodChange}
                 options={selectOptions}
               />
-              <OptionsDropdown items={optionsMenuItems} />
+              <OptionsDropdown
+                items={optionsMenuItems}
+                onAction={(id) => {
+                  if (id === "export") exportCsv("service-provider-traffic.csv", data);
+                }}
+              />
             </>
           )}
         </div>
