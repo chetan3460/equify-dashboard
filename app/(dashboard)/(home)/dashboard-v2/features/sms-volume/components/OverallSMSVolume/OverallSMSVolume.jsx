@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import {
   LineChart,
@@ -25,7 +25,15 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import DashboardSelect from "@/components/dasboard-select";
+import { Button } from "@/components/ui/button";
+import ChevronDown from "@/components/icons/ChevronDown";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+} from "@/components/ui/plain-dropdown-menu";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
@@ -39,7 +47,9 @@ const CustomTick = ({ x, y, payload, mode, isYAxis = false }) => (
       mode === "dark" ? "fill-gray-300" : "fill-[#201D1A]"
     }`}
   >
-    {payload.value}
+    {isYAxis && typeof payload?.value === "number"
+      ? formatYAxis(payload.value)
+      : payload?.value}
   </text>
 );
 
@@ -54,7 +64,16 @@ const OverallSMSVolume = ({
   const { theme: mode } = useTheme();
   const { isGlobalDragMode } = useDragContext();
 
-  const chartData = getChartData(selectedPeriod, smsData);
+  // Manage selected period: use parent-controlled value if handler provided, otherwise local state
+  const [internalPeriod, setInternalPeriod] = useState(
+    selectedPeriod || "Today"
+  );
+  useEffect(() => {
+    setInternalPeriod(selectedPeriod || "Today");
+  }, [selectedPeriod]);
+  const effectivePeriod = onPeriodChange ? selectedPeriod : internalPeriod;
+
+  const chartData = getChartData(effectivePeriod, smsData);
 
   return (
     <Card className="h-full flex flex-col">
@@ -72,17 +91,40 @@ const OverallSMSVolume = ({
             </div>
           ) : (
             <>
-              <DashboardSelect
-                value={selectedPeriod}
-                onChange={onPeriodChange}
-                options={selectOptions}
-              />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    color="secondary"
+                    size="xs"
+                    className="inline-flex items-center gap-1"
+                  >
+                    {effectivePeriod || "Today"}
+                    <ChevronDown className="ml-1" width={10} height={6} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Select period</DropdownMenuLabel>
+                  {selectOptions.map((opt) => (
+                    <DropdownMenuItem
+                      key={opt}
+                      onClick={() =>
+                        onPeriodChange
+                          ? onPeriodChange(opt)
+                          : setInternalPeriod(opt)
+                      }
+                    >
+                      {opt}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
               <OptionsDropdown items={optionsMenuItems} />
             </>
           )}
         </div>
       </div>
-      <CardContent className="flex-1 flex flex-col">
+      <CardContent className="flex-1 flex flex-col justify-between">
         <SMSLegend />
         <div className="relative" style={{ height: `${height}px` }}>
           <ResponsiveContainer width="100%" height="100%">
@@ -107,14 +149,14 @@ const OverallSMSVolume = ({
               />
               <XAxis
                 dataKey="time"
-                axisLine={{ stroke: "#666", strokeWidth: 0.475 }}
-                tickLine={{ stroke: "#666", strokeWidth: 0.475 }}
+                axisLine={{ stroke: "#666", strokeWidth: 1 }}
+                tickLine={{ stroke: "#666", strokeWidth: 1 }}
                 tick={(props) => <CustomTick {...props} mode={mode} />}
               />
               <YAxis
                 tickFormatter={formatYAxis}
-                axisLine={{ stroke: "#666", strokeWidth: 0.475 }}
-                tickLine={{ stroke: "#666", strokeWidth: 0.475 }}
+                axisLine={{ stroke: "#666", strokeWidth: 1 }}
+                tickLine={{ stroke: "#666", strokeWidth: 1 }}
                 tick={(props) => (
                   <CustomTick {...props} mode={mode} isYAxis={true} />
                 )}

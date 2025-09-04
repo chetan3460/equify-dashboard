@@ -1,5 +1,5 @@
 import React from "react";
-import { formatNumber } from "../../utils/utils";
+import { formatCompactNumber } from "@/lib/number";
 
 const SMS_COLORS = {
   total: "#00B6F1",
@@ -21,28 +21,28 @@ export const CustomTooltip = ({ active, payload, label }) => {
       className="inline-flex flex-col items-start gap-[5.7px] p-2 rounded-[4px] border border-[#DADADA] bg-white dark:bg-[#33445B] dark:border-[#4E6079]"
       style={{ fontFamily: "Poppins, sans-serif", fontSize: "11.4px" }}
     >
-      <p className="text-gray-900 font-medium mb-1">Time: {label}</p>
+      <p className="text-default-900 font-medium mb-1">Time: {label}</p>
 
       <div className="flex items-center justify-between gap-1">
         <span style={{ color: SMS_COLORS.total }}>Total SMS:</span>
-        <span style={{ color: SMS_COLORS.total }}>{formatNumber(total)}</span>
+        <span style={{ color: SMS_COLORS.total }}>{formatCompactNumber(total)}</span>
       </div>
 
       <div className="flex items-center justify-between gap-1">
         <span style={{ color: SMS_COLORS.delivered }}>Delivered:</span>
         <span style={{ color: SMS_COLORS.delivered }}>
-          {formatNumber(delivered)}
+          {formatCompactNumber(delivered)}
         </span>
       </div>
 
       <div className="flex items-center justify-between gap-1">
         <span style={{ color: SMS_COLORS.failed }}>Failed:</span>
-        <span style={{ color: SMS_COLORS.failed }}>{formatNumber(failed)}</span>
+        <span style={{ color: SMS_COLORS.failed }}>{formatCompactNumber(failed)}</span>
       </div>
 
       <div className="flex items-center justify-between gap-1">
         <span style={{ color: SMS_COLORS.retry }}>Retry:</span>
-        <span style={{ color: SMS_COLORS.retry }}>{formatNumber(retry)}</span>
+        <span style={{ color: SMS_COLORS.retry }}>{formatCompactNumber(retry)}</span>
       </div>
     </div>
   );

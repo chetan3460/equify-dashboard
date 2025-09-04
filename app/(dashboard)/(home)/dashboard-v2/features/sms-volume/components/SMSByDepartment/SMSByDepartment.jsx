@@ -75,6 +75,57 @@ export default function SMSByDepartment({
     [deptData]
   );
 
+  // Build a parsed gradient list from config to support both SVG defs and CSS backgrounds
+  const gradientMeta = useMemo(() => {
+    return DEPT_GRADIENTS.map((grad) => {
+      // Try to extract two colors from the svgDefinition string
+      const radialMatch = grad.svgDefinition.match(
+        /radial-gradient\(([^,]+),\s*([^\s]+)\s+([^,]+),\s*([^\s]+)\s+([^)]+)\)/
+      );
+      if (radialMatch) {
+        const [, , color1, , color2] = radialMatch;
+        return {
+          id: grad.id,
+          type: "radial",
+          colors: [color1, color2],
+          css: `radial-gradient(circle, ${color1} 0%, ${color2} 100%)`,
+        };
+      }
+      const linearMatch = grad.svgDefinition.match(
+        /linear-gradient\([^,]*,\s*([^\s]+)\s+[^,]*,\s*([^\s]+)\s+[^)]*\)/
+      );
+      if (linearMatch) {
+        const [, color1, color2] = linearMatch;
+        return {
+          id: grad.id,
+          type: "linear",
+          colors: [color1, color2],
+          css: `linear-gradient(135deg, ${color1} 8.37%, ${color2} 67.24%)`,
+        };
+      }
+      return {
+        id: grad.id,
+        type: "linear",
+        colors: ["#999", "#555"],
+        css: "linear-gradient(135deg, #999 0%, #555 100%)",
+      };
+    });
+  }, []);
+
+  // Assign gradients randomly (not tied to data item), stable per render based on current data length
+  const assigned = useMemo(() => {
+    const pool = [...gradientMeta];
+    // Shuffle pool
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return chartData.map((item, idx) => ({
+      item,
+      grad: pool[idx % pool.length],
+    }));
+  }, [chartData, gradientMeta]);
+
   return (
     <Card className="h-full flex flex-col">
       <div className="flex items-center justify-between">
@@ -151,34 +202,33 @@ export default function SMSByDepartment({
                     })}
                   </defs>
                   <Pie
-                    data={chartData}
+                    data={assigned.map((a) => a.item)}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
                     outerRadius="90%"
                     dataKey="value"
+                    stroke="#fff" // white border
+                    strokeWidth={1} // line thickness
                   >
-                    {chartData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={`url(#${entry.gradientId})`}
-                        stroke="none"
-                      />
+                    {assigned.map((a, index) => (
+                      <Cell key={`cell-${index}`} fill={`url(#${a.grad.id})`} />
                     ))}
                   </Pie>
+
                   <Tooltip content={<DeptTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
             <div className="flex-none  md:w-32 grid md:grid-cols-1 grid-cols-3 md:gap-2 gap-3 md:mb-0 mb-3">
-              {chartData.map((entry, index) => (
+              {assigned.map(({ item, grad }, index) => (
                 <div key={index} className="flex items-center space-x-3">
                   <div
                     className="w-4 h-4 rounded-full flex-shrink-0"
-                    style={{ background: entry.cssGradient }}
+                    style={{ background: grad.css }}
                   />
                   <span className="text-xs font-medium text-default-900">
-                    {entry.name}
+                    {item.name}
                   </span>
                 </div>
               ))}

@@ -40,6 +40,27 @@ import {
 // -----------------------------
 // Small presentational Card (supports gauge and metric types)
 // -----------------------------
+function formatCardValue(value) {
+  if (value == null) return "";
+  const str = String(value).trim();
+  // Preserve percentages as-is
+  if (str.endsWith("%")) return str;
+  // Handle latency like "1.2 ms" or "1200 ms"
+  if (str.toLowerCase().endsWith("ms")) {
+    const num = parseFloat(str.replace(/[^0-9.\-]/g, ""));
+    if (!Number.isFinite(num)) return str;
+    // Keep one decimal for ms
+    return `${Number(num.toFixed(1))} ms`;
+  }
+  // Remove commas and non-numeric except dot and minus
+  const num = parseFloat(str.replace(/,/g, "").replace(/[^0-9.\-]/g, ""));
+  if (!Number.isFinite(num)) return str;
+  const abs = Math.abs(num);
+  if (abs >= 1_000_000) return `${(num / 1_000_000).toFixed(3)}M`;
+  if (abs >= 1_000) return `${Math.round(num / 1_000)}K`;
+  return num.toLocaleString();
+}
+
 function Card({ data, isCustomizeMode = false }) {
   const isGaugeCard = data?.type === "gauge";
 
@@ -82,7 +103,7 @@ function Card({ data, isCustomizeMode = false }) {
         <>
           <div className="flex items-center gap-1">
             <div className="text-2xl font-bold text-default-900">
-              {data.value}
+              {formatCardValue(data.value)}
             </div>
             {data.trend === "up" && <GreenArrow />}
             {data.trend === "down" && <RedArrow />}

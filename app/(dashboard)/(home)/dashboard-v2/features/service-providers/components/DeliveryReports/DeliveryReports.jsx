@@ -31,6 +31,7 @@ import {
 
 import { rawData, chartData } from "./data";
 import { getChartConfig } from "./config";
+import { formatCompactNumber } from "@/lib/number";
 
 const CustomTick = ({ x, y, payload, vertical = false, chartConfig }) => (
   <text
@@ -40,7 +41,9 @@ const CustomTick = ({ x, y, payload, vertical = false, chartConfig }) => (
     className="text-xs font-normal"
     fill={chartConfig.axis.tick.fill}
   >
-    {payload.value}
+    {vertical && typeof payload.value === "number"
+      ? formatCompactNumber(payload.value)
+      : payload.value}
   </text>
 );
 

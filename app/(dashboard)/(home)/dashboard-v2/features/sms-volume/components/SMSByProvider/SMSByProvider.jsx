@@ -25,6 +25,7 @@ import {
 
 import { getProviderChartData, gradientSpecByName } from "./data";
 import { getChartConfig } from "./config";
+import { formatCompactNumber } from "@/lib/number";
 
 // Format axis values (1K, 1M etc.)
 const formatAxis = (n) => {
@@ -43,7 +44,9 @@ const CustomTick = ({ x, y, payload, textAnchor = "end", chartConfig }) => (
     fontSize={chartConfig.axis.tick.fontSize}
     className="text-xs font-normal"
   >
-    {payload.value}
+    {typeof payload?.value === "number"
+      ? formatAxis(payload.value)
+      : payload?.value}
   </text>
 );
 
@@ -171,7 +174,7 @@ export default function SMSByProvider({
                 <YAxis
                   type="category"
                   dataKey="name"
-                  tickMargin={10}
+                  tickMargin={1}
                   axisLine={{ stroke: chartConfig.axis.stroke }}
                   tickLine={{ stroke: chartConfig.axis.stroke }}
                   tick={(props) => (
@@ -184,6 +187,7 @@ export default function SMSByProvider({
                   contentStyle={chartConfig.tooltip.contentStyle}
                   labelStyle={chartConfig.tooltip.labelStyle}
                   itemStyle={chartConfig.tooltip.itemStyle}
+                  formatter={(value) => [formatCompactNumber(value)]}
                 />
 
                 <Bar dataKey="total" barSize={20} radius={[0, 4, 4, 0]}>

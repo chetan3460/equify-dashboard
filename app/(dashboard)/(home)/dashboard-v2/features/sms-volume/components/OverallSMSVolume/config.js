@@ -6,7 +6,7 @@
 
 export const CHART_CONFIG = {
   DEFAULT_HEIGHT: 300,
-  STROKE_WIDTH: 2,
+  STROKE_WIDTH: 1,
   GRID_DASH: "3 3",
   MARGIN: { TOP: 20, RIGHT: 60, LEFT: 0, BOTTOM: 20 },
 };

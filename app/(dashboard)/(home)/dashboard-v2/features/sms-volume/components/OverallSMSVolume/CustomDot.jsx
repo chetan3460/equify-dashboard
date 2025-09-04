@@ -50,9 +50,15 @@ export const CustomDot = ({ cx, cy, stroke, payload, dataKey }) => {
       {/* Pulse animation */}
       <style jsx>{`
         @keyframes pulse {
-          0% { transform: scale(1.05); }
-          50% { transform: scale(1.1); }
-          100% { transform: scale(1.05); }
+          0% {
+            transform: scale(1.05);
+          }
+          50% {
+            transform: scale(1.1);
+          }
+          100% {
+            transform: scale(1.05);
+          }
         }
       `}</style>
 
@@ -62,17 +68,18 @@ export const CustomDot = ({ cx, cy, stroke, payload, dataKey }) => {
         r={DOT_SIZES.NORMAL}
         fill="white" // default hollow
         stroke={stroke}
-        strokeWidth={2}
+        strokeWidth={1}
         style={{ cursor: "pointer", transition: "all 0.2s ease-in-out" }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         role="button"
         tabIndex={0}
-        aria-label={`Data point: ${dataKey} value ${payload?.[dataKey] || "unknown"}`}
+        aria-label={`Data point: ${dataKey} value ${
+          payload?.[dataKey] || "unknown"
+        }`}
       />
     </>
   );
 };
 
 export default CustomDot;
-

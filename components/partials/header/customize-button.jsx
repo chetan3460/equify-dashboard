@@ -16,7 +16,7 @@ const CustomizeButton = () => {
         ${
           isGlobalDragMode
             ? "bg-primary-100 text-primary dark:bg-transparent  dark:text-darkGray"
-            : "text-lightGray hover:text-primary hover:bg-transparent dark:text-[#ADADAD]  dark:hover:bg-[#1F2937]"
+            : "text-lightGray hover:text-primary hover:bg-primary-50  dark:text-[#ADADAD]  dark:hover:bg-[#1F2937]"
         }`}
     >
       <CustomizeIcon className="h-4 w-4" />
