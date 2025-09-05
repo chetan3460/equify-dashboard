@@ -13,9 +13,10 @@
 // />
 
 import React from "react";
+import { TableHead } from "@/components/ui/table";
 import { STICKY_HEADER_CELL_CLASS } from "@/lib/table";
-// We reuse the existing SortArrow (centralized design)
-import SortArrow from "../../applications/components/Kafka/components/SortArrow";
+// Reuse the existing SortArrow component from Kafka module
+import SortArrow from "../Kafka/components/SortArrow";
 
 export default function SortableHeaderCell({
   label,
@@ -51,7 +52,7 @@ export default function SortableHeaderCell({
       : "none";
 
   return (
-    <th
+    <TableHead
       role="button"
       tabIndex={0}
       onClick={handleClick}
@@ -63,7 +64,7 @@ export default function SortableHeaderCell({
         {label}
         <SortArrow dir={sortDir} active={sortKey === columnKey} />
       </span>
-    </th>
+    </TableHead>
   );
 }
 
