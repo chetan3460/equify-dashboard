@@ -119,7 +119,33 @@ export default function Kafka({ optionsMenuItems }) {
             <OptionsDropdown
               items={optionsMenuItems}
               onAction={(id) => {
-                if (id === "export") exportCsv("kafka-status.csv", sortedRows);
+                if (id === "export") {
+                  const rows = (sortedRows || []).map((r) => ({
+                    name: r?.name ?? "",
+                    host: r?.host ?? "",
+                    cpu: r?.cpu ?? "",
+                    memory: r?.memory ?? "",
+                    threads: r?.threads ?? "",
+                    connections: r?.connections ?? "",
+                    heapMb: r?.heapMb ?? r?.heap ?? "",
+                    topicHealth: r?.topicHealth ?? "",
+                    status: r?.status ?? "",
+                    exceededThreshold: r?.exceededThreshold ? "TRUE" : "FALSE",
+                    topics: Array.isArray(r?.topics)
+                      ? r.topics
+                          .map((t) =>
+                            t && typeof t === "object"
+                              ? (t.topic || t.name || "") + (t.messages != null ? ` (${t.messages})` : "")
+                              : String(t)
+                          )
+                          .filter(Boolean)
+                          .join(" | ")
+                      : "",
+                    timestamp: r?.timestamp ?? "",
+                    componentType: r?.componentType ?? "Kafka",
+                  }));
+                  exportCsv("kafka-status.csv", rows);
+                }
               }}
             />
           )}
