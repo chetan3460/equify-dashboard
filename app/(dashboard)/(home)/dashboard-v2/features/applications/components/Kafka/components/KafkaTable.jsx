@@ -5,13 +5,15 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import SortArrow from "./SortArrow";
+import { STICKY_HEADER_CLASS, ROW_SCROLL_THRESHOLD } from "@/lib/table";
+import SortableHeaderCell from "../../shared/SortableHeaderCell";
+import { formatFixed, formatInteger } from "@/lib/format";
+import { getStatusColor } from "@/lib/status";
 import { MEMORY_THRESHOLD, THREADS_THRESHOLD } from "../constants";
 import CriticalBadge from "../../shared/CriticalBadge";
 
@@ -24,54 +26,19 @@ export default function KafkaTable({
   columns,
   onOpenRow,
 }) {
-  const handleHeaderClick = (key) => {
-    if (sortKey === key) {
-      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    } else {
-      setSortKey(key);
-      setSortDir("asc");
-    }
-  };
-
-  const onHeaderKeyDown = (e, key) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleHeaderClick(key);
-    }
-  };
-
-  const ariaFor = (key) =>
-    sortKey === key ? (sortDir === "asc" ? "ascending" : "descending") : "none";
-
-  const renderHeader = (label, key) => (
-    <TableHead
-      role="button"
-      tabIndex={0}
-      onClick={() => handleHeaderClick(key)}
-      onKeyDown={(e) => onHeaderKeyDown(e, key)}
-      aria-sort={ariaFor(key)}
-className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
-    >
-      <span className="inline-flex items-center">
-        {label}
-        <SortArrow dir={sortDir} active={sortKey === key} />
-      </span>
-    </TableHead>
-  );
-
   return (
-    <Table wrapperClassName={rows.length > 6 ? "max-h-72 overflow-y-auto" : ""}>
-<TableHeader className="sticky top-0 z-10 !bg-[#DADAFA]">
+    <Table wrapperClassName={rows.length > ROW_SCROLL_THRESHOLD ? "max-h-72 overflow-y-auto" : ""}>
+      <TableHeader className={STICKY_HEADER_CLASS}>
         <TableRow>
-          {renderHeader(columns.name.label, "name")}
-          {renderHeader(columns.host.label, "host")}
-          {renderHeader(columns.cpu.label, "cpu")}
-          {renderHeader(columns.memory.label, "memory")}
-          {renderHeader(columns.threads.label, "threads")}
-          {renderHeader(columns.connections.label, "connections")}
-          {renderHeader(columns.heapMb.label, "heapMb")}
-          {renderHeader(columns.health.label, "health")}
-          {renderHeader(columns.status.label, "status")}
+          <SortableHeaderCell label={columns.name.label} columnKey={"name"} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.host.label} columnKey={"host"} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.cpu.label} columnKey={"cpu"} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.memory.label} columnKey={"memory"} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.threads.label} columnKey={"threads"} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.connections.label} columnKey={"connections"} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.heapMb.label} columnKey={"heapMb"} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.health.label} columnKey={"health"} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.status.label} columnKey={"status"} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
         </TableRow>
       </TableHeader>
 
@@ -106,7 +73,7 @@ className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
               </TableCell>
               <TableCell>{row?.host ?? "-"}</TableCell>
               <TableCell>
-                {Number.isFinite(row?.cpu) ? Number(row.cpu).toFixed(2) : "-"}
+                {formatFixed(row?.cpu, 2)}
               </TableCell>
               <TableCell
                 className={cn(
@@ -114,9 +81,7 @@ className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
                     "text-destructive-700 font-bold"
                 )}
               >
-                {Number.isFinite(row?.memory)
-                  ? Number(row.memory).toFixed(2)
-                  : "-"}
+                {formatFixed(row?.memory, 2)}
               </TableCell>
               <TableCell
                 className={cn(
@@ -124,23 +89,17 @@ className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
                     "text-destructive-700 font-bold"
                 )}
               >
-                {Number.isFinite(row?.threads)
-                  ? row.threads.toLocaleString()
-                  : "-"}
+                {formatInteger(row?.threads)}
               </TableCell>
               <TableCell>
-                {Number.isFinite(row?.connections)
-                  ? row.connections.toLocaleString()
-                  : "-"}
+                {formatInteger(row?.connections)}
               </TableCell>
               <TableCell>
-                {Number.isFinite(row?.heapMb ?? row?.heap)
-                  ? Number(row?.heapMb ?? row?.heap).toLocaleString()
-                  : "-"}
+                {formatInteger(row?.heapMb ?? row?.heap)}
               </TableCell>
               <TableCell>{row?.topicHealth ?? "-"}</TableCell>
               <TableCell>
-                <Badge color={statusActive ? "success" : "destructive"}>
+                <Badge color={getStatusColor(row?.status)}>
                   {row?.status ?? "-"}
                 </Badge>
               </TableCell>

@@ -3,15 +3,11 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import SortArrow from "../../Kafka/components/SortArrow";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
+import { STICKY_HEADER_CLASS, ROW_SCROLL_THRESHOLD } from "@/lib/table";
+import SortableHeaderCell from "../../shared/SortableHeaderCell";
+import { formatFixed } from "@/lib/format";
+import { getStatusColor } from "@/lib/status";
 
 export default function RedisTable({
   rows,
@@ -21,50 +17,15 @@ export default function RedisTable({
   setSortKey,
   setSortDir,
 }) {
-  const handleHeaderClick = (key) => {
-    if (sortKey === key) {
-      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    } else {
-      setSortKey(key);
-      setSortDir("asc");
-    }
-  };
-
-  const onHeaderKeyDown = (e, key) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleHeaderClick(key);
-    }
-  };
-
-  const ariaFor = (key) =>
-    sortKey === key ? (sortDir === "asc" ? "ascending" : "descending") : "none";
-
-  const renderHeader = (label, key) => (
-    <TableHead
-      role="button"
-      tabIndex={0}
-      onClick={() => handleHeaderClick(key)}
-      onKeyDown={(e) => onHeaderKeyDown(e, key)}
-      aria-sort={ariaFor(key)}
-className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
-    >
-      <span className="inline-flex items-center group">
-        {label}
-        <SortArrow dir={sortDir} active={sortKey === key} />
-      </span>
-    </TableHead>
-  );
-
   return (
-    <Table wrapperClassName={rows.length > 6 ? "max-h-72 overflow-y-auto" : ""}>
-<TableHeader className="sticky top-0 z-10 !bg-[#DADAFA]">
+    <Table wrapperClassName={rows.length > ROW_SCROLL_THRESHOLD ? "max-h-72 overflow-y-auto" : ""}>
+      <TableHeader className={STICKY_HEADER_CLASS}>
         <TableRow>
-          {renderHeader(columns.name.label, columns.name.key)}
-          {renderHeader(columns.host.label, columns.host.key)}
-          {renderHeader(columns.cpu.label, columns.cpu.key)}
-          {renderHeader(columns.memory.label, columns.memory.key)}
-          {renderHeader(columns.status.label, columns.status.key)}
+          <SortableHeaderCell label={columns.name.label} columnKey={columns.name.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.host.label} columnKey={columns.host.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.cpu.label} columnKey={columns.cpu.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.memory.label} columnKey={columns.memory.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.status.label} columnKey={columns.status.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -72,16 +33,10 @@ className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
           <TableRow key={r.name}>
             <TableCell>{r.name}</TableCell>
             <TableCell>{r.host}</TableCell>
-            <TableCell>{Number.isFinite(r.cpu) ? Number(r.cpu).toFixed(2) : "-"}</TableCell>
-            <TableCell>{Number.isFinite(r.memory) ? Number(r.memory).toFixed(2) : "-"}</TableCell>
+            <TableCell>{formatFixed(r.cpu, 2)}</TableCell>
+            <TableCell>{formatFixed(r.memory, 2)}</TableCell>
             <TableCell>
-              <Badge
-                color={
-                  String(r.status).toLowerCase() === "active"
-                    ? "success"
-                    : "destructive"
-                }
-              >
+              <Badge color={getStatusColor(r.status)}>
                 {r.status}
               </Badge>
             </TableCell>

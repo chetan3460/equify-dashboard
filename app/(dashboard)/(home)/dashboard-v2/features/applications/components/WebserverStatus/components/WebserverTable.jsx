@@ -3,15 +3,10 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import SortArrow from "../../Kafka/components/SortArrow";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
+import { STICKY_HEADER_CLASS, ROW_SCROLL_THRESHOLD } from "@/lib/table";
+import SortableHeaderCell from "../../shared/SortableHeaderCell";
+import { getStatusColor } from "@/lib/status";
 
 export default function WebserverTable({
   rows,
@@ -21,49 +16,14 @@ export default function WebserverTable({
   setSortKey,
   setSortDir,
 }) {
-  const handleHeaderClick = (key) => {
-    if (sortKey === key) {
-      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    } else {
-      setSortKey(key);
-      setSortDir("asc");
-    }
-  };
-
-  const onHeaderKeyDown = (e, key) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleHeaderClick(key);
-    }
-  };
-
-  const ariaFor = (key) =>
-    sortKey === key ? (sortDir === "asc" ? "ascending" : "descending") : "none";
-
-  const renderHeader = (label, key) => (
-    <TableHead
-      role="button"
-      tabIndex={0}
-      onClick={() => handleHeaderClick(key)}
-      onKeyDown={(e) => onHeaderKeyDown(e, key)}
-      aria-sort={ariaFor(key)}
-className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
-    >
-      <span className="inline-flex items-center group">
-        {label}
-        <SortArrow dir={sortDir} active={sortKey === key} />
-      </span>
-    </TableHead>
-  );
-
   return (
-    <Table wrapperClassName={rows.length > 6 ? "max-h-72 overflow-y-auto" : ""}>
-<TableHeader className="sticky top-0 z-10 !bg-[#DADAFA]">
+    <Table wrapperClassName={rows.length > ROW_SCROLL_THRESHOLD ? "max-h-72 overflow-y-auto" : ""}>
+      <TableHeader className={STICKY_HEADER_CLASS}>
         <TableRow>
-          {renderHeader(columns.service.label, columns.service.key)}
-          {renderHeader(columns.host.label, columns.host.key)}
-          {renderHeader(columns.statusCode.label, columns.statusCode.key)}
-          {renderHeader(columns.status.label, columns.status.key)}
+          <SortableHeaderCell label={columns.service.label} columnKey={columns.service.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.host.label} columnKey={columns.host.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.statusCode.label} columnKey={columns.statusCode.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+          <SortableHeaderCell label={columns.status.label} columnKey={columns.status.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -73,13 +33,7 @@ className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
             <TableCell>{r.host}</TableCell>
             <TableCell>{Number.isFinite(r.statusCode) ? r.statusCode : "-"}</TableCell>
             <TableCell>
-              <Badge
-                color={
-                  String(r.status).toLowerCase() === "active"
-                    ? "success"
-                    : "destructive"
-                }
-              >
+              <Badge color={getStatusColor(r.status)}>
                 {r.status}
               </Badge>
             </TableCell>
