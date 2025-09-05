@@ -65,8 +65,36 @@ export default function RedisTable({
               />
             </span>
           </TableHead>
-          <TableHead>{columns.host.label}</TableHead>
-          <TableHead>{columns.cpu.label}</TableHead>
+          <TableHead
+            role="button"
+            tabIndex={0}
+            onClick={() => {
+              setSortKey("host");
+              setSortDir((d) => (sortKey === "host" && d === "asc" ? "desc" : "asc"));
+            }}
+            aria-sort={sortKey === "host" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
+            className="cursor-pointer"
+          >
+            <span className="inline-flex items-center group">
+              {columns.host.label}
+              <SortArrow dir={sortDir} active={sortKey === "host"} />
+            </span>
+          </TableHead>
+          <TableHead
+            role="button"
+            tabIndex={0}
+            onClick={() => {
+              setSortKey("cpu");
+              setSortDir((d) => (sortKey === "cpu" && d === "asc" ? "desc" : "asc"));
+            }}
+            aria-sort={sortKey === "cpu" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
+            className="cursor-pointer"
+          >
+            <span className="inline-flex items-center group">
+              {columns.cpu.label}
+              <SortArrow dir={sortDir} active={sortKey === "cpu"} />
+            </span>
+          </TableHead>
           <TableHead
             role="button"
             tabIndex={0}
@@ -107,7 +135,21 @@ export default function RedisTable({
               />
             </span>
           </TableHead>
-          <TableHead>{columns.status.label}</TableHead>
+          <TableHead
+            role="button"
+            tabIndex={0}
+            onClick={() => {
+              setSortKey("status");
+              setSortDir((d) => (sortKey === "status" && d === "asc" ? "desc" : "asc"));
+            }}
+            aria-sort={sortKey === "status" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
+            className="cursor-pointer"
+          >
+            <span className="inline-flex items-center group">
+              {columns.status.label}
+              <SortArrow dir={sortDir} active={sortKey === "status"} />
+            </span>
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

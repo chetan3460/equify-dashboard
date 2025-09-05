@@ -6,15 +6,16 @@ import { useMemo } from "react";
 export function useWebserverSorting(rows, sortKey, sortDir) {
   return useMemo(() => {
     const list = [...(rows ?? [])];
+    const key = sortKey || "service";
     list.sort((a, b) => {
-      if (sortKey === "statusCode") {
-        const av = Number(a?.statusCode ?? 0);
-        const bv = Number(b?.statusCode ?? 0);
-        return sortDir === "asc" ? av - bv : bv - av;
-      }
-      // default to service name
-      const as = String(a?.service ?? "");
-      const bs = String(b?.service ?? "");
+      const av = a?.[key];
+      const bv = b?.[key];
+      const aNum = parseFloat(av);
+      const bNum = parseFloat(bv);
+      const bothNum = Number.isFinite(aNum) && Number.isFinite(bNum);
+      if (bothNum) return sortDir === "asc" ? aNum - bNum : bNum - aNum;
+      const as = (av ?? "").toString();
+      const bs = (bv ?? "").toString();
       return sortDir === "asc" ? as.localeCompare(bs) : bs.localeCompare(as);
     });
     return list;

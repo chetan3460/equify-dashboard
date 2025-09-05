@@ -6,15 +6,17 @@ import { useMemo } from "react";
 export function useApplicationsSorting(rows, sortKey, sortDir) {
   return useMemo(() => {
     const list = [...(rows ?? [])];
+    const key = sortKey || "name";
     list.sort((a, b) => {
-      if (sortKey === "memory") {
-        const av = Number(a?.memory ?? 0);
-        const bv = Number(b?.memory ?? 0);
-        return sortDir === "asc" ? av - bv : bv - av;
-      }
-      const an = String(a?.name ?? "");
-      const bn = String(b?.name ?? "");
-      return sortDir === "asc" ? an.localeCompare(bn) : bn.localeCompare(an);
+      const av = a?.[key];
+      const bv = b?.[key];
+      const aNum = parseFloat(av);
+      const bNum = parseFloat(bv);
+      const bothNum = Number.isFinite(aNum) && Number.isFinite(bNum);
+      if (bothNum) return sortDir === "asc" ? aNum - bNum : bNum - aNum;
+      const as = (av ?? "").toString();
+      const bs = (bv ?? "").toString();
+      return sortDir === "asc" ? as.localeCompare(bs) : bs.localeCompare(as);
     });
     return list;
   }, [rows, sortKey, sortDir]);
