@@ -7,11 +7,13 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import SortArrow from "../../Kafka/components/SortArrow";
+import { STICKY_HEADER_CLASS } from "@/lib/table";
+import { formatFixed, formatInteger } from "@/lib/format";
+import { getStatusColor } from "@/lib/status";
+import SortableHeaderCell from "../../shared/SortableHeaderCell";
 import CriticalBadge from "../../shared/CriticalBadge";
 
 export default function ApplicationsTable({
@@ -25,134 +27,64 @@ export default function ApplicationsTable({
 }) {
   return (
     <Table wrapperClassName={!disableInternalScroll && rows.length > 6 ? "max-h-72 overflow-y-auto" : ""}>
-      <TableHeader className="sticky top-0 z-10 !bg-[#DADAFA]">
+      <TableHeader className={STICKY_HEADER_CLASS}>
         <TableRow>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              setSortKey("name");
-              setSortDir((d) =>
-                sortKey === "name" && d === "asc" ? "desc" : "asc"
-              );
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setSortKey("name");
-                setSortDir((d) =>
-                  sortKey === "name" && d === "asc" ? "desc" : "asc"
-                );
-              }
-            }}
-            aria-sort={
-              sortKey === "name"
-                ? sortDir === "asc"
-                  ? "ascending"
-                  : "descending"
-                : "none"
-            }
-className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
-          >
-            <span className="inline-flex items-center group">
-              {columns.name.label}
-              <SortArrow
-                dir={sortDir}
-                active={sortKey === "name"}
-                className={sortKey === "name" ? "" : ""}
-              />
-            </span>
-          </TableHead>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              setSortKey("host");
-              setSortDir((d) => (sortKey === "host" && d === "asc" ? "desc" : "asc"));
-            }}
-            aria-sort={sortKey === "host" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
-          >
-            <span className="inline-flex items-center group">
-              {columns.host.label}
-              <SortArrow dir={sortDir} active={sortKey === "host"} />
-            </span>
-          </TableHead>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              setSortKey("cpu");
-              setSortDir((d) => (sortKey === "cpu" && d === "asc" ? "desc" : "asc"));
-            }}
-            aria-sort={sortKey === "cpu" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
-          >
-            <span className="inline-flex items-center group">
-              {columns.cpu.label}
-              <SortArrow dir={sortDir} active={sortKey === "cpu"} />
-            </span>
-          </TableHead>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              setSortKey("memory");
-              setSortDir((d) => (sortKey === "memory" && d === "asc" ? "desc" : "asc"));
-            }}
-            aria-sort={sortKey === "memory" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
-          >
-            <span className="inline-flex items-center group">
-              {columns.memory.label}
-              <SortArrow dir={sortDir} active={sortKey === "memory"} />
-            </span>
-          </TableHead>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              setSortKey("threads");
-              setSortDir((d) => (sortKey === "threads" && d === "asc" ? "desc" : "asc"));
-            }}
-            aria-sort={sortKey === "threads" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
-          >
-            <span className="inline-flex items-center group">
-              {columns.threads.label}
-              <SortArrow dir={sortDir} active={sortKey === "threads"} />
-            </span>
-          </TableHead>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              setSortKey("heap");
-              setSortDir((d) => (sortKey === "heap" && d === "asc" ? "desc" : "asc"));
-            }}
-            aria-sort={sortKey === "heap" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
-          >
-            <span className="inline-flex items-center group">
-              {columns.heap.label}
-              <SortArrow dir={sortDir} active={sortKey === "heap"} />
-            </span>
-          </TableHead>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              setSortKey("status");
-              setSortDir((d) => (sortKey === "status" && d === "asc" ? "desc" : "asc"));
-            }}
-            aria-sort={sortKey === "status" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
-          >
-            <span className="inline-flex items-center group">
-              {columns.status.label}
-              <SortArrow dir={sortDir} active={sortKey === "status"} />
-            </span>
-          </TableHead>
+          <SortableHeaderCell
+            label={columns.name.label}
+            columnKey={columns.name.key}
+            sortKey={sortKey}
+            sortDir={sortDir}
+            setSortKey={setSortKey}
+            setSortDir={setSortDir}
+          />
+          <SortableHeaderCell
+            label={columns.host.label}
+            columnKey={columns.host.key}
+            sortKey={sortKey}
+            sortDir={sortDir}
+            setSortKey={setSortKey}
+            setSortDir={setSortDir}
+          />
+          <SortableHeaderCell
+            label={columns.cpu.label}
+            columnKey={columns.cpu.key}
+            sortKey={sortKey}
+            sortDir={sortDir}
+            setSortKey={setSortKey}
+            setSortDir={setSortDir}
+          />
+          <SortableHeaderCell
+            label={columns.memory.label}
+            columnKey={columns.memory.key}
+            sortKey={sortKey}
+            sortDir={sortDir}
+            setSortKey={setSortKey}
+            setSortDir={setSortDir}
+          />
+          <SortableHeaderCell
+            label={columns.threads.label}
+            columnKey={columns.threads.key}
+            sortKey={sortKey}
+            sortDir={sortDir}
+            setSortKey={setSortKey}
+            setSortDir={setSortDir}
+          />
+          <SortableHeaderCell
+            label={columns.heap.label}
+            columnKey={columns.heap.key}
+            sortKey={sortKey}
+            sortDir={sortDir}
+            setSortKey={setSortKey}
+            setSortDir={setSortDir}
+          />
+          <SortableHeaderCell
+            label={columns.status.label}
+            columnKey={columns.status.key}
+            sortKey={sortKey}
+            sortDir={sortDir}
+            setSortKey={setSortKey}
+            setSortDir={setSortDir}
+          />
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -165,18 +97,12 @@ className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
               </span>
             </TableCell>
             <TableCell>{r.host}</TableCell>
-            <TableCell>{Number(r.cpu).toFixed(1)}</TableCell>
-            <TableCell>{Number(r.memory).toFixed(1)}</TableCell>
-            <TableCell>{Number(r.threads).toLocaleString()}</TableCell>
-            <TableCell>{Number(r.heap).toFixed(2)}</TableCell>
+            <TableCell>{formatFixed(r.cpu, 1)}</TableCell>
+            <TableCell>{formatFixed(r.memory, 1)}</TableCell>
+            <TableCell>{formatInteger(r.threads)}</TableCell>
+            <TableCell>{formatFixed(r.heap, 2)}</TableCell>
             <TableCell>
-              <Badge
-                color={
-                  String(r.status).toLowerCase() === "active"
-                    ? "success"
-                    : "destructive"
-                }
-              >
+              <Badge color={getStatusColor(r.status)}>
                 {r.status}
               </Badge>
             </TableCell>
