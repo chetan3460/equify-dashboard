@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
+import { exportCsv } from "@/lib/csv";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -148,7 +149,12 @@ export default function ServerStatistics({ optionsMenuItems }) {
             <DragHandleIcon />
           </div>
         ) : (
-          <OptionsDropdown items={optionsMenuItems} />
+          <OptionsDropdown
+            items={optionsMenuItems}
+            onAction={(id) => {
+              if (id === "export") exportCsv("server-statistics.csv", sortedServers);
+            }}
+          />
         )}
       </div>
 

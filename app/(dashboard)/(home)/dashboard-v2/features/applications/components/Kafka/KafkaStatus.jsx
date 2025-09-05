@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
+import { exportCsv } from "@/lib/csv";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 
 import { kafkaData } from "./config"; // mock/demo data lives here
@@ -114,9 +115,14 @@ export default function Kafka({ optionsMenuItems }) {
               <div className="cursor-grab flex items-center">
                 <DragHandleIcon />
               </div>
-            ) : (
-              <OptionsDropdown items={optionsMenuItems} />
-            )}
+          ) : (
+            <OptionsDropdown
+              items={optionsMenuItems}
+              onAction={(id) => {
+                if (id === "export") exportCsv("kafka-status.csv", sortedRows);
+              }}
+            />
+          )}
           </div>
         </div>
 

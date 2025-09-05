@@ -32,6 +32,7 @@ import {
 
 import { providerObj, gradientSpecByName } from "./data";
 import { getChartConfig } from "./config";
+import { exportCsv } from "@/lib/csv";
 
 // Format axis values (1K, 1M etc.)
 const formatAxis = (n) => {
@@ -94,7 +95,12 @@ export default function SuccessfulTransactions({
               </div>
             ) : (
               <>
-                <OptionsDropdown items={optionsMenuItems} />
+                <OptionsDropdown
+                  items={optionsMenuItems}
+                  onAction={(id) => {
+                    if (id === "export") exportCsv("successful-transactions.csv", data);
+                  }}
+                />
               </>
             )}
           </div>

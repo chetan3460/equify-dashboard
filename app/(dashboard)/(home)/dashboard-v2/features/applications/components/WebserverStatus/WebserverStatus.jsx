@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
+import { exportCsv } from "@/lib/csv";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 import { columns } from "./config";
 import { webservers } from "./data";
@@ -43,7 +44,11 @@ export default function Webserver() {
               <DragHandleIcon />
             </div>
           ) : (
-            <OptionsDropdown />
+            <OptionsDropdown
+              onAction={(id) => {
+                if (id === "export") exportCsv("webserver-status.csv", rows);
+              }}
+            />
           )}
         </div>
       </div>

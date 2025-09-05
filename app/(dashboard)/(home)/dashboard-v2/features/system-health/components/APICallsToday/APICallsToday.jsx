@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/plain-dropdown-menu";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
+import { exportCsv } from "@/lib/csv";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
 import {
   ResponsiveContainer,
@@ -129,7 +130,12 @@ export default function SuccessfulTransactions({
                     <DropdownMenuItem>Count</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <OptionsDropdown items={optionsMenuItems} />
+                <OptionsDropdown
+                  items={optionsMenuItems}
+                  onAction={(id) => {
+                    if (id === "export") exportCsv("system-health-network-stats.csv", data);
+                  }}
+                />
               </>
             )}
           </div>
