@@ -2,15 +2,17 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-const Table = React.forwardRef(({ className, ...props }, ref) => (
-  <div className="overflow-x-auto">
-    <table
-      ref={ref}
-      className={cn("w-full caption-top text-sm ", className)}
-      {...props}
-    />
-  </div>
-));
+const Table = React.forwardRef(
+  ({ className, wrapperClassName = "", ...props }, ref) => (
+    <div className={cn("overflow-x-auto", wrapperClassName)}>
+      <table
+        ref={ref}
+        className={cn("w-full caption-top text-sm ", className)}
+        {...props}
+      />
+    </div>
+  )
+);
 Table.displayName = "Table";
 
 const TableHeader = React.forwardRef(({ className, ...props }, ref) => (
@@ -44,7 +46,7 @@ const TableRow = React.forwardRef(({ className, ...props }, ref) => (
   <tr
     ref={ref}
     className={cn(
-      "transition-colors rounded-[4px] data-[state=selected]:bg-muted border-b border-b-[#F1F1F1] dark:border-b-[#374151] hover:bg-muted/50 ",
+      "transition-colors rounded-[4px]  data-[state=selected]:bg-muted border-b border-b-[#F1F1F1] dark:border-b-[#374151]  ",
       className
     )}
     {...props}
@@ -56,7 +58,7 @@ const TableHead = React.forwardRef(({ className, ...props }, ref) => (
   <th
     ref={ref}
     className={cn(
-      "p-3 text-left align-middle font-medium  text-xs  text-default-900    capitalize  [&:has([role=checkbox])]:pr-0",
+      "p-3 text-left align-middle font-medium  text-xs  text-default-900    capitalize  [&:has([role=checkbox])]:pr-0 bg-primary/20",
       className
     )}
     {...props}

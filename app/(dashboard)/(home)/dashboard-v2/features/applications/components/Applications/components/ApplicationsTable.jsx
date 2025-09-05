@@ -21,10 +21,11 @@ export default function ApplicationsTable({
   sortDir,
   setSortKey,
   setSortDir,
+  disableInternalScroll = false,
 }) {
   return (
-    <Table>
-      <TableHeader>
+    <Table wrapperClassName={!disableInternalScroll && rows.length > 6 ? "max-h-72 overflow-y-auto" : ""}>
+      <TableHeader className="sticky top-0 z-10 !bg-[#DADAFA]">
         <TableRow>
           <TableHead
             role="button"
@@ -51,7 +52,7 @@ export default function ApplicationsTable({
                   : "descending"
                 : "none"
             }
-            className="cursor-pointer"
+className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
           >
             <span className="inline-flex items-center group">
               {columns.name.label}
@@ -70,7 +71,7 @@ export default function ApplicationsTable({
               setSortDir((d) => (sortKey === "host" && d === "asc" ? "desc" : "asc"));
             }}
             aria-sort={sortKey === "host" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer"
+            className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
           >
             <span className="inline-flex items-center group">
               {columns.host.label}
@@ -85,7 +86,7 @@ export default function ApplicationsTable({
               setSortDir((d) => (sortKey === "cpu" && d === "asc" ? "desc" : "asc"));
             }}
             aria-sort={sortKey === "cpu" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer"
+            className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
           >
             <span className="inline-flex items-center group">
               {columns.cpu.label}
@@ -100,7 +101,7 @@ export default function ApplicationsTable({
               setSortDir((d) => (sortKey === "memory" && d === "asc" ? "desc" : "asc"));
             }}
             aria-sort={sortKey === "memory" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer"
+            className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
           >
             <span className="inline-flex items-center group">
               {columns.memory.label}
@@ -115,7 +116,7 @@ export default function ApplicationsTable({
               setSortDir((d) => (sortKey === "threads" && d === "asc" ? "desc" : "asc"));
             }}
             aria-sort={sortKey === "threads" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer"
+            className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
           >
             <span className="inline-flex items-center group">
               {columns.threads.label}
@@ -130,7 +131,7 @@ export default function ApplicationsTable({
               setSortDir((d) => (sortKey === "heap" && d === "asc" ? "desc" : "asc"));
             }}
             aria-sort={sortKey === "heap" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer"
+            className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
           >
             <span className="inline-flex items-center group">
               {columns.heap.label}
@@ -145,7 +146,7 @@ export default function ApplicationsTable({
               setSortDir((d) => (sortKey === "status" && d === "asc" ? "desc" : "asc"));
             }}
             aria-sort={sortKey === "status" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer"
+            className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
           >
             <span className="inline-flex items-center group">
               {columns.status.label}

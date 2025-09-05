@@ -2,12 +2,13 @@
 // Small, reusable sort arrow indicator used in table headers.
 
 export default function SortArrow({ dir = "asc", active = false, className = "" }) {
+  const rotateClass = active ? (dir === "asc" ? "rotate-0" : "rotate-180") : "rotate-0";
   return (
     <div
       aria-hidden
       className={`ml-1 inline-flex items-center justify-center w-5 h-5 rounded-full transition-transform duration-200 hover:bg-[#DADAFA] hover:text-primary ${
-        active ? "text-default-900" : ""
-      } ${dir === "asc" ? "rotate-0" : "rotate-180"} ${className}`}
+        active ? "text-default-900" : "text-muted-foreground opacity-60"
+      } ${rotateClass} ${className}`}
     >
       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
         <path

@@ -21,53 +21,49 @@ export default function WebserverTable({
   setSortKey,
   setSortDir,
 }) {
+  const handleHeaderClick = (key) => {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
+
+  const onHeaderKeyDown = (e, key) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleHeaderClick(key);
+    }
+  };
+
+  const ariaFor = (key) =>
+    sortKey === key ? (sortDir === "asc" ? "ascending" : "descending") : "none";
+
+  const renderHeader = (label, key) => (
+    <TableHead
+      role="button"
+      tabIndex={0}
+      onClick={() => handleHeaderClick(key)}
+      onKeyDown={(e) => onHeaderKeyDown(e, key)}
+      aria-sort={ariaFor(key)}
+className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
+    >
+      <span className="inline-flex items-center group">
+        {label}
+        <SortArrow dir={sortDir} active={sortKey === key} />
+      </span>
+    </TableHead>
+  );
+
   return (
-    <Table>
-      <TableHeader>
+    <Table wrapperClassName={rows.length > 6 ? "max-h-72 overflow-y-auto" : ""}>
+<TableHeader className="sticky top-0 z-10 !bg-[#DADAFA]">
         <TableRow>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              setSortKey("service");
-              setSortDir((d) =>
-                sortKey === "service" && d === "asc" ? "desc" : "asc"
-              );
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setSortKey("service");
-                setSortDir((d) =>
-                  sortKey === "service" && d === "asc" ? "desc" : "asc"
-                );
-              }
-            }}
-            aria-sort={
-              sortKey === "service"
-                ? sortDir === "asc"
-                  ? "ascending"
-                  : "descending"
-                : "none"
-            }
-            className="cursor-pointer"
-          >
-            <span className="inline-flex items-center group">
-              {columns.service.label}
-              <SortArrow
-                dir={sortDir}
-                active={sortKey === "service"}
-                className={sortKey === "service" ? "" : ""}
-              />
-            </span>
-          </TableHead>
-          <TableHead>{columns.host.label}</TableHead>
-          <TableHead>
-            <span className="inline-flex items-center group">
-              {columns.statusCode.label}
-            </span>
-          </TableHead>
-          <TableHead>{columns.status.label}</TableHead>
+          {renderHeader(columns.service.label, columns.service.key)}
+          {renderHeader(columns.host.label, columns.host.key)}
+          {renderHeader(columns.statusCode.label, columns.statusCode.key)}
+          {renderHeader(columns.status.label, columns.status.key)}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -75,7 +71,7 @@ export default function WebserverTable({
           <TableRow key={r.service}>
             <TableCell>{r.service}</TableCell>
             <TableCell>{r.host}</TableCell>
-            <TableCell>{r.statusCode}</TableCell>
+            <TableCell>{Number.isFinite(r.statusCode) ? r.statusCode : "-"}</TableCell>
             <TableCell>
               <Badge
                 color={

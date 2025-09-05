@@ -31,7 +31,7 @@ export default function TopicDialog({
         ) : (
           <div ref={listRef} onScroll={onScroll} className="max-h-[240px] overflow-y-auto overscroll-contain">
             <Table>
-              <TableHeader className="sticky top-0 z-10 bg-primary/10">
+<TableHeader className="sticky top-0 z-10 !bg-[#DADAFA]">
                 <TableRow>
                   <TableHead
                     role="button"

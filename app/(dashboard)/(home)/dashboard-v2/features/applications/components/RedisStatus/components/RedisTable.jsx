@@ -21,135 +21,50 @@ export default function RedisTable({
   setSortKey,
   setSortDir,
 }) {
+  const handleHeaderClick = (key) => {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
+
+  const onHeaderKeyDown = (e, key) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleHeaderClick(key);
+    }
+  };
+
+  const ariaFor = (key) =>
+    sortKey === key ? (sortDir === "asc" ? "ascending" : "descending") : "none";
+
+  const renderHeader = (label, key) => (
+    <TableHead
+      role="button"
+      tabIndex={0}
+      onClick={() => handleHeaderClick(key)}
+      onKeyDown={(e) => onHeaderKeyDown(e, key)}
+      aria-sort={ariaFor(key)}
+className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
+    >
+      <span className="inline-flex items-center group">
+        {label}
+        <SortArrow dir={sortDir} active={sortKey === key} />
+      </span>
+    </TableHead>
+  );
+
   return (
-    <Table>
-      <TableHeader>
+    <Table wrapperClassName={rows.length > 6 ? "max-h-72 overflow-y-auto" : ""}>
+<TableHeader className="sticky top-0 z-10 !bg-[#DADAFA]">
         <TableRow>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              setSortKey("name");
-              setSortDir((d) =>
-                sortKey === "name" && d === "asc" ? "desc" : "asc"
-              );
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setSortKey("name");
-                setSortDir((d) =>
-                  sortKey === "name" && d === "asc" ? "desc" : "asc"
-                );
-              }
-            }}
-            aria-sort={
-              sortKey === "name"
-                ? sortDir === "asc"
-                  ? "ascending"
-                  : "descending"
-                : "none"
-            }
-            className="cursor-pointer"
-          >
-            <span className="inline-flex items-center group">
-              {columns.name.label}
-              <SortArrow
-                dir={sortDir}
-                active={sortKey === "name"}
-                className={
-                  sortKey === "name"
-                    ? ""
-                    : "opacity-50 group-hover:opacity-100 transition-opacity"
-                }
-              />
-            </span>
-          </TableHead>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              setSortKey("host");
-              setSortDir((d) => (sortKey === "host" && d === "asc" ? "desc" : "asc"));
-            }}
-            aria-sort={sortKey === "host" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer"
-          >
-            <span className="inline-flex items-center group">
-              {columns.host.label}
-              <SortArrow dir={sortDir} active={sortKey === "host"} />
-            </span>
-          </TableHead>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              setSortKey("cpu");
-              setSortDir((d) => (sortKey === "cpu" && d === "asc" ? "desc" : "asc"));
-            }}
-            aria-sort={sortKey === "cpu" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer"
-          >
-            <span className="inline-flex items-center group">
-              {columns.cpu.label}
-              <SortArrow dir={sortDir} active={sortKey === "cpu"} />
-            </span>
-          </TableHead>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              setSortKey("memory");
-              setSortDir((d) =>
-                sortKey === "memory" && d === "asc" ? "desc" : "asc"
-              );
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setSortKey("memory");
-                setSortDir((d) =>
-                  sortKey === "memory" && d === "asc" ? "desc" : "asc"
-                );
-              }
-            }}
-            aria-sort={
-              sortKey === "memory"
-                ? sortDir === "asc"
-                  ? "ascending"
-                  : "descending"
-                : "none"
-            }
-            className="cursor-pointer"
-          >
-            <span className="inline-flex items-center group">
-              {columns.memory.label}
-              <SortArrow
-                dir={sortDir}
-                active={sortKey === "memory"}
-                className={
-                  sortKey === "memory"
-                    ? ""
-                    : "opacity-50 group-hover:opacity-100 transition-opacity"
-                }
-              />
-            </span>
-          </TableHead>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              setSortKey("status");
-              setSortDir((d) => (sortKey === "status" && d === "asc" ? "desc" : "asc"));
-            }}
-            aria-sort={sortKey === "status" ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
-            className="cursor-pointer"
-          >
-            <span className="inline-flex items-center group">
-              {columns.status.label}
-              <SortArrow dir={sortDir} active={sortKey === "status"} />
-            </span>
-          </TableHead>
+          {renderHeader(columns.name.label, columns.name.key)}
+          {renderHeader(columns.host.label, columns.host.key)}
+          {renderHeader(columns.cpu.label, columns.cpu.key)}
+          {renderHeader(columns.memory.label, columns.memory.key)}
+          {renderHeader(columns.status.label, columns.status.key)}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -157,8 +72,8 @@ export default function RedisTable({
           <TableRow key={r.name}>
             <TableCell>{r.name}</TableCell>
             <TableCell>{r.host}</TableCell>
-            <TableCell>{r.cpu}</TableCell>
-            <TableCell>{r.memory}</TableCell>
+            <TableCell>{Number.isFinite(r.cpu) ? Number(r.cpu).toFixed(2) : "-"}</TableCell>
+            <TableCell>{Number.isFinite(r.memory) ? Number(r.memory).toFixed(2) : "-"}</TableCell>
             <TableCell>
               <Badge
                 color={

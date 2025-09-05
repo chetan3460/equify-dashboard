@@ -29,10 +29,11 @@ import DatabaseTable from "./components/DatabaseTable";
 
 export default function Database() {
   const [sortDir, setSortDir] = useState("asc");
+  const [sortKey, setSortKey] = useState("name");
   const [openKey, setOpenKey] = useState(null); // "mysql" | "clickhouse" | null
   const { isGlobalDragMode } = useDragContext();
 
-  const sorted = useDatabaseSorting(databaseData.database, sortDir);
+  const sorted = useDatabaseSorting(databaseData.database, sortKey, sortDir);
 
   const toggle = (key) => setOpenKey((k) => (k === key ? null : key));
 
@@ -63,7 +64,9 @@ export default function Database() {
         <div className="overflow-hidden ">
           <DatabaseTable
             rows={sorted}
+            sortKey={sortKey}
             sortDir={sortDir}
+            setSortKey={setSortKey}
             setSortDir={setSortDir}
             columns={columns}
             openKey={openKey}

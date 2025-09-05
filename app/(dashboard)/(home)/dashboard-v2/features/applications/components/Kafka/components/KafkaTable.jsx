@@ -52,40 +52,61 @@ function CriticalBadge() {
 
 export default function KafkaTable({
   rows,
+  sortKey,
   sortDir,
+  setSortKey,
   setSortDir,
   columns,
   onOpenRow,
 }) {
+  const handleHeaderClick = (key) => {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
+
+  const onHeaderKeyDown = (e, key) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleHeaderClick(key);
+    }
+  };
+
+  const ariaFor = (key) =>
+    sortKey === key ? (sortDir === "asc" ? "ascending" : "descending") : "none";
+
+  const renderHeader = (label, key) => (
+    <TableHead
+      role="button"
+      tabIndex={0}
+      onClick={() => handleHeaderClick(key)}
+      onKeyDown={(e) => onHeaderKeyDown(e, key)}
+      aria-sort={ariaFor(key)}
+className="cursor-pointer sticky top-0 z-10 bg-[#DADAFA]"
+    >
+      <span className="inline-flex items-center">
+        {label}
+        <SortArrow dir={sortDir} active={sortKey === key} />
+      </span>
+    </TableHead>
+  );
+
   return (
-    <Table>
-      <TableHeader>
+    <Table wrapperClassName={rows.length > 6 ? "max-h-72 overflow-y-auto" : ""}>
+<TableHeader className="sticky top-0 z-10 !bg-[#DADAFA]">
         <TableRow>
-          <TableHead
-            role="button"
-            tabIndex={0}
-            onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-              }
-            }}
-            aria-sort={sortDir === "asc" ? "ascending" : "descending"}
-            className="cursor-pointer"
-          >
-            <span className="inline-flex items-center">
-              {columns.name.label} <SortArrow dir={sortDir} active />
-            </span>
-          </TableHead>
-          <TableHead>{columns.host.label}</TableHead>
-          <TableHead>{columns.cpu.label}</TableHead>
-          <TableHead>{columns.memory.label}</TableHead>
-          <TableHead>{columns.threads.label}</TableHead>
-          <TableHead>{columns.connections.label}</TableHead>
-          <TableHead>{columns.heapMb.label}</TableHead>
-          <TableHead>{columns.health.label}</TableHead>
-          <TableHead>{columns.status.label}</TableHead>
+          {renderHeader(columns.name.label, "name")}
+          {renderHeader(columns.host.label, "host")}
+          {renderHeader(columns.cpu.label, "cpu")}
+          {renderHeader(columns.memory.label, "memory")}
+          {renderHeader(columns.threads.label, "threads")}
+          {renderHeader(columns.connections.label, "connections")}
+          {renderHeader(columns.heapMb.label, "heapMb")}
+          {renderHeader(columns.health.label, "health")}
+          {renderHeader(columns.status.label, "status")}
         </TableRow>
       </TableHeader>
 

@@ -7,17 +7,41 @@ export function useRedisSorting(rows, sortKey, sortDir) {
   return useMemo(() => {
     const list = [...(rows ?? [])];
     const key = sortKey || "name";
+    const dir = sortDir === "desc" ? "desc" : "asc";
+
     list.sort((a, b) => {
       const av = a?.[key];
       const bv = b?.[key];
-      const aNum = parseFloat(av);
-      const bNum = parseFloat(bv);
+
+      const aNull = av == null || (typeof av === "string" && av.length === 0);
+      const bNull = bv == null || (typeof bv === "string" && bv.length === 0);
+      if (aNull || bNull) {
+        if (aNull && bNull) return 0;
+        return aNull ? 1 : -1; // push null/empty to bottom
+      }
+
+      const aNum =
+        typeof av === "number"
+          ? av
+          : Number.isFinite(parseFloat(av))
+          ? parseFloat(av)
+          : NaN;
+      const bNum =
+        typeof bv === "number"
+          ? bv
+          : Number.isFinite(parseFloat(bv))
+          ? parseFloat(bv)
+          : NaN;
       const bothNum = Number.isFinite(aNum) && Number.isFinite(bNum);
-      if (bothNum) return sortDir === "asc" ? aNum - bNum : bNum - aNum;
-      const as = (av ?? "").toString();
-      const bs = (bv ?? "").toString();
-      return sortDir === "asc" ? as.localeCompare(bs) : bs.localeCompare(as);
+      if (bothNum) return dir === "asc" ? aNum - bNum : bNum - aNum;
+
+      const as = String(av).toLowerCase();
+      const bs = String(bv).toLowerCase();
+      if (as === bs) return 0;
+      if (dir === "asc") return as < bs ? -1 : 1;
+      return as < bs ? 1 : -1;
     });
+
     return list;
   }, [rows, sortKey, sortDir]);
 }

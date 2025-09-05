@@ -42,6 +42,7 @@ import {
 /* ---------- Kafka Component ---------- */
 export default function Kafka({ optionsMenuItems }) {
   const [sortDir, setSortDir] = useState("asc");
+  const [sortKey, setSortKey] = useState("name");
   const [openRow, setOpenRow] = useState(null);
   const [visibleCount, setVisibleCount] = useState(topicBatchSize);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -50,7 +51,7 @@ export default function Kafka({ optionsMenuItems }) {
   const [topicSortDir, setTopicSortDir] = useState("asc");
 
   // Sorted lists derived from state
-  const sortedRows = useKafkaRowSorting(kafkaData.rows, sortDir);
+  const sortedRows = useKafkaRowSorting(kafkaData.rows, sortKey, sortDir);
   const activeRow = openRow != null ? sortedRows[openRow] : null;
   const topics = activeRow?.topics ?? [];
   const sortedTopics = useTopicSorting(topics, topicSortKey, topicSortDir);
@@ -156,7 +157,9 @@ export default function Kafka({ optionsMenuItems }) {
           <div className="overflow-hidden">
             <KafkaTable
               rows={sortedRows}
+              sortKey={sortKey}
               sortDir={sortDir}
+              setSortKey={setSortKey}
               setSortDir={setSortDir}
               columns={columns}
               onOpenRow={setOpenRow}
