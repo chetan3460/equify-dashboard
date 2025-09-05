@@ -14,6 +14,7 @@ import { columns } from "./config";
 import { applicationsData } from "./data";
 import { useApplicationsSorting } from "./hooks/useApplicationsSorting";
 import ApplicationsTable from "./components/ApplicationsTable";
+import { exportCsv } from "@/lib/csv";
 
 export default function ApplicationsComponent() {
   const [sortDir, setSortDir] = useState("asc");
@@ -41,7 +42,11 @@ export default function ApplicationsComponent() {
               <DragHandleIcon />
             </div>
           ) : (
-            <OptionsDropdown />
+            <OptionsDropdown
+              onAction={(id) => {
+                if (id === "export") exportCsv("applications.csv", rows);
+              }}
+            />
           )}
         </div>
       </div>
