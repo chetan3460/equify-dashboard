@@ -20,10 +20,18 @@ import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { providerStatus, getStatusList } from "./data";
 import { PROVIDER_STATUS_CONFIG } from "./config";
+import { exportCsv } from "@/lib/csv";
 
 export default function ProviderStatus({ optionsMenuItems }) {
   const { theme } = useTheme();
   const { isGlobalDragMode } = useDragContext();
+
+  // Build export rows once per render
+  const exportRows = getStatusList(providerStatus).map(({ name, status }) => ({
+    provider: name,
+    status: status === 1 ? PROVIDER_STATUS_CONFIG.statusLabels.active : PROVIDER_STATUS_CONFIG.statusLabels.inactive,
+    status_code: status,
+  }));
 
   return (
     <Card className="h-full flex flex-col">
@@ -79,7 +87,12 @@ export default function ProviderStatus({ optionsMenuItems }) {
               </svg>
             </div>
           ) : (
-            <OptionsDropdown items={optionsMenuItems} />
+            <OptionsDropdown
+              items={optionsMenuItems}
+              onAction={(id) => {
+                if (id === "export") exportCsv("provider-status.csv", exportRows);
+              }}
+            />
           )}
         </div>
       </div>

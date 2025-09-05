@@ -30,6 +30,7 @@ import {
 } from "recharts";
 import { rawData, chartData } from "./data";
 import { getChartConfig } from "./config";
+import { exportCsv } from "@/lib/csv";
 
 const CustomTick = ({ x, y, payload, vertical = false, chartConfig }) => (
   // <text
@@ -115,6 +116,12 @@ export default function AvgLatency({ optionsMenuItems, height = 440 }) {
         { id: "refresh", label: "Refresh" },
       ];
 
+  const optionsWithActions = resolvedOptions.map((opt) =>
+    opt.id === "export"
+      ? { ...opt, onClick: () => exportCsv("avg-latency.csv", chartData) }
+      : opt
+  );
+
   return (
     <Card className="h-full flex flex-col">
       <div className="flex items-center justify-between">
@@ -177,7 +184,7 @@ export default function AvgLatency({ optionsMenuItems, height = 440 }) {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>Options</DropdownMenuLabel>
-                {resolvedOptions.map((item, idx) => (
+                {optionsWithActions.map((item, idx) => (
                   <DropdownMenuItem
                     key={item.id || idx}
                     className="px-2 py-1.5 text-sm"
