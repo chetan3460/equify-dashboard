@@ -9,40 +9,44 @@ import OngoingTPS from "./components/OngoingTPS/OngoingTPS";
 import AvgLatency from "./components/AvgLatency/AvgLatency";
 import DeliveryReports from "./components/DeliveryReports/DeliveryReports";
 import SuccessfulTransactions from "./components/SuccessfulTransactions/SuccessfulTransactions";
+import { chartData as apiCallsChartData } from "./components/APICallsByProvider/data";
 
 export default function ServiceProviders() {
   const items = useMemo(
-    () => [
-      {
-        id: "provider-status",
-        className: "",
-        component: <ProviderStatus />,
-      },
-      {
-        id: "provider-traffic",
-        className: "",
-        component: <ProviderTraffic />,
-      },
-      { id: "api-calls-today", className: "", component: <APICallsToday /> },
+    () => {
+      const spanTwoCols = apiCallsChartData.length > 6 ? "lg:col-span-2 h-full" : "";
+      return [
+        {
+          id: "provider-status",
+          className: "",
+          component: <ProviderStatus />,
+        },
+        {
+          id: "provider-traffic",
+          className: "",
+          component: <ProviderTraffic />,
+        },
+        { id: "api-calls-today", className: "", component: <APICallsToday /> },
 
-      { id: "delivery-reports", className: "", component: <DeliveryReports /> },
-      { id: "ongoing-tps", className: "", component: <OngoingTPS /> },
-      {
-        id: "avg-latency",
-        className: "lg:col-span-2 h-full",
-        component: <AvgLatency />,
-      },
-      {
-        id: "successful-transactions",
-        className: "lg:col-span-2 h-full",
-        component: <SuccessfulTransactions />,
-      },
-      {
-        id: "api-calls-by-provider",
-        className: "",
-        component: <APICallsByProvider />,
-      },
-    ],
+        { id: "delivery-reports", className: "", component: <DeliveryReports /> },
+        { id: "ongoing-tps", className: "", component: <OngoingTPS /> },
+        {
+          id: "avg-latency",
+          className: "lg:col-span-2 h-full",
+          component: <AvgLatency />,
+        },
+        {
+          id: "successful-transactions",
+          className: "lg:col-span-2 h-full",
+          component: <SuccessfulTransactions />,
+        },
+        {
+          id: "api-calls-by-provider",
+          className: spanTwoCols,
+          component: <APICallsByProvider />,
+        },
+      ];
+    },
     []
   );
 
