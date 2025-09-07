@@ -230,7 +230,7 @@ export default function OngoingTPS({ optionsMenuItems, height = 340 }) {
                 )}
               </defs>
 
-              <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+              <Bar dataKey="value" barSize={16} radius={[4, 4, 0, 0]}>
                 {chartData.map((entry, i) => (
                   <Cell key={i} fill={`url(#${entry.gradientId})`} />
                 ))}

@@ -10,11 +10,15 @@ import AvgLatency from "./components/AvgLatency/AvgLatency";
 import DeliveryReports from "./components/DeliveryReports/DeliveryReports";
 import SuccessfulTransactions from "./components/SuccessfulTransactions/SuccessfulTransactions";
 import { chartData as apiCallsChartData } from "./components/APICallsByProvider/data";
+import { data as providerTrafficData } from "./components/ProviderTraffic/data";
+import { chartData as ongoingTPSChartData } from "./components/OngoingTPS/data";
 
 export default function ServiceProviders() {
   const items = useMemo(
     () => {
-      const spanTwoCols = apiCallsChartData.length > 6 ? "lg:col-span-2 h-full" : "";
+      const spanApiTwoCols = apiCallsChartData.length > 6 ? "lg:col-span-2 h-full" : "";
+      const spanTrafficTwoCols = providerTrafficData.length > 6 ? "lg:col-span-2 h-full" : "";
+      const spanOngoingTPSTwoCols = ongoingTPSChartData.length > 6 ? "lg:col-span-2 h-full" : "";
       return [
         {
           id: "provider-status",
@@ -23,13 +27,13 @@ export default function ServiceProviders() {
         },
         {
           id: "provider-traffic",
-          className: "",
+          className: spanTrafficTwoCols,
           component: <ProviderTraffic />,
         },
         { id: "api-calls-today", className: "", component: <APICallsToday /> },
 
         { id: "delivery-reports", className: "", component: <DeliveryReports /> },
-        { id: "ongoing-tps", className: "", component: <OngoingTPS /> },
+      { id: "ongoing-tps", className: spanOngoingTPSTwoCols, component: <OngoingTPS /> },
         {
           id: "avg-latency",
           className: "lg:col-span-2 h-full",
@@ -42,7 +46,7 @@ export default function ServiceProviders() {
         },
         {
           id: "api-calls-by-provider",
-          className: spanTwoCols,
+          className: spanApiTwoCols,
           component: <APICallsByProvider />,
         },
       ];

@@ -14,7 +14,7 @@ export function getChartConfig(theme) {
             },
         },
         bar: {
-            size: 20,
+            size: 16,
             radius: [0, 4, 4, 0],
         },
         grid: {

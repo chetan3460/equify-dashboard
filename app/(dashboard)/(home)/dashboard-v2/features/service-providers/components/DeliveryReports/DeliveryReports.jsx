@@ -273,11 +273,13 @@ export default function DeliveryReports({
 
               {/* Bars */}
               <Bar
+                barSize={16}
                 dataKey="msgSubmitted"
                 radius={[4, 4, 0, 0]}
                 fill="url(#gradMsg)"
               />
               <Bar
+                barSize={16}
                 dataKey="dlrReceived"
                 radius={[4, 4, 0, 0]}
                 fill="url(#gradDlr)"
