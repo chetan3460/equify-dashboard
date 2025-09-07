@@ -25,19 +25,40 @@ import { chartData, rawData } from "./data"; // ⬅️ import rawData
 import { getChartConfig } from "./config";
 import { formatCompactNumber } from "@/lib/number";
 
-const CustomTick = ({ x, y, payload, vertical = false, chartConfig }) => (
-  <text
-    x={x}
-    y={y + (vertical ? 0 : 10)}
-    textAnchor={vertical ? "end" : "middle"}
-    className="text-xs font-normal"
-    fill={chartConfig.axis.tick.fill}
-  >
-    {vertical && typeof payload.value === "number"
-      ? formatCompactNumber(payload.value)
-      : payload.value}
-  </text>
-);
+const CustomTick = ({ x, y, payload, vertical = false, rotate = false, chartConfig }) => {
+  const label = vertical && typeof payload.value === "number"
+    ? formatCompactNumber(payload.value)
+    : payload.value;
+
+  if (rotate) {
+    // Render vertical text (for crowded X-axis category labels)
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text
+          transform="rotate(-90)"
+          textAnchor="end"
+          className="text-xs font-normal"
+          fill={chartConfig.axis.tick.fill}
+          dx={-6}
+        >
+          {label}
+        </text>
+      </g>
+    );
+  }
+
+  return (
+    <text
+      x={x}
+      y={y + (vertical ? 0 : 10)}
+      textAnchor={vertical ? "end" : "middle"}
+      className="text-xs font-normal"
+      fill={chartConfig.axis.tick.fill}
+    >
+      {label}
+    </text>
+  );
+};
 
 const CustomTooltip = ({ active, payload, chartConfig }) => {
   if (active && payload && payload.length) {
@@ -125,7 +146,8 @@ export default function APICallsByProvider({ optionsMenuItems }) {
             <OptionsDropdown
               items={optionsMenuItems}
               onAction={(id) => {
-                if (id === "export") exportCsv("api-calls-by-provider.csv", chartData);
+                if (id === "export")
+                  exportCsv("api-calls-by-provider.csv", chartData);
               }}
             />
           )}
@@ -147,9 +169,11 @@ export default function APICallsByProvider({ optionsMenuItems }) {
               <XAxis
                 dataKey="name"
                 interval={0}
-                tickMargin={8}
-                height={40}
-                tick={<CustomTick chartConfig={chartConfig} />}
+                tickMargin={4}
+                height={100}
+                tick={(props) => (
+                  <CustomTick {...props} chartConfig={chartConfig} rotate />
+                )}
               />
               <YAxis tick={<CustomTick chartConfig={chartConfig} vertical />} />
               <Tooltip
@@ -176,12 +200,14 @@ export default function APICallsByProvider({ optionsMenuItems }) {
 
               {/* Bars */}
               <Bar
+                barSize={16}
                 dataKey="success"
                 name="Successful"
                 radius={[4, 4, 0, 0]}
                 fill="url(#gradSuccess)"
               />
               <Bar
+                barSize={16}
                 dataKey="failed"
                 name="Failed"
                 radius={[4, 4, 0, 0]}
