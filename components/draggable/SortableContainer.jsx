@@ -37,8 +37,12 @@ function SortableItem({
     isDragging,
   } = useSortable({ id });
 
+  // Avoid scaling effects from dnd-kit by applying translate only
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform:
+      transform != null
+        ? `translate3d(${Math.round(transform.x)}px, ${Math.round(transform.y)}px, 0)`
+        : undefined,
     transition,
     zIndex: isDragging ? 50 : 1,
   };

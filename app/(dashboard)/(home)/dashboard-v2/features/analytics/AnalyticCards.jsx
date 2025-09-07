@@ -155,7 +155,7 @@ function SortableItem({ id, children, isCustomizeMode }) {
       style={style}
       className={`transition-all duration-300 relative ${
         isCustomizeMode ? "cursor-grab select-none touch-none" : ""
-      } ${isDragging ? "scale-105 opacity-75" : ""}`}
+      } ${isDragging ? "" : ""}`}
       {...dragProps}
     >
       {children}
@@ -260,7 +260,7 @@ export default function AnalyticCards() {
 
       <DragOverlay>
         {activeItem && (
-          <div className="scale-105 rotate-3">
+          <div>
             <Card data={activeItem} isCustomizeMode />
           </div>
         )}
