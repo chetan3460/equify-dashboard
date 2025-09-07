@@ -25,7 +25,7 @@ export default function Applications() {
       items={items}
       storageKey="v2-applications-order"
       strategy="grid"
-      restrictBySpan={false}
+      restrictBySpan={true}
     >
       {(gridItems, SortableItem) => (
         <div className="grid grid-cols-1  gap-4">

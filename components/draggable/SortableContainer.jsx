@@ -52,8 +52,11 @@ function SortableItem({
       style={style}
       className={`
         transition-all duration-300 relative 
-        ${isCustomizeMode ? "cursor-grab select-none touch-none border-2 border-dashed border-gray-400 rounded-20 p-1 min-h-[120px] hover:border-blue-400" : ""} 
-        ${isDragging ? "scale-105 opacity-75" : ""} 
+        ${
+          isCustomizeMode
+            ? "cursor-grab select-none touch-none border-2 border-dashed border-gray-400 rounded-20 p-1  hover:border-blue-400"
+            : ""
+        } 
         ${className}
       `}
       {...dragProps}
@@ -242,7 +245,10 @@ export const SortableContainer = ({
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext items={items.map((it) => it.id)} strategy={getSortingStrategy()}>
+        <SortableContext
+          items={items.map((it) => it.id)}
+          strategy={getSortingStrategy()}
+        >
           {children(items, (item, index, customClassName = "") => (
             <SortableItem
               key={item.id}
@@ -259,7 +265,9 @@ export const SortableContainer = ({
           {activeItem && renderOverlay ? (
             renderOverlay(activeItem)
           ) : activeItem ? (
-            <div className="transform rotate-6 opacity-90">{activeItem.component || activeItem}</div>
+            <div>
+              {activeItem.component || activeItem}
+            </div>
           ) : null}
         </DragOverlay>
       </DndContext>

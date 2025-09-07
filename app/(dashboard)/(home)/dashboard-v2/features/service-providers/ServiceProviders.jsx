@@ -58,7 +58,7 @@ export default function ServiceProviders() {
       items={items}
       storageKey="v2-service-providers-order"
       strategy="grid"
-      restrictBySpan={false}
+      restrictBySpan={true}
     >
       {(gridItems, SortableItem) => (
         <div className="grid grid-cols-1 lg:grid-cols-2  gap-4">
