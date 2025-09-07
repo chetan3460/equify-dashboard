@@ -10,14 +10,12 @@ import AvgLatency from "./components/AvgLatency/AvgLatency";
 import DeliveryReports from "./components/DeliveryReports/DeliveryReports";
 import SuccessfulTransactions from "./components/SuccessfulTransactions/SuccessfulTransactions";
 import { chartData as apiCallsChartData } from "./components/APICallsByProvider/data";
-import { data as providerTrafficData } from "./components/ProviderTraffic/data";
 import { chartData as ongoingTPSChartData } from "./components/OngoingTPS/data";
 
 export default function ServiceProviders() {
   const items = useMemo(
     () => {
       const spanApiTwoCols = apiCallsChartData.length > 6 ? "lg:col-span-2 h-full" : "";
-      const spanTrafficTwoCols = providerTrafficData.length > 6 ? "lg:col-span-2 h-full" : "";
       const spanOngoingTPSTwoCols = ongoingTPSChartData.length > 6 ? "lg:col-span-2 h-full" : "";
       return [
         {
@@ -27,7 +25,7 @@ export default function ServiceProviders() {
         },
         {
           id: "provider-traffic",
-          className: spanTrafficTwoCols,
+          className: "",
           component: <ProviderTraffic />,
         },
         { id: "api-calls-today", className: "", component: <APICallsToday /> },
