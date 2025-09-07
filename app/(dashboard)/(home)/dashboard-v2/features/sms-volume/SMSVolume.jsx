@@ -5,23 +5,9 @@ import { OverallSMSVolume, SMSByDepartment, SMSByProvider } from "./index";
 
 export default function SMSVolume() {
   // demo data (kept local to this feature)
+  // Keep only lastUpdated; series values use component defaults
   const smsData = {
     lastUpdated: "15:15:45",
-    "12:00": { total: 155130, delivered: 77434, failed: 22575, retry: 55121 },
-    "13:00": { total: 155130, delivered: 77434, failed: 22575, retry: 55121 },
-    "14:00": { total: 155130, delivered: 77434, failed: 22575, retry: 55121 },
-    "15:00": { total: 155130, delivered: 77434, failed: 22575, retry: 55121 },
-  };
-  const providerData = {
-    lastUpdated: "01:15:45",
-    Airtel: { total: 25013 },
-    Jio: { total: 55035 },
-    VI: { total: 19971 },
-    BSNL: { total: 25013 },
-    Infobip: { total: 55035 },
-    Tanla: { total: 19971 },
-    Synch: { total: 55035 },
-    Equence: { total: 19971 },
   };
 
   // selection states
@@ -75,7 +61,6 @@ export default function SMSVolume() {
         component: (
           <SMSByProvider
             height={chartHeight}
-            providerData={providerData}
             selectedPeriod={providerSelectedPeriod}
             onPeriodChange={setProviderSelectedPeriod}
             selectOptions={smsSelectOptions}
@@ -86,7 +71,6 @@ export default function SMSVolume() {
     ],
     [
       smsData,
-      providerData,
       selectedPeriod,
       deptSelectedPeriod,
       providerSelectedPeriod,

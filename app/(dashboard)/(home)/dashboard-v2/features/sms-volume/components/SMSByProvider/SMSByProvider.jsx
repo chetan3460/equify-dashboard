@@ -35,21 +35,37 @@ const formatAxis = (n) => {
   return n.toLocaleString();
 };
 
-const CustomTick = ({ x, y, payload, textAnchor = "end", chartConfig }) => (
-  <text
-    x={x}
-    y={y}
-    dy={4}
-    textAnchor={textAnchor}
-    fill={chartConfig.axis.tick.fill}
-    fontSize={chartConfig.axis.tick.fontSize}
-    className="text-xs font-normal"
-  >
-    {typeof payload?.value === "number"
-      ? formatAxis(payload.value)
-      : payload?.value}
-  </text>
-);
+// Trim labels: if more than 5 words OR exceeds maxChars, add ellipsis
+const trimLabel = (s, { maxWords = 5, maxChars = 14 } = {}) => {
+  if (s == null) return s;
+  const str = String(s);
+  const words = str.split(/\s+/).filter(Boolean);
+  const byWords = words.length > maxWords ? words.slice(0, maxWords).join(" ") + "…" : str;
+  return byWords.length > maxChars ? byWords.slice(0, maxChars) + "…" : byWords;
+};
+
+const CustomTick = ({ x, y, payload, textAnchor = "end", chartConfig }) => {
+  const raw = payload?.value;
+  const label = typeof raw === "number" ? formatAxis(raw) : trimLabel(raw, { maxWords: 5, maxChars: 14 });
+  return (
+    <text
+      x={x}
+      y={y}
+      dy={4}
+      textAnchor={textAnchor}
+      fill={chartConfig.axis.tick.fill}
+      fontSize={chartConfig.axis.tick.fontSize}
+      className="text-xs font-normal"
+      title={raw != null ? String(raw) : ""}
+      style={{ pointerEvents: "auto" }}
+      aria-label={raw != null ? String(raw) : undefined}
+    >
+      {/* Full value on hover */}
+      <title>{raw != null ? String(raw) : ""}</title>
+      {label}
+    </text>
+  );
+};
 
 export default function SMSByProvider({
   height = 384,
@@ -67,6 +83,25 @@ export default function SMSByProvider({
     () => getProviderChartData(providerData),
     [providerData]
   );
+
+  const MAX_VISIBLE_ROWS = 14;
+  const ROW_HEIGHT = 28; // px per category row (barSize + padding)
+  const needsScroll = chartData.length > MAX_VISIBLE_ROWS;
+  const chartInnerHeight = needsScroll
+    ? 32 + chartData.length * ROW_HEIGHT // add some padding for axes
+    : height;
+
+  // Reserve enough space for Y-axis labels to avoid clipping
+  const approxCharWidth = 7; // px per character for text-xs
+  const maxLabelLen = useMemo(
+    () =>
+      chartData.reduce((m, d) => {
+        const lbl = trimLabel(d.name, { maxWords: 5, maxChars: 14 });
+        return Math.max(m, (lbl || "").length);
+      }, 0),
+    [chartData]
+  );
+  const yAxisWidth = Math.min(160, Math.max(70, maxLabelLen * approxCharWidth + 8));
 
   return (
     <Card className="h-full flex flex-col">
@@ -102,27 +137,51 @@ export default function SMSByProvider({
         </div>
 
         <CardContent className="flex-1 flex flex-col">
-          <div style={{ height }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={chartData}
-                layout="vertical"
-                barCategoryGap="10%"
-                margin={{ top: 8, right: 30, left: 0, bottom: 0 }}
-              >
-                <defs>
-                  {chartData.map((d, i) => {
-                    const spec =
-                      gradientSpecByName[d.name] || gradientSpecByName.Airtel;
-                    const id = `grad-${i}`;
-                    if (spec.type === "radial") {
+          <div
+            className={needsScroll ? "overflow-y-auto" : ""}
+            style={{ maxHeight: height }}
+          >
+            <div style={{ height: chartInnerHeight }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={chartData}
+                  layout="vertical"
+                  barCategoryGap="10%"
+                  margin={{ top: 8, right: 30, left: 0, bottom: 0 }}
+                >
+                  <defs>
+                    {chartData.map((d, i) => {
+                      const spec =
+                        gradientSpecByName[d.name] || gradientSpecByName.Airtel;
+                      const id = `grad-${i}`;
+                      if (spec.type === "radial") {
+                        return (
+                          <radialGradient
+                            key={id}
+                            id={id}
+                            cx="50%"
+                            cy="50%"
+                            r="70%"
+                          >
+                            {spec.stops.map(([offset, color]) => (
+                              <stop
+                                key={offset}
+                                offset={offset}
+                                stopColor={color}
+                              />
+                            ))}
+                          </radialGradient>
+                        );
+                      }
                       return (
-                        <radialGradient
+                        <linearGradient
                           key={id}
                           id={id}
-                          cx="50%"
-                          cy="50%"
-                          r="70%"
+                          x1="0%"
+                          y1="0%"
+                          x2="100%"
+                          y2="0%"
+                          gradientTransform={`rotate(${spec.angle || 0}, 0.5, 0.5)`}
                         >
                           {spec.stops.map(([offset, color]) => (
                             <stop
@@ -131,58 +190,37 @@ export default function SMSByProvider({
                               stopColor={color}
                             />
                           ))}
-                        </radialGradient>
+                        </linearGradient>
                       );
-                    }
-                    return (
-                      <linearGradient
-                        key={id}
-                        id={id}
-                        x1="0%"
-                        y1="0%"
-                        x2="100%"
-                        y2="0%"
-                        gradientTransform={`rotate(${
-                          spec.angle || 0
-                        }, 0.5, 0.5)`}
-                      >
-                        {spec.stops.map(([offset, color]) => (
-                          <stop
-                            key={offset}
-                            offset={offset}
-                            stopColor={color}
-                          />
-                        ))}
-                      </linearGradient>
-                    );
-                  })}
-                </defs>
+                    })}
+                  </defs>
 
-                <CartesianGrid
-                  stroke={chartConfig.grid.stroke}
-                  strokeDasharray={chartConfig.grid.strokeDasharray}
-                  strokeWidth={chartConfig.grid.strokeWidth}
-                />
+                  <CartesianGrid
+                    stroke={chartConfig.grid.stroke}
+                    strokeDasharray={chartConfig.grid.strokeDasharray}
+                    strokeWidth={chartConfig.grid.strokeWidth}
+                  />
 
-                <XAxis
-                  type="number"
-                  tickFormatter={formatAxis}
-                  tickMargin={10}
-                  axisLine={{ stroke: chartConfig.axis.stroke }}
-                  tickLine={{ stroke: chartConfig.axis.stroke }}
-                  tick={(props) => (
-                    <CustomTick
-                      {...props}
-                      chartConfig={chartConfig}
-                      textAnchor="middle"
-                    />
-                  )}
-                />
+                  <XAxis
+                    type="number"
+                    tickFormatter={formatAxis}
+                    tickMargin={10}
+                    axisLine={{ stroke: chartConfig.axis.stroke }}
+                    tickLine={{ stroke: chartConfig.axis.stroke }}
+                    tick={(props) => (
+                      <CustomTick
+                        {...props}
+                        chartConfig={chartConfig}
+                        textAnchor="middle"
+                      />
+                    )}
+                  />
 
                 <YAxis
                   type="category"
                   dataKey="name"
-                  tickMargin={1}
+                  width={yAxisWidth}
+                  tickMargin={6}
                   axisLine={{ stroke: chartConfig.axis.stroke }}
                   tickLine={{ stroke: chartConfig.axis.stroke }}
                   tick={(props) => (
@@ -190,21 +228,22 @@ export default function SMSByProvider({
                   )}
                 />
 
-                <Tooltip
-                  cursor={chartConfig.tooltip.cursor}
-                  contentStyle={chartConfig.tooltip.contentStyle}
-                  labelStyle={chartConfig.tooltip.labelStyle}
-                  itemStyle={chartConfig.tooltip.itemStyle}
-                  formatter={(value) => [formatCompactNumber(value)]}
-                />
+                  <Tooltip
+                    cursor={chartConfig.tooltip.cursor}
+                    contentStyle={chartConfig.tooltip.contentStyle}
+                    labelStyle={chartConfig.tooltip.labelStyle}
+                    itemStyle={chartConfig.tooltip.itemStyle}
+                    formatter={(value) => [formatCompactNumber(value)]}
+                  />
 
-                <Bar dataKey="total" barSize={20} radius={[0, 4, 4, 0]}>
-                  {chartData.map((d, i) => (
-                    <Cell key={d.name} fill={`url(#grad-${i})`} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+                  <Bar dataKey="total" barSize={16} radius={[0, 4, 4, 0]}>
+                    {chartData.map((d, i) => (
+                      <Cell key={d.name} fill={`url(#grad-${i})`} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
           <div className="py-1 px-2 bg-[#E2F5FD] dark:bg-[#0D475F] rounded-[8px] inline-block mt-3 max-w-max">
             <p className="text-xs font-medium text-[#0067B1] dark:text-[#149BFC]">

@@ -9,6 +9,14 @@ export const providerObj = {
     Tanla: { total: 19971 },
     Synch: { total: 55035 },
     Equence: { total: 19971 },
+    RouteMobile: { total: 31234 },
+    Kaleyra: { total: 27890 },
+    Twilio: { total: 43123 },
+    Nexmo: { total: 22765 },
+    TataTeleservices: { total: 19876 },
+    Sify: { total: 25432 },
+    MyOperator: { total: 16543 },
+    MSG91: { total: 38901 },
 };
 
 /**
@@ -92,5 +100,45 @@ export const gradientSpecByName = {
             ["0%", "#3EECAC"],
             ["100%", "#42A5F5"],
         ],
+    },
+    RouteMobile: {
+        type: "linear",
+        angle: 45,
+        stops: [["0%", "#FF9A9E"], ["100%", "#FAD0C4"]],
+    },
+    Kaleyra: {
+        type: "linear",
+        angle: 135,
+        stops: [["0%", "#84FAB0"], ["100%", "#8FD3F4"]],
+    },
+    Twilio: {
+        type: "linear",
+        angle: 225,
+        stops: [["0%", "#F5576C"], ["100%", "#F093FB"]],
+    },
+    Nexmo: {
+        type: "linear",
+        angle: 315,
+        stops: [["0%", "#4FACFE"], ["100%", "#00F2FE"]],
+    },
+    TataTeleservices: {
+        type: "linear",
+        angle: 200,
+        stops: [["0%", "#FCCF31"], ["100%", "#F55555"]],
+    },
+    Sify: {
+        type: "linear",
+        angle: 160,
+        stops: [["0%", "#43E97B"], ["100%", "#38F9D7"]],
+    },
+    MyOperator: {
+        type: "linear",
+        angle: 20,
+        stops: [["0%", "#A18CD1"], ["100%", "#FBC2EB"]],
+    },
+    MSG91: {
+        type: "linear",
+        angle: 250,
+        stops: [["0%", "#F6D365"], ["100%", "#FDA085"]],
     },
 };
