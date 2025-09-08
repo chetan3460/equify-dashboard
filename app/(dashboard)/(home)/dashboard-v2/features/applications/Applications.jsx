@@ -25,7 +25,8 @@ export default function Applications() {
       items={items}
       storageKey="v2-applications-order"
       strategy="grid"
-      restrictBySpan={true}
+      restrictBySpan={false}
+      moveMode="swap"
     >
       {(gridItems, SortableItem) => (
         <div className="grid grid-cols-1  gap-4">

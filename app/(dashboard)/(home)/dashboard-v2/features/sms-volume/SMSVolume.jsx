@@ -83,7 +83,8 @@ export default function SMSVolume() {
       items={items}
       storageKey="v2-sms-volume-order"
       strategy="grid"
-      restrictBySpan={true}
+      restrictBySpan={false}
+      moveMode="swap"
     >
       {(gridItems, SortableItem) => (
         <div className="grid grid-cols-1 lg:grid-cols-2  gap-4">

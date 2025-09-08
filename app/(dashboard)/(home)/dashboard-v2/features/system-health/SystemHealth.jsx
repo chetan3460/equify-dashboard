@@ -23,7 +23,8 @@ export default function SystemHealth() {
       items={items}
       storageKey="v2-system-health-order"
       strategy="grid"
-      restrictBySpan={true}
+      restrictBySpan={false}
+      moveMode="swap"
     >
       {(gridItems, SortableItem) => (
         <div className="grid grid-cols-1  gap-6">

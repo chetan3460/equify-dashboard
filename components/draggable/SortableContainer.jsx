@@ -35,16 +35,17 @@ function SortableItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id });
+  } = useSortable({ id, animateLayoutChanges: () => false });
 
-  // Avoid scaling effects from dnd-kit by applying translate only
+  // Keep siblings visually static during drag; hide the active item's original
   const style = {
     transform:
-      transform != null
+      isDragging && transform != null
         ? `translate3d(${Math.round(transform.x)}px, ${Math.round(transform.y)}px, 0)`
         : undefined,
-    transition,
+    transition: isDragging ? transition : undefined,
     zIndex: isDragging ? 50 : 1,
+    opacity: isDragging ? 0 : 1,
   };
 
   // In customize mode, apply drag listeners to entire item as well as the handle
@@ -80,7 +81,8 @@ export const SortableContainer = ({
   storageKey,
   onItemsChange,
   renderOverlay,
-  restrictBySpan = true,
+  restrictBySpan = false,
+  moveMode = "shift", // "shift" (default dnd-kit array move) or "swap"
 }) => {
   const {
     isGlobalDragMode,
@@ -213,6 +215,15 @@ export const SortableContainer = ({
     return tokens.length ? tokens.join("|") : "default";
   };
 
+  // Swap helper: swap two indices without shifting others
+  const swapAt = (arr, i, j) => {
+    const next = [...arr];
+    const tmp = next[i];
+    next[i] = next[j];
+    next[j] = tmp;
+    return next;
+  };
+
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (!over || active.id === over.id) {
@@ -223,6 +234,7 @@ export const SortableContainer = ({
     setItems((currentItems) => {
       const oldIndex = currentItems.findIndex((item) => item.id === active.id);
       const newIndex = currentItems.findIndex((item) => item.id === over.id);
+      if (oldIndex === -1 || newIndex === -1) return currentItems;
 
       // Restrict reordering to items with matching span groups (configurable)
       if (restrictBySpan) {
@@ -233,7 +245,10 @@ export const SortableContainer = ({
         }
       }
 
-      return arrayMove(currentItems, oldIndex, newIndex);
+      // Choose movement strategy: swap vs shift
+      return moveMode === "swap"
+        ? swapAt(currentItems, oldIndex, newIndex)
+        : arrayMove(currentItems, oldIndex, newIndex);
     });
 
     setActiveItem(null);
