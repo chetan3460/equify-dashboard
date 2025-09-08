@@ -33,15 +33,6 @@ import { getChartConfig } from "./config";
 import { exportCsv } from "@/lib/csv";
 
 const CustomTick = ({ x, y, payload, vertical = false, chartConfig }) => (
-  // <text
-  //   x={x}
-  //   y={y + (vertical ? 0 : 10)}
-  //   textAnchor={vertical ? "end" : "middle"}
-  //   className="text-xs font-normal"
-  //   fill={chartConfig.axis.tick.fill}
-  // >
-  //   {payload.value}
-  // </text>
   <text
     x={x}
     y={y}
@@ -51,7 +42,7 @@ const CustomTick = ({ x, y, payload, vertical = false, chartConfig }) => (
     fill={chartConfig.axis.tick.fill}
     fontSize={chartConfig.axis.tick.fontSize}
   >
-    {payload.value}ms
+    {vertical ? `${payload.value} ms` : payload.value}
   </text>
 );
 
@@ -215,6 +206,7 @@ export default function AvgLatency({ optionsMenuItems, height = 440 }) {
                 dataKey="name"
                 interval={0}
                 tick={<CustomTick chartConfig={chartConfig} />}
+                tickMargin={8}
                 height={40}
               />
               <YAxis
