@@ -20,7 +20,9 @@ import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
 import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { STICKY_HEADER_CLASS, ROW_SCROLL_THRESHOLD } from "@/lib/table";
+import { useTableSorting } from "@/lib/sort";
+import SortableHeaderCell from "../../../applications/components/shared/SortableHeaderCell";
 
 import { servers as serverData } from "./data";
 
@@ -35,35 +37,6 @@ const columnLabels = {
   exceededThreshold: "Threshold",
 };
 
-const SortIcon = ({ active, direction }) => (
-  <div
-    aria-hidden
-    className={`inline-flex items-center justify-center w-5 h-5 rounded-full transition-transform duration-200 ${
-      direction === "asc" ? "rotate-180" : "rotate-0"
-    } ${
-      active
-        ? "bg-[#DADAFA] text-primary"
-        : "hover:bg-[#DADAFA] hover:text-primary"
-    }`}
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      fill="none"
-      className="w-3 h-3"
-    >
-      <path
-        d="M6 1.875V10.125M2.625 6.75L6 10.125L9.375 6.75"
-        stroke="currentColor"
-        strokeWidth="0.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  </div>
-);
 
 const getTableKeys = (data) =>
   Array.isArray(data) && data.length
@@ -102,10 +75,9 @@ export default function ServerStatistics({ optionsMenuItems }) {
   const { isGlobalDragMode } = useDragContext();
   const { theme } = useTheme();
 
-  const [sortConfig, setSortConfig] = useState({
-    key: "host",
-    direction: "asc",
-  });
+  // Kafka-like sorting state
+  const [sortKey, setSortKey] = useState("host");
+  const [sortDir, setSortDir] = useState("asc");
 
   const lastUpdated = useMemo(() => {
     const times = (serverData || [])
@@ -117,25 +89,32 @@ export default function ServerStatistics({ optionsMenuItems }) {
   }, []);
 
   const tableKeys = useMemo(() => getTableKeys(serverData), []);
-  const sortedServers = useMemo(
-    () => sortData(Array.isArray(serverData) ? serverData : [], sortConfig),
-    [sortConfig]
+
+  // Accessors to align with generic table sorting
+  const accessors = useMemo(() => ({
+    io: (row) => {
+      // parse "read/write" as sum for sorting
+      if (!row?.io) return null;
+      const [r, w] = String(row.io)
+        .split("/")
+        .map((v) => Number.parseFloat(v.trim()));
+      if (Number.isFinite(r) && Number.isFinite(w)) return r + w;
+      if (Number.isFinite(r)) return r;
+      if (Number.isFinite(w)) return w;
+      return null;
+    },
+    exceededThreshold: (row) => (row?.exceededThreshold ? 1 : 0),
+  }), []);
+
+  const sortedServers = useTableSorting(
+    Array.isArray(serverData) ? serverData : [],
+    sortKey,
+    sortDir,
+    accessors
   );
 
-  if (!Array.isArray(serverData)) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Server Statistics</CardTitle>
-          <CardDescription>Last updated: N/A</CardDescription>
-        </CardHeader>
-        <div className="p-4 text-sm text-muted-foreground">
-          Error: `serverData` is not an array. Check your import path and
-          data.js export.
-        </div>
-      </Card>
-    );
-  }
+  const wrapperClassName =
+    sortedServers.length > ROW_SCROLL_THRESHOLD ? "max-h-72 overflow-y-auto" : "";
 
   return (
     <Card className="h-full flex flex-col">
@@ -152,51 +131,28 @@ export default function ServerStatistics({ optionsMenuItems }) {
           <OptionsDropdown
             items={optionsMenuItems}
             onAction={(id) => {
-              if (id === "export") exportCsv("server-statistics.csv", sortedServers);
+              if (id === "export")
+                exportCsv("server-statistics.csv", sortedServers);
             }}
           />
         )}
       </div>
 
-      <div className="h-[200px]">
-        <ScrollArea className="h-full">
-          <Table>
-            <TableHeader>
+      <div className="overflow-hidden">
+        <Table wrapperClassName={wrapperClassName}>
+          <TableHeader className={STICKY_HEADER_CLASS}>
               <TableRow>
-                {tableKeys.map((key) => {
-                  const isSortable = ["host", "memory", "cpu"].includes(key);
-                  return (
-                    <TableHead key={key} className="sticky top-0 z-10 ">
-                      {isSortable ? (
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setSortConfig((prev) => ({
-                              key,
-                              direction:
-                                prev.key === key && prev.direction === "asc"
-                                  ? "desc"
-                                  : "asc",
-                            }))
-                          }
-                          className="inline-flex items-center gap-1"
-                        >
-                          <span>{columnLabels[key] || key}</span>
-                          <SortIcon
-                            active={sortConfig.key === key}
-                            direction={
-                              sortConfig.key === key
-                                ? sortConfig.direction
-                                : "desc"
-                            }
-                          />
-                        </button>
-                      ) : (
-                        <span>{columnLabels[key] || key}</span>
-                      )}
-                    </TableHead>
-                  );
-                })}
+                {tableKeys.map((key) => (
+                  <SortableHeaderCell
+                    key={key}
+                    label={columnLabels[key] || key}
+                    columnKey={key}
+                    sortKey={sortKey}
+                    sortDir={sortDir}
+                    setSortKey={setSortKey}
+                    setSortDir={setSortDir}
+                  />
+                ))}
               </TableRow>
             </TableHeader>
 
@@ -230,7 +186,6 @@ export default function ServerStatistics({ optionsMenuItems }) {
               )}
             </TableBody>
           </Table>
-        </ScrollArea>
       </div>
     </Card>
   );
