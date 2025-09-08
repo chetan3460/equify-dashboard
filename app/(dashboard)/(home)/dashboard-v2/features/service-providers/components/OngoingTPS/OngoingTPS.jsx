@@ -32,19 +32,40 @@ import { rawData, chartData } from "./data";
 import { getChartConfig } from "./config";
 import { formatCompactNumber } from "@/lib/number";
 
-const CustomTick = ({ x, y, payload, vertical = false, chartConfig }) => (
-  <text
-    x={x}
-    y={y + (vertical ? 0 : 10)}
-    textAnchor={vertical ? "end" : "middle"}
-    className="text-xs font-normal"
-    fill={chartConfig.axis.tick.fill}
-  >
-    {vertical && typeof payload.value === "number"
+const CustomTick = ({ x, y, payload, vertical = false, rotate = false, chartConfig }) => {
+  const value =
+    vertical && typeof payload.value === "number"
       ? formatCompactNumber(payload.value)
-      : payload.value}
-  </text>
-);
+      : payload.value;
+
+  if (rotate) {
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text
+          transform="rotate(-90)"
+          textAnchor="end"
+          className="text-xs font-normal"
+          fill={chartConfig.axis.tick.fill}
+          dx={-6}
+        >
+          {value}
+        </text>
+      </g>
+    );
+  }
+
+  return (
+    <text
+      x={x}
+      y={y + (vertical ? 0 : 10)}
+      textAnchor={vertical ? "end" : "middle"}
+      className="text-xs font-normal"
+      fill={chartConfig.axis.tick.fill}
+    >
+      {value}
+    </text>
+  );
+};
 
 const CustomTooltip = ({ active, payload, chartConfig }) => {
   if (active && payload && payload.length) {
@@ -194,8 +215,11 @@ export default function OngoingTPS({ optionsMenuItems, height = 340 }) {
               <XAxis
                 dataKey="name"
                 interval={0}
-                tick={<CustomTick chartConfig={chartConfig} />}
-                height={40}
+                tickMargin={4}
+                height={100}
+                tick={(props) => (
+                  <CustomTick {...props} chartConfig={chartConfig} rotate />
+                )}
               />
               <YAxis tick={<CustomTick chartConfig={chartConfig} vertical />} />
               <Tooltip

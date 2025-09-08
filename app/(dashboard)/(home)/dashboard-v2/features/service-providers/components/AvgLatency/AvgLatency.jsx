@@ -32,19 +32,37 @@ import { rawData, chartData } from "./data";
 import { getChartConfig } from "./config";
 import { exportCsv } from "@/lib/csv";
 
-const CustomTick = ({ x, y, payload, vertical = false, chartConfig }) => (
-  <text
-    x={x}
-    y={y}
-    dy={vertical ? 4 : 16}
-    dx={vertical ? -10 : 0}
-    textAnchor={vertical ? "end" : "middle"}
-    fill={chartConfig.axis.tick.fill}
-    fontSize={chartConfig.axis.tick.fontSize}
-  >
-    {vertical ? `${payload.value} ms` : payload.value}
-  </text>
-);
+const CustomTick = ({ x, y, payload, vertical = false, rotate = false, chartConfig }) => {
+  if (rotate) {
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text
+          transform="rotate(-90)"
+          textAnchor="end"
+          fill={chartConfig.axis.tick.fill}
+          fontSize={chartConfig.axis.tick.fontSize}
+          dx={-6}
+        >
+          {payload.value}
+        </text>
+      </g>
+    );
+  }
+
+  return (
+    <text
+      x={x}
+      y={y}
+      dy={vertical ? 4 : 16}
+      dx={vertical ? -10 : 0}
+      textAnchor={vertical ? "end" : "middle"}
+      fill={chartConfig.axis.tick.fill}
+      fontSize={chartConfig.axis.tick.fontSize}
+    >
+      {vertical ? `${payload.value} ms` : payload.value}
+    </text>
+  );
+};
 
 const CustomTooltip = ({ active, payload, chartConfig }) => {
   if (active && payload && payload.length) {
@@ -205,9 +223,11 @@ export default function AvgLatency({ optionsMenuItems, height = 440 }) {
               <XAxis
                 dataKey="name"
                 interval={0}
-                tick={<CustomTick chartConfig={chartConfig} />}
-                tickMargin={8}
-                height={40}
+                tickMargin={4}
+                height={100}
+                tick={(props) => (
+                  <CustomTick {...props} chartConfig={chartConfig} rotate />
+                )}
               />
               <YAxis
                 // tick={<CustomTick chartConfig={chartConfig} vertical />}

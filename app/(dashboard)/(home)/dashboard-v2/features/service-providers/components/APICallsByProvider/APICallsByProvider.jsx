@@ -169,10 +169,10 @@ export default function APICallsByProvider({ optionsMenuItems }) {
               <XAxis
                 dataKey="name"
                 interval={0}
-                tickMargin={8}
-                height={40}
+                tickMargin={4}
+                height={100}
                 tick={(props) => (
-                  <CustomTick {...props} chartConfig={chartConfig} />
+                  <CustomTick {...props} chartConfig={chartConfig} rotate />
                 )}
               />
               <YAxis tick={<CustomTick chartConfig={chartConfig} vertical />} />
