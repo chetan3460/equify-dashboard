@@ -1,0 +1,20 @@
+'use client'
+
+import Callout from "@/components/docs/Callout";
+
+# Analytics – Guide
+
+<Callout type="note">Analytics (gauges, helpers) live under features/analytics.</Callout>
+
+## Files
+- GaugeChart.jsx – reusable gauge
+- gauge-helpers.js – helpers for math/rendering
+- analytic-cards-helpers.js – helpers for analytic summaries
+
+## Patterns
+- Keep helpers pure; keep rendering components declarative
+- Accept props for thresholds/colors to avoid hard-coding
+
+## Backend migration
+- Most analytics read from mappers. Provide simple selectors/hooks for data sources.
+

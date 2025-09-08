@@ -1,0 +1,25 @@
+'use client'
+
+import Callout from "@/components/docs/Callout";
+
+# Applications – Guide
+
+<Callout type="note">Applications tables live under features/applications/components.</Callout>
+
+## Modules
+- Kafka – Kafka status and topics
+- RedisStatus – Redis table
+- DatabaseStatus – DB tables and IO details
+- WebserverStatus – Webserver metrics
+
+## Patterns
+- Sorting: use lib/sort + SortableHeaderCell across all tables
+- Toasts/ToastsContainer for Kafka warnings
+- Keep data shaping isolated from presentational tables
+- Accessibility: proper ARIA, avoid unsupported aria-* on role="button"
+
+## Backend migration
+1) Add `app/api/applications/<endpoint>/route.js`
+2) Add lib/api/applications.js + lib/queries hooks
+3) Replace mock imports with hook data; add loading/error UI
+

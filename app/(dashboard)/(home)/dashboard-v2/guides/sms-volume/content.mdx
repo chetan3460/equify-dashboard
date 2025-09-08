@@ -1,0 +1,25 @@
+'use client'
+
+import Callout from "@/components/docs/Callout";
+
+# SMS Volume – Guide
+
+<Callout type="note">SMS volume cards live under features/sms-volume/components.</Callout>
+
+## Cards
+- OverallSMSVolume – Area/line trend
+- SMSByProvider – Vertical bars by provider
+- SMSByDepartment – Pie with legend
+
+## Patterns
+- config.js holds axis/grid/tooltip and sizes
+- data.js shapes data → chartData (and lastUpdated)
+- Pie sizing: adjust outerRadius for visual size
+- Axis spacing: tickMargin + CustomTick
+- tickFormatter: compact values (1k/1M)
+
+## Backend migration
+1) Add `app/api/sms-volume/<endpoint>/route.js`
+2) Add lib/api/smsVolume.js + lib/queries hooks
+3) Replace mock imports with hook data; add loading/error UI
+

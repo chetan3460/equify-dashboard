@@ -83,6 +83,60 @@ export function getChartConfig(theme) {
                 { offset: "100%", color: "#FF758C" },
             ],
         },
+        {
+            id: "grad9",
+            type: "linearGradient",
+            props: { x1: "0", y1: "0", x2: "0", y2: "1" },
+            stops: [
+                { offset: "0%", color: "#00C9FF" },
+                { offset: "100%", color: "#92FE9D" },
+            ],
+        },
+        {
+            id: "grad10",
+            type: "linearGradient",
+            props: { x1: "0", y1: "0", x2: "0", y2: "1" },
+            stops: [
+                { offset: "0%", color: "#FEE140" },
+                { offset: "100%", color: "#FA709A" },
+            ],
+        },
+        {
+            id: "grad11",
+            type: "linearGradient",
+            props: { x1: "0", y1: "0", x2: "0", y2: "1" },
+            stops: [
+                { offset: "0%", color: "#74EBD5" },
+                { offset: "100%", color: "#ACB6E5" },
+            ],
+        },
+        {
+            id: "grad12",
+            type: "linearGradient",
+            props: { x1: "0", y1: "0", x2: "0", y2: "1" },
+            stops: [
+                { offset: "0%", color: "#F6D365" },
+                { offset: "100%", color: "#FDA085" },
+            ],
+        },
+        {
+            id: "grad13",
+            type: "linearGradient",
+            props: { x1: "0", y1: "0", x2: "0", y2: "1" },
+            stops: [
+                { offset: "0%", color: "#B2FEFA" },
+                { offset: "100%", color: "#0ED2F7" },
+            ],
+        },
+        {
+            id: "grad14",
+            type: "linearGradient",
+            props: { x1: "0", y1: "0", x2: "0", y2: "1" },
+            stops: [
+                { offset: "0%", color: "#FBD3E9" },
+                { offset: "100%", color: "#BB377D" },
+            ],
+        },
     ];
 
     return {

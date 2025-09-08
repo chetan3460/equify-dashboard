@@ -1,0 +1,110 @@
+import Callout from "@/components/docs/Callout";
+import { CodeTabs } from "@/components/docs/CodeTabs";
+import StatusTable from "@/components/docs/StatusTable";
+import status from "./status.json";
+
+# Dashboard v2 – Project Guide
+
+<Callout type="tip">
+This page is MDX. You can embed components like <code>&lt;Callout /&gt;</code> and <code>&lt;CodeTabs /&gt;</code>.
+</Callout>
+
+## Quick start
+
+- Dev:
+  ```bash
+  npm run dev
+  ```
+- Build & start:
+  ```bash
+  npm run build && npm start
+  ```
+- Deploy (Vercel CLI):
+  ```bash
+  vercel --yes
+  vercel --prod --yes
+  ```
+
+## What you’ll find where
+
+- `app/(dashboard)/(home)/dashboard-v2`
+  - `page.jsx` – entry; tabs, title, analytic cards
+  - `Tabs.jsx` – tab UI
+  - `ui/` – shared UI (TitleSection, icons)
+  - `guides/` – docs
+  - `interactive/` – in-app docs page
+  - `features/` – modules
+    - `analytics/` – gauges and helpers
+    - `applications/` – app/infra tables (Kafka, Redis, DB, Webserver)
+    - `service-providers/` – provider metrics (API calls, TPS, latency, etc.)
+    - `sms-volume/` – SMS analytics
+    - `system-health/` – system metrics
+
+## Core patterns
+
+- Component folder pattern
+  - `components/<CardName>/`
+    - `<CardName>.jsx` – UI and local logic
+    - `config.js` – theme-aware visuals (axis, grid, tooltip, gradients, sizes)
+    - `data.js` – mock data + mappers (backend → chartData)
+- Theme
+  - `getChartConfig(theme)` from each config.js
+- Height
+  - `height` prop: px (e.g., `440`) or `"auto"` (parent must define height)
+- Axes & ticks
+  - `CustomTick`, `tickMargin`, `tickFormatter` for compact (1k/1M)
+- Gradients
+  - Define in config.js and use via defs: `fill="url(#gradId)"`
+- Sorting (tables)
+  - `lib/sort` + `SortableHeaderCell`
+
+## Backend integration
+
+Two safe options:
+
+1. Client fetch via BFF route handlers (minimal)
+   - Add `app/api/.../route.js` that calls upstream with server-only env vars.
+   - Use React Query hooks in client cards to fetch `/api/...`.
+2. Server-side fetch (best practice)
+   - Make `page.jsx` a server component; fetch data there.
+   - Pass props to client cards; leverage Next fetch caching/revalidate.
+
+<Callout type="note">
+Secrets must not be exposed via <code>NEXT_PUBLIC_*</code>. Use route handlers or server components.
+</Callout>
+
+## Feature status
+
+<StatusTable items={status} />
+
+## Migration checklist (per card)
+
+<CodeTabs
+  tabs={{
+    "1. Remove mock import": (
+      <pre>{`// Before
+import { rawData, chartData } from './data'
+
+// After (Option A)
+import { useAPICallsToday } from '@/lib/queries/serviceProviders'`}</pre>
+    ),
+    "2. Add route handler": (
+      <pre>{`// app/api/service-providers/apicalls-today/route.js
+export async function GET(req) { /* call upstream, return JSON */ }`}</pre>
+    ),
+    "3. Hook & mapper": (
+      <pre>{`// lib/queries/serviceProviders.js
+export function useAPICallsToday(period){ /* React Query */ }`}</pre>
+    ),
+    "4. Loading & error": (
+      <pre>{`if(isLoading) return <Skeleton/>; if(error) return <Error/>;`}</pre>
+    ),
+  }}
+  codes={{
+    "1. Remove mock import": `// Before\nimport { rawData, chartData } from './data'\n\n// After (Option A)\nimport { useAPICallsToday } from '@/lib/queries/serviceProviders'`,
+    "2. Add route handler": `// app/api/service-providers/apicalls-today/route.js\nexport async function GET(req) { /* call upstream, return JSON */ }`,
+    "3. Hook & mapper": `// lib/queries/serviceProviders.js\nexport function useAPICallsToday(period){ /* React Query */ }`,
+    "4. Loading & error": `if(isLoading) return <Skeleton/>; if(error) return <Error/>;`
+  }}
+/>
+

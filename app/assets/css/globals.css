@@ -141,6 +141,11 @@
     @apply scroll-smooth;
   }
 
+  /* Ensure anchors don't hide under sticky elements */
+  .prose :is(h2, h3, h4) {
+    scroll-margin-top: 6rem; /* roughly 96px */
+  }
+
   body {
     @apply bg-[#ECEDF4] dark:bg-background text-foreground text-sm;
     color: #201d1a;

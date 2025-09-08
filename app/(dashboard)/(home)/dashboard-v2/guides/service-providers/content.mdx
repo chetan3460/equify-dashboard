@@ -1,0 +1,32 @@
+'use client'
+
+import Callout from "@/components/docs/Callout";
+
+# Service Providers – Guide
+
+<Callout type="note">Provider-centric cards live under features/service-providers/components.</Callout>
+
+## Cards
+- APICallsToday – Line chart of total API calls
+- APICallsByProvider – Grouped bars per provider
+- AvgLatency – Triangular bars per provider (ms)
+- DeliveryReports – Grouped bars: sent vs DLR
+- OngoingTPS – Current TPS per provider
+- ProviderStatus – Active/Inactive list (non-chart)
+
+## Patterns
+- Visuals in config.js (axis, grid, tooltip, gradients, sizes)
+- Data mapping in data.js (mock → chartData). Replace with backend mappers later
+- Axes
+  - Use CustomTick; add tickMargin where needed; use compact tickFormatter (1k/1M)
+- Gradients
+  - Define once in config.js; reference by id via defs
+
+## Exporting data
+- Use exportCsv in the options menu handler. Keep mappers pure; decide fields explicitly.
+
+## Backend migration
+1) Add `app/api/service-providers/<endpoint>/route.js`
+2) Add lib/api/serviceProviders.js + lib/queries hooks
+3) Replace mock imports with hook data; add loading/error UI
+

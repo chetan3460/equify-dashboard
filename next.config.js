@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 
-const nextConfig = {
+const withMDX = require('@next/mdx')({
+  extension: /\.mdx?$/,
+});
+
+const baseConfig = {
   // Suppress React 19 ref warnings during React 18 migration period
   onDemandEntries: {
     // Keep pages in memory longer to avoid refactoring
@@ -10,6 +14,8 @@ const nextConfig = {
   experimental: {
     // Suppress React 19 warnings
     reactCompiler: false,
+    // Enable Rust-based MDX for App Router compatibility
+    mdxRs: true,
     // Disable problematic devtools in development
     optimizePackageImports: ['@radix-ui/react-select', '@radix-ui/react-dialog'],
   },
@@ -67,4 +73,10 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withMDX({
+  ...baseConfig,
+  pageExtensions: [
+    'md', 'mdx',
+    'tsx', 'ts', 'jsx', 'js', 'mjs'
+  ],
+});

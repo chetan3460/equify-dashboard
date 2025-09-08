@@ -1,0 +1,22 @@
+'use client'
+
+import Callout from "@/components/docs/Callout";
+
+# System Health – Guide
+
+<Callout type="note">System Health cards live under features/system-health/components.</Callout>
+
+## Cards
+- APICallsToday – Area latency chart
+- ServerStatistics – Server metrics table
+
+## Patterns
+- config.js: axis/grid/tooltip/series styles
+- Sorting: use lib/sort + SortableHeaderCell
+- Height: wrapper div + ResponsiveContainer
+
+## Backend migration
+1) Add `app/api/system-health/<endpoint>/route.js`
+2) Add lib/api/systemHealth.js + lib/queries hooks
+3) Replace mock imports with hook data; add loading/error UI
+

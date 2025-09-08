@@ -90,7 +90,6 @@ export default function APICallsToday({
   const { theme } = useTheme();
   const chartConfig = getChartConfig(theme);
 
-  // Support number (pixels) or string (e.g., "auto" -> fill parent)
   const wrapperStyle =
     typeof height === "number" ? { height: `${height}px` } : { height: "100%" };
 

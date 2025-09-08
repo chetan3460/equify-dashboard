@@ -9,6 +9,12 @@ export const rawData = {
     Tanla: 55,
     Infobip: 200,
     Synch: 32,
+    RouteMobile: 47,
+    Kaleyra: 63,
+    Twilio: 28,
+    Plivo: 35,
+    Gupshup: 51,
+    Exotel: 44,
 };
 
 // Convert to array for Recharts

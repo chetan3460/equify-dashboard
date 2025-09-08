@@ -1,0 +1,9 @@
+[
+  { "card": "APICallsToday", "section": "service-providers", "dataSource": "mock", "loading": false, "error": false, "compactTicks": true, "gradients": false, "sorting": false },
+  { "card": "AvgLatency", "section": "service-providers", "dataSource": "mock", "loading": false, "error": false, "compactTicks": false, "gradients": true, "sorting": false },
+  { "card": "DeliveryReports", "section": "service-providers", "dataSource": "mock", "loading": false, "error": false, "compactTicks": true, "gradients": true, "sorting": false },
+  { "card": "OngoingTPS", "section": "service-providers", "dataSource": "mock", "loading": false, "error": false, "compactTicks": true, "gradients": true, "sorting": false },
+  { "card": "SuccessfulTransactions", "section": "service-providers", "dataSource": "mock", "loading": false, "error": false, "compactTicks": true, "gradients": true, "sorting": false },
+  { "card": "ServerStatistics", "section": "system-health", "dataSource": "mock", "loading": false, "error": false, "compactTicks": true, "gradients": false, "sorting": true }
+]
+

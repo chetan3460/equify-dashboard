@@ -34,26 +34,40 @@ import { providerObj, gradientSpecByName } from "./data";
 import { getChartConfig } from "./config";
 import { exportCsv } from "@/lib/csv";
 
-// Format axis values (1K, 1M etc.)
+// Format axis values (e.g., 15k, 1.2M)
 const formatAxis = (n) => {
-  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
-  if (n >= 1_000) return Math.round(n / 1_000) + "K";
-  return n.toLocaleString();
+  if (n == null || n === "") return "";
+  const v = Number(n);
+  if (!Number.isFinite(v)) return String(n);
+  if (v >= 1_000_000) return (v / 1_000_000).toFixed(1) + "M";
+  if (v >= 1_000) return Math.round(v / 1_000) + "k";
+  return v.toLocaleString();
 };
 
-const CustomTick = ({ x, y, payload, textAnchor = "end", chartConfig }) => (
-  <text
-    x={x}
-    y={y}
-    dy={4}
-    textAnchor={textAnchor}
-    fill={chartConfig.axis.tick.fill}
-    fontSize={chartConfig.axis.tick.fontSize}
-    className="text-xs font-normal"
-  >
-    {payload.value}
-  </text>
-);
+const CustomTick = ({
+  x,
+  y,
+  payload,
+  textAnchor = "end",
+  chartConfig,
+  formatFn,
+}) => {
+  const raw = payload?.value;
+  const display = typeof formatFn === "function" ? formatFn(raw) : raw;
+  return (
+    <text
+      x={x}
+      y={y}
+      dy={4}
+      textAnchor={textAnchor}
+      fill={chartConfig.axis.tick.fill}
+      fontSize={chartConfig.axis.tick.fontSize}
+      className="text-xs font-normal"
+    >
+      {display}
+    </text>
+  );
+};
 
 export default function SuccessfulTransactions({
   height = 384,
@@ -98,7 +112,8 @@ export default function SuccessfulTransactions({
                 <OptionsDropdown
                   items={optionsMenuItems}
                   onAction={(id) => {
-                    if (id === "export") exportCsv("successful-transactions.csv", data);
+                    if (id === "export")
+                      exportCsv("successful-transactions.csv", data);
                   }}
                 />
               </>
@@ -113,7 +128,7 @@ export default function SuccessfulTransactions({
                 data={data}
                 layout="vertical"
                 barCategoryGap="10%"
-                margin={{ top: 8, right: 30, left: 0, bottom: 8 }}
+                margin={{ top: 8, right: 30, left: 10, bottom: 8 }}
               >
                 <defs>
                   {data.map((d, i) => {
@@ -174,11 +189,13 @@ export default function SuccessfulTransactions({
                   tickFormatter={formatAxis}
                   axisLine={{ stroke: chartConfig.axis.stroke }}
                   tickLine={{ stroke: chartConfig.axis.stroke }}
+                  tickMargin={10}
                   tick={(props) => (
                     <CustomTick
                       {...props}
                       chartConfig={chartConfig}
                       textAnchor="middle"
+                      formatFn={formatAxis}
                     />
                   )}
                 />
