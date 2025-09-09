@@ -1,14 +1,14 @@
-import { DashBoard, Graph } from "@/components/svg";
+import { LayoutDashboard, LineChart } from "lucide-react";
 
 export const menusConfig = {
   mainNav: [
     {
       title: "Dashboard",
-      icon: DashBoard,
+      icon: LayoutDashboard,
       child: [
-        { title: "Dashboard V2", href: "/dashboard-v2", icon: Graph },
-        { title: "Interactive", href: "/dashboard-v2/interactive", icon: Graph },
-        { title: "Guides", href: "/dashboard-v2/guides", icon: Graph },
+        { title: "Dashboard V2", href: "/dashboard-v2", icon: LineChart },
+        { title: "Interactive", href: "/dashboard-v2/interactive", icon: LineChart },
+        { title: "Guides", href: "/dashboard-v2/guides", icon: LineChart },
       ],
     },
   ],
@@ -16,11 +16,11 @@ export const menusConfig = {
     modern: [
       {
         title: "Dashboard",
-        icon: DashBoard,
+        icon: LayoutDashboard,
         child: [
-          { title: "Dashboard V2", href: "/dashboard-v2", icon: Graph },
-          { title: "Interactive", href: "/dashboard-v2/interactive", icon: Graph },
-          { title: "Guides", href: "/dashboard-v2/guides", icon: Graph },
+          { title: "Dashboard V2", href: "/dashboard-v2", icon: LineChart },
+          { title: "Interactive", href: "/dashboard-v2/interactive", icon: LineChart },
+          { title: "Guides", href: "/dashboard-v2/guides", icon: LineChart },
         ],
       },
     ],
@@ -28,19 +28,17 @@ export const menusConfig = {
       { isHeader: true, title: "menu" },
       {
         title: "Dashboard",
-        icon: DashBoard,
+        icon: LayoutDashboard,
         href: "/dashboard-v2",
         isOpen: false,
         isHide: false,
         child: [
-          { title: "Dashboard V2", href: "/dashboard-v2", icon: Graph },
-          { title: "Interactive", href: "/dashboard-v2/interactive", icon: Graph },
-          { title: "Guides", href: "/dashboard-v2/guides", icon: Graph },
+          { title: "Dashboard V2", href: "/dashboard-v2", icon: LineChart },
+          { title: "Interactive", href: "/dashboard-v2/interactive", icon: LineChart },
+          { title: "Guides", href: "/dashboard-v2/guides", icon: LineChart },
         ],
       },
     ],
   },
 };
-
-
 
