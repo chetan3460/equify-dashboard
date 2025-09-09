@@ -7,8 +7,8 @@ export const PROVIDER_STATUS_CONFIG = {
   scrollMaxHeight: 260,
   // Tailwind class fragments for status visuals
   dot: {
-    active: "bg-success-700/20",
-    inactive: "bg-destructive-700/20",
+    active: "bg-success-700",
+    inactive: "bg-destructive-700",
   },
   badge: {
     active: "bg-success-700/20 text-success-700",
