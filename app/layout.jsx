@@ -3,7 +3,6 @@ import "./assets/css/theme.css";
 import { Poppins } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import Providers from "@/provider/providers";
-import "simplebar-react/dist/simplebar.min.css";
 import TanstackProvider from "@/provider/providers.client";
 import "@/lib/suppress-warnings";
 import WarningSuppressor from "@/components/client/warning-suppressor";
