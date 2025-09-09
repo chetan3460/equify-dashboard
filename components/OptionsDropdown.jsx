@@ -5,7 +5,7 @@ import {
   Export12,
   Settings12,
   Refresh12,
-} from "@/app/(dashboard)/(home)/dashboard-v2/ui/icons";
+} from "@/ui/icons";
 
 function getIconById(id) {
   const key = typeof id === "string" ? id.toLowerCase() : id;

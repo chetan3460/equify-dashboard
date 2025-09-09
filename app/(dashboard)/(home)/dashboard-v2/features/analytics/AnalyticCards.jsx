@@ -19,9 +19,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import GaugeChart from "./components/GaugeChart";
 
-import GreenArrow from "../../ui/icons/ArrowUpTriangle16";
-import RedArrow from "../../ui/icons/ArrowDownTriangle16";
-import DragHandle from "../../ui/icons/DragHandleDots16";
+import { ArrowUpTriangle16 as GreenArrow, ArrowDownTriangle16 as RedArrow, DragHandleDots16 as DragHandle } from "@/ui/icons";
 import { initialCardsData } from "./data/cards";
 import { getNumericValue } from "./utils/numbers";
 import {
