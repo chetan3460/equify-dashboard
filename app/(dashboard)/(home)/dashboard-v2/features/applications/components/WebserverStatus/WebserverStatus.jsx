@@ -35,7 +35,7 @@ export default function Webserver() {
         <CardHeader>
           <CardTitle>Webserver</CardTitle>
           <CardDescription>
-            Last updated: {webservers.lastUpdated}
+            Last updated ({webservers.lastUpdated})
           </CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">

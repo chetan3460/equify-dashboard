@@ -37,7 +37,6 @@ const columnLabels = {
   exceededThreshold: "Threshold",
 };
 
-
 const getTableKeys = (data) =>
   Array.isArray(data) && data.length
     ? Object.keys(data[0]).filter((k) => k !== "timestamp")
@@ -91,20 +90,23 @@ export default function ServerStatistics({ optionsMenuItems }) {
   const tableKeys = useMemo(() => getTableKeys(serverData), []);
 
   // Accessors to align with generic table sorting
-  const accessors = useMemo(() => ({
-    io: (row) => {
-      // parse "read/write" as sum for sorting
-      if (!row?.io) return null;
-      const [r, w] = String(row.io)
-        .split("/")
-        .map((v) => Number.parseFloat(v.trim()));
-      if (Number.isFinite(r) && Number.isFinite(w)) return r + w;
-      if (Number.isFinite(r)) return r;
-      if (Number.isFinite(w)) return w;
-      return null;
-    },
-    exceededThreshold: (row) => (row?.exceededThreshold ? 1 : 0),
-  }), []);
+  const accessors = useMemo(
+    () => ({
+      io: (row) => {
+        // parse "read/write" as sum for sorting
+        if (!row?.io) return null;
+        const [r, w] = String(row.io)
+          .split("/")
+          .map((v) => Number.parseFloat(v.trim()));
+        if (Number.isFinite(r) && Number.isFinite(w)) return r + w;
+        if (Number.isFinite(r)) return r;
+        if (Number.isFinite(w)) return w;
+        return null;
+      },
+      exceededThreshold: (row) => (row?.exceededThreshold ? 1 : 0),
+    }),
+    []
+  );
 
   const sortedServers = useTableSorting(
     Array.isArray(serverData) ? serverData : [],
@@ -114,14 +116,16 @@ export default function ServerStatistics({ optionsMenuItems }) {
   );
 
   const wrapperClassName =
-    sortedServers.length > ROW_SCROLL_THRESHOLD ? "max-h-72 overflow-y-auto" : "";
+    sortedServers.length > ROW_SCROLL_THRESHOLD
+      ? "max-h-72 overflow-y-auto"
+      : "";
 
   return (
     <Card className="h-full flex flex-col">
       <div className="flex items-center justify-between mb-5">
         <CardHeader>
           <CardTitle>API calls by service provider today</CardTitle>
-          <CardDescription>Last updated: {lastUpdated}</CardDescription>
+          <CardDescription>Last updated ({lastUpdated})</CardDescription>
         </CardHeader>
         {isGlobalDragMode ? (
           <div className="cursor-grab flex items-center">
@@ -141,51 +145,51 @@ export default function ServerStatistics({ optionsMenuItems }) {
       <div className="overflow-hidden">
         <Table wrapperClassName={wrapperClassName}>
           <TableHeader className={STICKY_HEADER_CLASS}>
-              <TableRow>
-                {tableKeys.map((key) => (
-                  <SortableHeaderCell
-                    key={key}
-                    label={columnLabels[key] || key}
-                    columnKey={key}
-                    sortKey={sortKey}
-                    sortDir={sortDir}
-                    setSortKey={setSortKey}
-                    setSortDir={setSortDir}
-                  />
-                ))}
-              </TableRow>
-            </TableHeader>
+            <TableRow>
+              {tableKeys.map((key) => (
+                <SortableHeaderCell
+                  key={key}
+                  label={columnLabels[key] || key}
+                  columnKey={key}
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  setSortKey={setSortKey}
+                  setSortDir={setSortDir}
+                />
+              ))}
+            </TableRow>
+          </TableHeader>
 
-            <TableBody>
-              {sortedServers.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={tableKeys.length}
-                    className="p-4 text-center"
-                  >
-                    No server rows to display
-                  </TableCell>
+          <TableBody>
+            {sortedServers.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={tableKeys.length}
+                  className="p-4 text-center"
+                >
+                  No server rows to display
+                </TableCell>
+              </TableRow>
+            ) : (
+              sortedServers.map((srv, idx) => (
+                <TableRow key={srv?.host ?? `srv-${idx}`}>
+                  {tableKeys.map((key) => (
+                    <TableCell
+                      key={key}
+                      className={
+                        key === "exceededThreshold" && srv?.[key]
+                          ? "text-destructive"
+                          : ""
+                      }
+                    >
+                      {formatCell(srv, key)}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              ) : (
-                sortedServers.map((srv, idx) => (
-                  <TableRow key={srv?.host ?? `srv-${idx}`}>
-                    {tableKeys.map((key) => (
-                      <TableCell
-                        key={key}
-                        className={
-                          key === "exceededThreshold" && srv?.[key]
-                            ? "text-destructive"
-                            : ""
-                        }
-                      >
-                        {formatCell(srv, key)}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+              ))
+            )}
+          </TableBody>
+        </Table>
       </div>
     </Card>
   );

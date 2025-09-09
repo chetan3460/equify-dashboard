@@ -29,7 +29,7 @@ export const DragConfirmationPopup = () => {
   if (!showConfirmation) return null;
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-11/12 md:w-auto max-w-[500px] mx-auto bg-card rounded-[6px] shadow-lg p-4 flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 md:space-x-4 animate-fade-in z-50">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-11/12 md:w-auto max-w-[500px] mx-auto bg-card rounded-[6px] shadow-lg p-4 flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 md:space-x-4 animate-fade-in z-50 dark:border-primary border">
       {/* Left Side: Icon and Text */}
       <div className="flex items-center gap-2 ">
         <div

@@ -44,7 +44,7 @@ export default function Redis() {
         <CardHeader>
           <CardTitle>Redis</CardTitle>
           <CardDescription>
-            Last updated: {redisData.lastUpdated}
+            Last updated ({redisData.lastUpdated})
           </CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">

@@ -14,9 +14,11 @@ export default function SortArrow({
   return (
     <div
       aria-hidden
-      className={`ml-1 inline-flex items-center justify-center w-5 h-5 rounded-full transition-transform duration-200 hover:bg-[#DADAFA] dark:bg-[#33445B hover:text-primary ${
-        active ? "text-default-900" : ""
-      } ${rotateClass} ${className}`}
+      className={`ml-1 inline-flex items-center justify-center w-5 h-5 rounded-full transition-transform duration-200 ${
+        active
+          ? "bg-[#4e47e11a] dark:bg-[#33445B] text-default-900"
+          : "hover:bg-[#4e47e11a]"
+      } hover:text-primary ${rotateClass} ${className}`}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

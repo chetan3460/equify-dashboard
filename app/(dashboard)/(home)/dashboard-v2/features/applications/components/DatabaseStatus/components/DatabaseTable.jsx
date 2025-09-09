@@ -34,12 +34,12 @@ export default function DatabaseTable({
     <Table wrapperClassName={rows.length > ROW_SCROLL_THRESHOLD ? "max-h-72 overflow-y-auto" : ""}>
       <TableHeader className={STICKY_HEADER_CLASS}>
         <TableRow>
-          <SortableHeaderCell label={columns.name.label} columnKey={columns.name.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
-          <SortableHeaderCell label={columns.host.label} columnKey={columns.host.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
-          <SortableHeaderCell label={columns.cpu.label} columnKey={columns.cpu.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
-          <SortableHeaderCell label={columns.memory.label} columnKey={columns.memory.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
-          <SortableHeaderCell label={columns.connections.label} columnKey={columns.connections.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
-          <SortableHeaderCell label={columns.status.label} columnKey={columns.status.key} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+<SortableHeaderCell label={columns.name.label} columnKey={columns.name.key} preferredFirstDir={columns.name.preferredFirstDir} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+<SortableHeaderCell label={columns.host.label} columnKey={columns.host.key} preferredFirstDir={columns.host.preferredFirstDir} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+<SortableHeaderCell label={columns.cpu.label} columnKey={columns.cpu.key} preferredFirstDir={columns.cpu.preferredFirstDir} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+<SortableHeaderCell label={columns.memory.label} columnKey={columns.memory.key} preferredFirstDir={columns.memory.preferredFirstDir} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+<SortableHeaderCell label={columns.connections.label} columnKey={columns.connections.key} preferredFirstDir={columns.connections.preferredFirstDir} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
+<SortableHeaderCell label={columns.status.label} columnKey={columns.status.key} preferredFirstDir={columns.status.preferredFirstDir} sortKey={sortKey} sortDir={sortDir} setSortKey={setSortKey} setSortDir={setSortDir} />
         </TableRow>
       </TableHeader>
 

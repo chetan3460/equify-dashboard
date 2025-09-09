@@ -25,15 +25,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import ChevronDown from "@/components/icons/ChevronDown";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-} from "@/components/ui/plain-dropdown-menu";
+import DashboardSelect from "@/components/dasboard-select";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
 import { useDragContext } from "@/components/draggable/DragProvider";
@@ -92,34 +84,13 @@ const OverallSMSVolume = ({
             </div>
           ) : (
             <>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    color="secondary"
-                    size="xs"
-                    className="inline-flex items-center gap-1"
-                  >
-                    {effectivePeriod || "Today"}
-                    <ChevronDown className="ml-1" width={10} height={6} />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Select period</DropdownMenuLabel>
-                  {selectOptions.map((opt) => (
-                    <DropdownMenuItem
-                      key={opt}
-                      onClick={() =>
-                        onPeriodChange
-                          ? onPeriodChange(opt)
-                          : setInternalPeriod(opt)
-                      }
-                    >
-                      {opt}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <DashboardSelect
+                value={effectivePeriod}
+                onChange={(opt) =>
+                  onPeriodChange ? onPeriodChange(opt) : setInternalPeriod(opt)
+                }
+                options={selectOptions}
+              />
               <OptionsDropdown
                 items={optionsMenuItems}
                 onAction={(id) => {

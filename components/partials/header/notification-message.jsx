@@ -78,13 +78,7 @@ export default function NotificationMessage() {
 
           {/* Scroll area */}
           <div
-            className="px-4 overflow-y-auto max-h-[300px]
-              [scrollbar-width:thin] [scrollbar-color:#D1D2DA_transparent]
-              [&::-webkit-scrollbar]:w-[3px]
-              [&::-webkit-scrollbar-track]:bg-transparent
-              [&::-webkit-scrollbar-thumb]:bg-[#D1D2DA]
-              [&::-webkit-scrollbar-thumb]:rounded-[100px]
-              [&::-webkit-scrollbar-thumb]:min-h-[15px]"
+            className="px-4 overflow-y-auto max-h-[300px]"
           >
             {items.map((item, i) => (
               <div

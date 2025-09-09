@@ -97,9 +97,10 @@ export default function SuccessfulTransactions({
           <CardHeader>
             <CardTitle>Successful transactions today</CardTitle>
             <CardDescription>
-              Last updated:{" "}
+              Last updated (
               {(providerData && providerData.lastUpdated) ||
                 providerObj.lastUpdated}
+              )
             </CardDescription>
           </CardHeader>
           <div className="flex items-center gap-2">

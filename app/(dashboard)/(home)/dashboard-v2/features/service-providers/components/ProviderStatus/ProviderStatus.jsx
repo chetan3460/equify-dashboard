@@ -100,7 +100,7 @@ export default function ProviderStatus({ optionsMenuItems }) {
       {/* Providers with custom scrollbar */}
       <CardContent className="flex-1 flex flex-col">
         <div
-          className="overflow-y-auto space-y-3 pr-2 custom-scrollbar"
+          className="overflow-y-auto space-y-3 pr-2"
           style={{ maxHeight: `${PROVIDER_STATUS_CONFIG.scrollMaxHeight}px` }}
         >
           {getStatusList(providerStatus).map(({ name, status }, index) => (

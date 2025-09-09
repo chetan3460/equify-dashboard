@@ -72,7 +72,7 @@ const CustomTooltip = ({ active, payload, label, chartConfig }) => {
 // Custom Legend with gradient circles
 const CustomLegend = ({ payload }) => {
   return (
-    <ul className="grid grid-cols-2  justify-center self-center items-center gap-2  text-default-900 text-sm">
+    <ul className="grid grid-cols-1  justify-center self-center items-center gap-2  text-default-900 text-sm">
       {payload.map((entry, index) => (
         <li key={`item-${index}`} className="flex items-center gap-2">
           {/* SVG circle for gradient swatch */}
@@ -148,7 +148,8 @@ export default function ProviderTraffic({
               <OptionsDropdown
                 items={optionsMenuItems}
                 onAction={(id) => {
-                  if (id === "export") exportCsv("service-provider-traffic.csv", data);
+                  if (id === "export")
+                    exportCsv("service-provider-traffic.csv", data);
                 }}
               />
             </>
@@ -160,7 +161,7 @@ export default function ProviderTraffic({
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart
-              margin={{ right: isMobile ? 0 : 0, bottom: isMobile ? 24 : 0 }}
+              margin={{ right: isMobile ? 0 : 50, bottom: isMobile ? 24 : 0 }}
             >
               {/* Gradient defs */}
               <defs>
@@ -199,7 +200,7 @@ export default function ProviderTraffic({
                 innerRadius="50%"
                 outerRadius="80%"
                 paddingAngle={0}
-                stroke="none" // ⬅ removes white border
+                stroke="1" // ⬅ removes white border
               >
                 {data.map((_, index) => (
                   <Cell

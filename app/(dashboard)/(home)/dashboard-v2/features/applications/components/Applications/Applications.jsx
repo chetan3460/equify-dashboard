@@ -33,7 +33,7 @@ export default function ApplicationsComponent() {
         <CardHeader>
           <CardTitle>Applications</CardTitle>
           <CardDescription>
-            Last updated: {applicationsData.lastUpdated}
+            Last updated ({applicationsData.lastUpdated})
           </CardDescription>
         </CardHeader>
         <div className="flex items-center gap-2">

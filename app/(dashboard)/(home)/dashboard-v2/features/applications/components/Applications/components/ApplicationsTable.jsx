@@ -30,56 +30,63 @@ export default function ApplicationsTable({
       <TableHeader className={STICKY_HEADER_CLASS}>
         <TableRow>
           <SortableHeaderCell
-            label={columns.name.label}
+label={columns.name.label}
             columnKey={columns.name.key}
+            preferredFirstDir={columns.name.preferredFirstDir}
             sortKey={sortKey}
             sortDir={sortDir}
             setSortKey={setSortKey}
             setSortDir={setSortDir}
           />
           <SortableHeaderCell
-            label={columns.host.label}
+label={columns.host.label}
             columnKey={columns.host.key}
+            preferredFirstDir={columns.host.preferredFirstDir}
             sortKey={sortKey}
             sortDir={sortDir}
             setSortKey={setSortKey}
             setSortDir={setSortDir}
           />
           <SortableHeaderCell
-            label={columns.cpu.label}
+label={columns.cpu.label}
             columnKey={columns.cpu.key}
+            preferredFirstDir={columns.cpu.preferredFirstDir}
             sortKey={sortKey}
             sortDir={sortDir}
             setSortKey={setSortKey}
             setSortDir={setSortDir}
           />
           <SortableHeaderCell
-            label={columns.memory.label}
+label={columns.memory.label}
             columnKey={columns.memory.key}
+            preferredFirstDir={columns.memory.preferredFirstDir}
             sortKey={sortKey}
             sortDir={sortDir}
             setSortKey={setSortKey}
             setSortDir={setSortDir}
           />
           <SortableHeaderCell
-            label={columns.threads.label}
+label={columns.threads.label}
             columnKey={columns.threads.key}
+            preferredFirstDir={columns.threads.preferredFirstDir}
             sortKey={sortKey}
             sortDir={sortDir}
             setSortKey={setSortKey}
             setSortDir={setSortDir}
           />
           <SortableHeaderCell
-            label={columns.heap.label}
+label={columns.heap.label}
             columnKey={columns.heap.key}
+            preferredFirstDir={columns.heap.preferredFirstDir}
             sortKey={sortKey}
             sortDir={sortDir}
             setSortKey={setSortKey}
             setSortDir={setSortDir}
           />
           <SortableHeaderCell
-            label={columns.status.label}
+label={columns.status.label}
             columnKey={columns.status.key}
+            preferredFirstDir={columns.status.preferredFirstDir}
             sortKey={sortKey}
             sortDir={sortDir}
             setSortKey={setSortKey}
