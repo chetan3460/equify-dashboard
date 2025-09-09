@@ -1,5 +1,5 @@
-import "./assets/css/globals.css";
-import "./assets/css/theme.css";
+import "./assets/css/purged/globals.css";
+import "./assets/css/purged/theme.css";
 import { Poppins } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import Providers from "@/providers/providers";
