@@ -10,7 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
-import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
+import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 
 import {
   BarChart,

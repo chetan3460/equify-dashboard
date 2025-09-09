@@ -25,11 +25,11 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import DashboardSelect from "@/components/dasboard-select";
+import DashboardSelect from "@/components/dashboard-select";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
+import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 
 const CustomTick = ({ x, y, payload, mode, isYAxis = false }) => (
   <text

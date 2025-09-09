@@ -38,6 +38,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
+      "@/ui/*": ["./app/(dashboard)/(home)/dashboard-v2/ui/*"],
       "contentlayer/generated": ["./.contentlayer/generated"]
     }
   },

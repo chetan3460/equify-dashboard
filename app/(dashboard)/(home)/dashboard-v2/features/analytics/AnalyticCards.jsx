@@ -143,11 +143,18 @@ function SortableItem({ id, children, isCustomizeMode }) {
     transition,
     isDragging,
   } = useSortable({ id });
+
+  // Only the active (dragged) item should visually move. Hide its original while dragging.
   const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
+    transform:
+      isDragging && transform != null
+        ? `translate3d(${Math.round(transform.x)}px, ${Math.round(transform.y)}px, 0)`
+        : undefined,
+    transition: isDragging ? transition : undefined,
     zIndex: isDragging ? 50 : 1,
+    opacity: isDragging ? 0 : 1,
   };
+
   const dragProps = isCustomizeMode ? { ...attributes, ...listeners } : {};
   return (
     <div

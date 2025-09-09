@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
-import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
+import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 import { columns } from "./config";
 import { applicationsData } from "./data";
 import { useApplicationsSorting } from "./hooks/useApplicationsSorting";

@@ -9,10 +9,10 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import DashboardSelect from "@/components/dasboard-select";
+import DashboardSelect from "@/components/dashboard-select";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
-import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
+import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 import {
   ResponsiveContainer,
   BarChart,

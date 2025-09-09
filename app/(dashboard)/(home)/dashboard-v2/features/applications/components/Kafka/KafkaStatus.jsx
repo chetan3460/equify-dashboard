@@ -14,7 +14,7 @@ import {
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
-import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
+import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 
 import { kafkaData } from "./config"; // mock/demo data lives here
 import { columns } from "./columns"; // table labels

@@ -17,12 +17,12 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import DashboardSelect from "@/components/dasboard-select";
+import DashboardSelect from "@/components/dashboard-select";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { providerStatus, getStatusList } from "./data";
 import { PROVIDER_STATUS_CONFIG } from "./config";
 import { exportCsv } from "@/lib/csv";
-import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
+import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 
 export default function ProviderStatus({
   optionsMenuItems,

@@ -14,8 +14,8 @@ import {
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
-import DashboardSelect from "@/components/dasboard-select";
-import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
+import DashboardSelect from "@/components/dashboard-select";
+import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 
 import {
   LineChart,

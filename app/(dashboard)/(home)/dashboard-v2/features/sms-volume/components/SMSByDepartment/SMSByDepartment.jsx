@@ -8,7 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import DashboardSelect from "@/components/dasboard-select";
+import DashboardSelect from "@/components/dashboard-select";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
 import {
@@ -19,7 +19,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
+import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 import { DEPT_GRADIENTS, CHART_CONFIG } from "./config";
 import { getDeptChartData } from "./data";
 

@@ -17,7 +17,7 @@ import {
 import { useDragContext } from "@/components/draggable/DragProvider";
 import OptionsDropdown from "@/components/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
-import { DragHandleDots16 as DragHandleIcon } from "../../../../ui/icons";
+import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 import { columns } from "./config";
 import { webservers } from "./data";
 import { useWebserverSorting } from "./hooks/useWebserverSorting";
