@@ -97,7 +97,7 @@ export default function SuccessfulTransactions({
                       variant="outline"
                       color="secondary"
                       size="xs"
-                      className="inline-flex items-center gap-1 px-3 py-2 text-xs font-normal"
+                      className="inline-flex items-center gap-1 px-3 py-2 text-xs font-normal dark:bg-[#323E4E]"
                     >
                       Server 1
                       <ChevronDown className="ml-1" width={10} height={6} />
@@ -118,14 +118,16 @@ export default function SuccessfulTransactions({
                       variant="outline"
                       color="secondary"
                       size="xs"
-                      className="inline-flex items-center gap-1 cursor-pointer px-3 py-2 text-xs font-normal"
+                      className="inline-flex items-center gap-1 cursor-pointer px-3 py-2 text-xs font-normal dark:bg-[#323E4E]"
                     >
                       Percentage
                       <ChevronDown className="ml-1" width={10} height={6} />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Display</DropdownMenuLabel>
+                    <DropdownMenuLabel className="cursor-pointer">
+                      Display
+                    </DropdownMenuLabel>
                     <DropdownMenuItem>Percentage</DropdownMenuItem>
                     <DropdownMenuItem>Count</DropdownMenuItem>
                   </DropdownMenuContent>
@@ -133,7 +135,8 @@ export default function SuccessfulTransactions({
                 <OptionsDropdown
                   items={optionsMenuItems}
                   onAction={(id) => {
-                    if (id === "export") exportCsv("system-health-network-stats.csv", data);
+                    if (id === "export")
+                      exportCsv("system-health-network-stats.csv", data);
                   }}
                 />
               </>
