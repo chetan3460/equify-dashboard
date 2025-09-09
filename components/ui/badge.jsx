@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-[8px] border py-1 px-2  text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ",
+  "inline-flex items-center rounded-[8px] border py-1 px-2  text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 capitalize ",
   {
     variants: {
       color: {
@@ -112,7 +112,7 @@ function Badge({ className, color, variant, children, ...props }) {
     >
       {/* Live dot indicator */}
       {color === "live" && (
-        <span className="mr-1 inline-block w-[6px] h-[6px] rounded-full bg-primary" />
+        <span className="mr-1 inline-block w-[6px] h-[6px] rounded-full bg-primary capitalize" />
       )}
       {children}
     </div>
