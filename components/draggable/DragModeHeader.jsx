@@ -43,62 +43,62 @@ export const DragConfirmationPopup = () => {
             viewBox="0 0 24 24"
             fill="none"
           >
-            <g clip-path="url(#clip0_376_3754)">
+            <g clipPath="url(#clip0_376_3754)">
               <path
                 d="M20.25 12V16.5"
                 stroke="#595B61"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M18 14.25H22.5"
                 stroke="#595B61"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M7.5 3.75V8.25"
                 stroke="#595B61"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M5.25 6H9.75"
                 stroke="#595B61"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M15.75 17.25V20.25"
                 stroke="#595B61"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M14.25 18.75H17.25"
                 stroke="#595B61"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M13.5 7.5L16.5 10.5"
                 stroke="#595B61"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M17.0305 3.96951L3.96978 17.0302C3.67689 17.3231 3.67689 17.798 3.96978 18.0909L5.9088 20.0299C6.20169 20.3228 6.67657 20.3228 6.96946 20.0299L20.0302 6.96919C20.3231 6.6763 20.3231 6.20143 20.0302 5.90853L18.0911 3.96951C17.7983 3.67662 17.3234 3.67662 17.0305 3.96951Z"
                 stroke="#595B61"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </g>
             <defs>

@@ -4,10 +4,9 @@ import Header from "@/components/partials/header";
 import Sidebar from "@/components/partials/sidebar";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "@/store";
-import { motion, AnimatePresence } from "framer-motion";
-import { useRouter, usePathname } from "next/navigation";
+import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import Footer from "@/components/partials/footer";
-import { useMediaQuery } from "@/hooks/use-media-query";
 import MobileSidebar from "@/components/partials/sidebar/mobile-sidebar";
 import HeaderSearch from "@/components/header-search";
 import { useMounted } from "@/hooks/use-mounted";
@@ -18,7 +17,6 @@ const MainLayout = ({ children }) => {
   const { collapsed } = useSidebar();
   const [open, setOpen] = React.useState(false);
   const location = usePathname();
-  const isMobile = useMediaQuery("(min-width: 768px)");
   const mounted = useMounted();
   if (!mounted) {
     return <LayoutLoader />;
@@ -31,16 +29,15 @@ const MainLayout = ({ children }) => {
       <Sidebar />
 
       <div
-        className={cn("content-wrapper transition-all duration-150 ", {
+        className={cn("content-wrapper transition-all duration-150", {
           "xl:ml-[248px]": !collapsed,
           "xl:ml-[72px]": collapsed,
         })}
       >
         <div
-          className={cn("  lg:py-6 py-4 lg:px-10 px-7 page-min-height ", {})}
+          className={cn("lg:py-6 py-4 lg:px-10 px-7 page-min-height", {})}
         >
           <LayoutWrapper
-            isMobile={isMobile}
             setOpen={setOpen}
             open={open}
             location={location}
@@ -59,7 +56,7 @@ const MainLayout = ({ children }) => {
 
 export default MainLayout;
 
-const LayoutWrapper = ({ children, isMobile, setOpen, open, location }) => {
+const LayoutWrapper = ({ children, setOpen, open, location }) => {
   return (
     <>
       <motion.div

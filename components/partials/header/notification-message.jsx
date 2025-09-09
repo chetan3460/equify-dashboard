@@ -103,8 +103,8 @@ export default function NotificationMessage() {
                         <path
                           d="M1 0.5L4.50001 3.99999L1 7.5"
                           stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
                       </svg>
                     </span>
