@@ -1,38 +1,18 @@
 "use client";
 import React from "react";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import {
-  DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragOverlay,
-  rectIntersection,
-  MeasuringStrategy,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  useSortable,
-  rectSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { SortableContainer } from "@/components/draggable/SortableContainer";
 import GaugeChart from "./components/GaugeChart";
 
 import { ArrowUpTriangle16 as GreenArrow, ArrowDownTriangle16 as RedArrow, DragHandleDots16 as DragHandle } from "@/ui/icons";
 import { initialCardsData } from "./data/cards";
 import { getNumericValue } from "./utils/numbers";
-import {
-  STORAGE_KEY,
-  CONTAINER_ID,
-  applySavedOrder,
-} from "./components/analytic-cards-helpers";
+import { STORAGE_KEY, CONTAINER_ID } from "./components/analytic-cards-helpers";
 
 /*
-  AnalyticCards
-  - Draggable, persistable grid of small analytics cards
-  - Integrates with a global DragProvider for save/cancel
-  - Keeps the component small by delegating helpers to analytic-cards-helpers.js
+  AnalyticCards (refactored)
+  - Uses shared SortableContainer for DnD, save/cancel, and persistence
+  - Card remains a presentational component
 */
 
 // -----------------------------
@@ -47,10 +27,8 @@ function formatCardValue(value) {
   if (str.toLowerCase().endsWith("ms")) {
     const num = parseFloat(str.replace(/[^0-9.\-]/g, ""));
     if (!Number.isFinite(num)) return str;
-    // Keep one decimal for ms
     return `${Number(num.toFixed(1))} ms`;
   }
-  // Remove commas and non-numeric except dot and minus
   const num = parseFloat(str.replace(/,/g, "").replace(/[^0-9.\-]/g, ""));
   if (!Number.isFinite(num)) return str;
   const abs = Math.abs(num);
@@ -59,13 +37,14 @@ function formatCardValue(value) {
   return num.toLocaleString();
 }
 
-function Card({ data, isCustomizeMode = false }) {
+function Card({ data }) {
+  const { isGlobalDragMode } = useDragContext();
   const isGaugeCard = data?.type === "gauge";
 
   const content = (
     <div className="rounded-20 p-4 bg-card shadow transition-all duration-300 group relative">
       {/* Drag handle (visible only in customize mode) */}
-      {isCustomizeMode && (
+      {isGlobalDragMode && (
         <div className="absolute top-2 right-2 z-10 opacity-75 hover:opacity-100 transition-opacity cursor-grab">
           <DragHandle />
         </div>
@@ -76,7 +55,6 @@ function Card({ data, isCustomizeMode = false }) {
 
       {/* Content */}
       {isGaugeCard ? (
-        // Gauge card
         <div className="mt-0 w-full h-[65px] flex items-center justify-center overflow-hidden">
           <GaugeChart
             value={getNumericValue(data.value)}
@@ -97,7 +75,6 @@ function Card({ data, isCustomizeMode = false }) {
           />
         </div>
       ) : (
-        // Metric card
         <>
           <div className="flex items-center gap-1">
             <div className="text-2xl font-bold text-default-900">
@@ -107,9 +84,7 @@ function Card({ data, isCustomizeMode = false }) {
             {data.trend === "down" && <RedArrow />}
           </div>
           {data.change && (
-            <div
-              className={`flex items-center gap-1 mt-3 text-[11px] ${data.color}`}
-            >
+            <div className={`flex items-center gap-1 mt-3 text-[11px] ${data.color}`}>
               <span className="font-medium">{data.change}</span>
             </div>
           )}
@@ -118,8 +93,7 @@ function Card({ data, isCustomizeMode = false }) {
     </div>
   );
 
-  // Optional dashed wrapper in customize mode
-  if (!isCustomizeMode) return content;
+  if (!isGlobalDragMode) return content;
   return (
     <div className="relative transition-all duration-300">
       <div className="border-2 border-dashed border-gray-400 rounded-20 p-1 min-h-[120px] transition-colors hover:border-blue-400">
@@ -130,137 +104,33 @@ function Card({ data, isCustomizeMode = false }) {
 }
 
 // -----------------------------
-// Sortable item wrapper (focuses on drag behavior)
-// -----------------------------
-function SortableItem({ id, children, isCustomizeMode }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id });
-
-  // Only the active (dragged) item should visually move. Hide its original while dragging.
-  const style = {
-    transform:
-      isDragging && transform != null
-        ? `translate3d(${Math.round(transform.x)}px, ${Math.round(transform.y)}px, 0)`
-        : undefined,
-    transition: isDragging ? transition : undefined,
-    zIndex: isDragging ? 50 : 1,
-    opacity: isDragging ? 0 : 1,
-  };
-
-  const dragProps = isCustomizeMode ? { ...attributes, ...listeners } : {};
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={`transition-all duration-300 relative ${
-        isCustomizeMode ? "cursor-grab select-none touch-none" : ""
-      } ${isDragging ? "" : ""}`}
-      {...dragProps}
-    >
-      {children}
-    </div>
-  );
-}
-
-// -----------------------------
 // Main component
 // -----------------------------
 export default function AnalyticCards() {
-  const {
-    isGlobalDragMode,
-    registerContainer,
-    unregisterContainer,
-    markContainerChanged,
-  } = useDragContext();
+  const { isGlobalDragMode } = useDragContext();
 
-  // Items ordering state (with original for cancel)
-  const [items, setItems] = React.useState(initialCardsData);
-  const [originalItems, setOriginalItems] = React.useState(initialCardsData);
-  const [activeItem, setActiveItem] = React.useState(null);
-
-  // DnD sensors (small delay and tolerance to avoid accidental drags)
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: { delay: 120, tolerance: 8 },
-    })
+  // Build components for SortableContainer (id + component)
+  const [items, setItems] = React.useState(() =>
+    initialCardsData.map((d) => ({ id: d.id, component: <Card data={d} /> }))
   );
 
-  // Register save/cancel with the DragProvider
-  React.useEffect(() => {
-    const callbacks = {
-      onSave: () => {
-        const order = items.map((it, i) => ({ id: it.id, order: i }));
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(order));
-        setOriginalItems(items);
-      },
-      onCancel: () => setItems(originalItems),
-    };
-    registerContainer(CONTAINER_ID, callbacks);
-    return () => unregisterContainer(CONTAINER_ID);
-  }, [items, originalItems, registerContainer, unregisterContainer]);
-
-  // Load saved order on mount
-  React.useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) return;
-    const reordered = applySavedOrder(initialCardsData, saved);
-    setItems(reordered);
-    setOriginalItems(reordered);
-  }, []);
-
-  // Drag handlers
-  const handleDragStart = React.useCallback(
-    (event) => {
-      setActiveItem(items.find((i) => i.id === event.active.id) || null);
-    },
-    [items]
-  );
-
-  const handleDragEnd = React.useCallback(
-    (event) => {
-      const { active, over } = event;
-      if (!over || active.id === over.id) {
-        setActiveItem(null);
-        return;
-      }
-      setItems((curr) => {
-        const oldIndex = curr.findIndex((i) => i.id === active.id);
-        const newIndex = curr.findIndex((i) => i.id === over.id);
-        return arrayMove(curr, oldIndex, newIndex);
-      });
-      setActiveItem(null);
-      markContainerChanged(CONTAINER_ID);
-    },
-    [markContainerChanged]
-  );
-
-  // Render grid + overlay
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={rectIntersection}
-      measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
+    <SortableContainer
+      containerId={CONTAINER_ID}
+      items={items}
+      storageKey={STORAGE_KEY}
+      strategy="grid"
+      onItemsChange={setItems}
+      className=""
     >
-      <SortableContext items={items} strategy={rectSortingStrategy}>
+      {(orderedItems, renderSortable) => (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {items.map((item) => (
-            <SortableItem
-              key={item.id}
-              id={item.id}
-              isCustomizeMode={isGlobalDragMode}
-            >
-              <Card data={item} isCustomizeMode={isGlobalDragMode} />
-            </SortableItem>
-          ))}
+          {orderedItems.map((item, index) => renderSortable(item, index))}
         </div>
+      )}
+    </SortableContainer>
+  );
+}
       </SortableContext>
 
       <DragOverlay>
