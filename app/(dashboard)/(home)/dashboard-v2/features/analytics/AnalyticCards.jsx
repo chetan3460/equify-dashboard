@@ -93,14 +93,9 @@ function Card({ data }) {
     </div>
   );
 
-  if (!isGlobalDragMode) return content;
-  return (
-    <div className="relative transition-all duration-300">
-      <div className="border-2 border-dashed border-gray-400 rounded-20 p-1 min-h-[120px] transition-colors hover:border-blue-400">
-        {content}
-      </div>
-    </div>
-  );
+  // SortableContainer already adds a dashed border wrapper for items in customize mode.
+  // Returning content directly avoids double borders.
+  return content;
 }
 
 // -----------------------------
@@ -123,23 +118,11 @@ export default function AnalyticCards() {
       onItemsChange={setItems}
       className=""
     >
-      {(orderedItems, renderSortable) => (
+      {(orderedItems, SortableItem) => (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {orderedItems.map((item, index) => renderSortable(item, index))}
+          {orderedItems.map((item, index) => SortableItem(item, index))}
         </div>
       )}
     </SortableContainer>
-  );
-}
-      </SortableContext>
-
-      <DragOverlay>
-        {activeItem && (
-          <div>
-            <Card data={activeItem} isCustomizeMode />
-          </div>
-        )}
-      </DragOverlay>
-    </DndContext>
   );
 }
