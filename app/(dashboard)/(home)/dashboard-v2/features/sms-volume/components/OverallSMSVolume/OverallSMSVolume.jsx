@@ -1,4 +1,10 @@
 "use client";
+/*
+  Component: OverallSMSVolume
+  Purpose: Multi-series line chart for total/delivered/failed/retry SMS with custom legend, dots, and themed axes.
+  Notes: Parent-controlled or internal period state; export action; DragProvider handle.
+  Data/Config: ./data (getChartData), ./config (CHART_CONFIG, THEME_COLORS).
+*/
 import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import {
@@ -25,8 +31,8 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import DashboardSelect from "@/components/dashboard-select";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import DashboardSelect from "@/app/(dashboard)/(home)/dashboard-v2/ui/dashboard-select";
+import OptionsDropdown from "@/app/(dashboard)/(home)/dashboard-v2/ui/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
 import { useDragContext } from "@/components/draggable/DragProvider";
 import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";

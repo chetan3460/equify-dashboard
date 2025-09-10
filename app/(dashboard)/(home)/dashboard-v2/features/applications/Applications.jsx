@@ -1,4 +1,9 @@
 "use client";
+/*
+  Feature: Applications – Container
+  Purpose: Hosts Kafka, Database, Redis, Webserver, and Applications table cards.
+  Wires SortableContainer with items and persisted order.
+*/
 import React, { useMemo } from "react";
 import { SortableContainer } from "@/components/draggable";
 import KafkaStatus from "./components/Kafka/KafkaStatus";

@@ -1,4 +1,8 @@
 
+/*
+  Module: Config
+  Purpose: Theme-aware chart/table configuration and constants for this component.
+*/
 /**
  * Returns chart config based on current theme
  * @param {"light"|"dark"} theme

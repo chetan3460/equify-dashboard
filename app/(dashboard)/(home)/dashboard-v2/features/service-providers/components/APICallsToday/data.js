@@ -1,3 +1,7 @@
+/*
+  Module: Data
+  Purpose: Mock/demo data and mapping helpers for this component (suitable for charts/tables).
+*/
 // Raw data
 export const rawData = {
     lastUpdated: "01:15:45",

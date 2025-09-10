@@ -1,15 +1,6 @@
 import { create } from "zustand";
 import { siteConfig } from "@/config/site";
 import { persist, createJSONStorage } from "zustand/middleware";
-export const useThemeStore = create(
-  (set) => ({
-    theme: "custom", // hardcoded to custom theme
-    layout: "vertical", // hardcoded to vertical
-    navbarType: "sticky", // hardcoded to sticky
-    footerType: "static", // hardcoded to static
-    radius: 1.25, // hardcoded to 20px (1.25rem)
-  })
-);
 
 export const useSidebar = create(
   persist(

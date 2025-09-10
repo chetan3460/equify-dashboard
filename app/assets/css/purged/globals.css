@@ -221,30 +221,8 @@
   .options-icon {
     @apply flex w-3 h-3 items-center justify-center;
   }
-  /* Calendar Styles */
 
-  /* Calendar Event Colors */
-
-  /* Date Picker */
-
-  /* React Select Styles */
-
-  /* Map Styles */
-
-  /* Shepherd Styles */
-
-  /* Pagination Styles */
-
-  /* Timeline Styles */
-
-  /* Steps Styles */
   .steps {
     @apply flex items-baseline;
   }
-
-  /* Scrollbar Styles */
-
-  /* Force flat line caps on react-gauge-component arcs */
-
-  /* Slider Styles */
 }

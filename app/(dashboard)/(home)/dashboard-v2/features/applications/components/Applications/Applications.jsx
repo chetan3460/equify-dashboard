@@ -1,4 +1,10 @@
 "use client";
+/*
+  Component: Applications (table)
+  Purpose: Sortable table of application nodes with status badges and CSV export.
+  Notes: Sorting via hook; DnD handle in container; columns from ./config.
+  Data: ./data (applicationsData).
+*/
 import React, { useState } from "react";
 import {
   Card,
@@ -8,7 +14,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import OptionsDropdown from "@/app/(dashboard)/(home)/dashboard-v2/ui/OptionsDropdown";
 import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 import { columns } from "./config";
 import { applicationsData } from "./data";

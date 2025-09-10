@@ -1,3 +1,7 @@
+/*
+  Module: SMS Volume constants
+  Purpose: Centralized colors, legend items, dot sizes, chart config, and theme tokens for SMS charts.
+*/
 export const SMS_COLORS = {
   TOTAL: {
     solid: "#00B6F1",

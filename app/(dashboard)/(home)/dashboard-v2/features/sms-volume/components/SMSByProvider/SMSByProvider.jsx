@@ -1,4 +1,10 @@
 "use client";
+/*
+  Component: SMSByProvider
+  Purpose: Vertical bar chart of SMS volume by provider with gradient-filled bars and trimmed, accessible labels.
+  Notes: Scrolls when many rows; exportable; DragProvider handle.
+  Data/Config: ./data (getProviderChartData, gradientSpecByName), ./config (axis, stroke, grid).
+*/
 import React, { useMemo } from "react";
 import { useTheme } from "next-themes";
 import {
@@ -9,8 +15,8 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import DashboardSelect from "@/components/dashboard-select";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import DashboardSelect from "@/app/(dashboard)/(home)/dashboard-v2/ui/dashboard-select";
+import OptionsDropdown from "@/app/(dashboard)/(home)/dashboard-v2/ui/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
 import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 import {

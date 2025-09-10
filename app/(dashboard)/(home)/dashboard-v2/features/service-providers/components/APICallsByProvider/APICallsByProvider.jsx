@@ -1,3 +1,9 @@
+/*
+  Component: APICallsByProvider
+  Purpose: Bar chart comparing successful vs failed API calls across providers with gradient legend and rotated ticks.
+  Notes: Exportable data, DnD handle, theme-aware tooltip; uses compact number formatting.
+  Data/Config: ./data (chartData, rawData), ./config (gradients, axis styles).
+*/
 import { useTheme } from "next-themes";
 import {
   Card,
@@ -7,7 +13,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import OptionsDropdown from "@/app/(dashboard)/(home)/dashboard-v2/ui/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
 import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 

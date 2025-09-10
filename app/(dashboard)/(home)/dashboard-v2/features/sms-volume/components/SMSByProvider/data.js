@@ -1,3 +1,7 @@
+/*
+  Module: Data
+  Purpose: Mock/demo data and mapping helpers for this component (suitable for charts/tables).
+*/
 // Default mock data
 export const providerObj = {
     lastUpdated: "01:15:45",

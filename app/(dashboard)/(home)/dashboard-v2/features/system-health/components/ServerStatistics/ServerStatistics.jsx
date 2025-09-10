@@ -1,4 +1,10 @@
 "use client";
+/*
+  Component: ServerStatistics
+  Purpose: Sortable table of server metrics (CPU, memory, threads, disk, IO) with export.
+  Notes: Sticky header, optional internal scroll, generic sorting, and threshold highlighting.
+  Data: ./data (servers).
+*/
 import React, { useState, useMemo } from "react";
 import { useTheme } from "next-themes";
 
@@ -17,7 +23,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import OptionsDropdown from "@/app/(dashboard)/(home)/dashboard-v2/ui/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
 import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 import { STICKY_HEADER_CLASS, ROW_SCROLL_THRESHOLD } from "@/lib/table";

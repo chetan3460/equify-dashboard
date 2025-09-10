@@ -1,3 +1,7 @@
+/*
+  Component: CustomTooltip (OverallSMSVolume)
+  Purpose: Themed tooltip rendering compact values for multi-series SMS line chart.
+*/
 import React from "react";
 import { formatCompactNumber } from "@/lib/number";
 

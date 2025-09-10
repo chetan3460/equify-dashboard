@@ -5,15 +5,14 @@ import { siteConfig } from "@/config/site";
 import Providers from "@/providers/providers";
 import TanstackProvider from "@/providers/providers.client";
 import "@/lib/suppress-warnings";
-import WarningSuppressor from "@/components/client/warning-suppressor";
 import BodyClassHandler from "@/components/client/body-class-handler";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
 // import "flatpickr/dist/themes/light.css"; // Removed dependency
-const poppins = Poppins({ 
-  subsets: ["latin"], 
+const poppins = Poppins({
+  subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins"
+  variable: "--font-poppins",
 });
 
 export const metadata = {
@@ -28,8 +27,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head></head>
-      <body className={cn("dash-tail-app", poppins.className)}>
-        <WarningSuppressor />
+      <body className={cn("equence-app", poppins.className)}>
         <BodyClassHandler />
         <TanstackProvider>
           <Providers>{children}</Providers>

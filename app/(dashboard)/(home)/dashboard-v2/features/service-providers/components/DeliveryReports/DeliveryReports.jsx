@@ -1,3 +1,9 @@
+/*
+  Component: DeliveryReports
+  Purpose: Stacked bar chart for messages sent vs delivery reports with custom legend and tooltip.
+  Notes: Period selector, export action, and DragProvider handle; theme-aware colors via config.
+  Data/Config: ./data (series, lastUpdated), ./config (legend colors, axis styling).
+*/
 import React, { useState } from "react";
 
 import { useTheme } from "next-themes";
@@ -9,15 +15,10 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import DashboardSelect from "@/components/dashboard-select";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-} from "@/components/ui/plain-dropdown-menu";
+import DashboardSelect from "@/app/(dashboard)/(home)/dashboard-v2/ui/dashboard-select";
+import OptionsDropdown from "@/app/(dashboard)/(home)/dashboard-v2/ui/OptionsDropdown";
 import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
+import { exportCsv } from "@/lib/csv";
 
 import {
   BarChart,
@@ -33,7 +34,14 @@ import { rawData, chartData } from "./data";
 import { getChartConfig } from "./config";
 import { formatCompactNumber } from "@/lib/number";
 
-const CustomTick = ({ x, y, payload, vertical = false, rotate = false, chartConfig }) => {
+const CustomTick = ({
+  x,
+  y,
+  payload,
+  vertical = false,
+  rotate = false,
+  chartConfig,
+}) => {
   const value =
     vertical && typeof payload.value === "number"
       ? formatCompactNumber(payload.value)
@@ -138,28 +146,11 @@ export default function DeliveryReports({
   const { isGlobalDragMode } = useDragContext();
   const { theme } = useTheme();
   const chartConfig = getChartConfig(theme);
-  const [currentPeriod, setCurrentPeriod] = useState(selectedPeriod);
 
-  const resolvedOptions = (optionsMenuItems && optionsMenuItems.length > 0)
-    ? optionsMenuItems
-    : [
-        { id: "resize", label: "Resize" },
-        { id: "export", label: "Export" },
-        { id: "settings", label: "Settings" },
-        { id: "refresh", label: "Refresh" },
-      ];
 
-  // Wire export action
-  const optionsWithActions = resolvedOptions.map((opt) =>
-    opt.id === "export"
-      ? { ...opt, onClick: () => import("@/lib/csv").then(({ exportCsv }) => exportCsv("delivery-reports.csv", chartData)) }
-      : opt
-  );
+  const wrapperStyle =
+    typeof height === "number" ? { height: `${height}px` } : { height: "100%" };
 
-  const handlePeriodChange = (newPeriod) => {
-    setCurrentPeriod(newPeriod);
-    onPeriodChange?.(newPeriod);
-  };
   return (
     <Card className="h-full flex flex-col">
       <div className="flex items-center justify-between">
@@ -178,70 +169,23 @@ export default function DeliveryReports({
           ) : (
             <>
               <DashboardSelect
-                value={currentPeriod}
-                onChange={handlePeriodChange}
+                value={selectedPeriod}
+                onChange={onPeriodChange}
                 options={selectOptions}
               />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    aria-label="Open options"
-                    className="text-default-900 inline-flex items-center justify-center h-8 w-8 rounded hover:bg-default-100"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="17"
-                      viewBox="0 0 16 17"
-                      fill="none"
-                    >
-                      <g clipPath="url(#clip0_621_439)">
-                        <path
-                          d="M8 9.25C8.41421 9.25 8.75 8.91421 8.75 8.5C8.75 8.08579 8.41421 7.75 8 7.75C7.58579 7.75 7.25 8.08579 7.25 8.5C7.25 8.91421 7.58579 9.25 8 9.25Z"
-                          fill="currentColor"
-                        />
-                        <path
-                          d="M8 5C8.41421 5 8.75 4.66421 8.75 4.25C8.75 3.83579 8.41421 3.5 8 3.5C7.58579 3.5 7.25 3.83579 7.25 4.25C7.25 4.66421 7.58579 5 8 5Z"
-                          fill="currentColor"
-                        />
-                        <path
-                          d="M8 13.5C8.41421 13.5 8.75 13.1642 8.75 12.75C8.75 12.3358 8.41421 12 8 12C7.58579 12 7.25 12.3358 7.25 12.75C7.25 13.1642 7.58579 13.5 8 13.5Z"
-                          fill="currentColor"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_621_439">
-                          <rect
-                            width="16"
-                            height="16"
-                            fill="white"
-                            transform="translate(0 0.5)"
-                          />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Options</DropdownMenuLabel>
-                  {optionsWithActions.map((item, idx) => (
-                    <DropdownMenuItem
-                      key={item.id || idx}
-                      className="px-2 py-1.5 text-sm"
-                      onClick={item.onClick}
-                    >
-                      {item.label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <OptionsDropdown
+                items={optionsMenuItems}
+                onAction={(id) => {
+                  if (id === "export") exportCsv("delivery-reports.csv", chartData);
+                }}
+              />
             </>
           )}
         </div>
       </div>
 
       <CardContent className="flex-1">
-        <div className="h-80">
+        <div style={wrapperStyle}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={chartData}

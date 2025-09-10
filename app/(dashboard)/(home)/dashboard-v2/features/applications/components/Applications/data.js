@@ -1,3 +1,7 @@
+/*
+  Module: Data
+  Purpose: Mock/demo data and mapping helpers for this component (suitable for charts/tables).
+*/
 export const applicationsData = {
   lastUpdated: "16:50:01",
   applications: [

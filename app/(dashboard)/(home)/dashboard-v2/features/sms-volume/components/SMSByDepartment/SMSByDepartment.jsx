@@ -1,4 +1,10 @@
 "use client";
+/*
+  Component: SMSByDepartment
+  Purpose: Pie chart of SMS distribution by department with gradient defs and accessible tooltip.
+  Notes: Period selector, export support, DragProvider handle.
+  Data/Config: ./data (getDeptChartData), ./config (DEPT_GRADIENTS, CHART_CONFIG).
+*/
 import React, { useMemo, useState } from "react";
 import {
   PieChart,
@@ -8,8 +14,8 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import DashboardSelect from "@/components/dashboard-select";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import DashboardSelect from "@/app/(dashboard)/(home)/dashboard-v2/ui/dashboard-select";
+import OptionsDropdown from "@/app/(dashboard)/(home)/dashboard-v2/ui/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
 import {
   Card,

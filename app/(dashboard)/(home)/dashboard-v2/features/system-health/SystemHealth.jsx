@@ -1,4 +1,9 @@
 "use client";
+/*
+  Feature: System Health – Container
+  Purpose: Hosts server statistics and network/API calls charts for infrastructure health.
+  Wires SortableContainer with items and persisted order.
+*/
 import React, { useMemo } from "react";
 import { SortableContainer } from "@/components/draggable";
 import ServerStatistics from "./components/ServerStatistics/ServerStatistics";

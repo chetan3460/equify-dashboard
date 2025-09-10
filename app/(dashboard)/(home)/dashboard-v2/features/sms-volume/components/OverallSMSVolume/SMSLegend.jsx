@@ -1,4 +1,8 @@
 "use client";
+/*
+  Component: SMSLegend
+  Purpose: Presentational legend for OverallSMSVolume using shared SMS colors.
+*/
 import { LEGEND_ITEMS, SMS_COLORS } from "../../utils/constants";
 
 const SMSLegend = () => (

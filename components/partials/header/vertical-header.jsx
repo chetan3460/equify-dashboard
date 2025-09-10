@@ -1,5 +1,5 @@
 import React from "react";
-import { useSidebar, useThemeStore } from "@/store";
+import { useSidebar } from "@/store";
 import { cn } from "@/lib/utils";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
@@ -55,7 +55,7 @@ const MenuBar = ({ collapsed, setCollapsed }) => {
 
 const VerticalHeader = ({ handleOpenSearch }) => {
   const { collapsed, setCollapsed, subMenu, sidebarType } = useSidebar();
-  const { layout } = useThemeStore();
+  const layout = "vertical";
   const isDesktop = useMediaQuery("(min-width: 1280px)");
   const isMobile = useMediaQuery("(min-width: 768px)");
   let LogoContent = null;

@@ -12,9 +12,9 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import OptionsDropdown from "@/app/(dashboard)/(home)/dashboard-v2/ui/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
-import DashboardSelect from "@/components/dashboard-select";
+import DashboardSelect from "@/app/(dashboard)/(home)/dashboard-v2/ui/dashboard-select";
 import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 
 import {

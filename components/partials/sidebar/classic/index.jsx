@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { cn, isLocationMatch } from "@/lib/utils";
-import { useSidebar, useThemeStore } from "@/store";
+import { useSidebar } from "@/store";
 import SidebarLogo from "../common/logo";
 import { menusConfig } from "@/config/menus";
 import MenuLabel from "../common/menu-label";

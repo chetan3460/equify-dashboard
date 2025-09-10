@@ -1,3 +1,9 @@
+/*
+  Component: OngoingTPS
+  Purpose: Bar chart of transactions-per-second by provider with live badge and export.
+  Notes: Supports numeric or CSS string heights; gradient-filled bars; DnD handle.
+  Data/Config: ./data (values, lastUpdated), ./config (gradients, axis styles).
+*/
 import { useTheme } from "next-themes";
 import {
   Card,
@@ -9,7 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 import { useDragContext } from "@/components/draggable/DragProvider";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import OptionsDropdown from "@/app/(dashboard)/(home)/dashboard-v2/ui/OptionsDropdown";
 import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 
 import {

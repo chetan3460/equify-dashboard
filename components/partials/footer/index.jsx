@@ -1,5 +1,5 @@
 import React from "react";
-import { useSidebar, useThemeStore } from "@/store";
+import { useSidebar } from "@/store";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -9,7 +9,8 @@ import { useMounted } from "@/hooks/use-mounted";
 
 const Footer = ({ handleOpenSearch }) => {
   const { collapsed, sidebarType } = useSidebar();
-  const { layout, footerType } = useThemeStore();
+  const layout = "vertical";
+  const footerType = "static";
   const mounted = useMounted();
   const isMobile = useMediaQuery("(min-width: 768px)");
 

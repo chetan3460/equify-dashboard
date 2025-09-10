@@ -1,4 +1,8 @@
 
+/*
+  Module: Config
+  Purpose: Theme-aware chart/table configuration and constants for this component.
+*/
 /**
  * SMSByDepartment chart configuration and gradients.
  * Kept local to the chart folder to scope concerns and mirror OverallSMSVolume.

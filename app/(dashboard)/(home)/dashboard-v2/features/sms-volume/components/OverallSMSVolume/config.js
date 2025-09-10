@@ -1,4 +1,8 @@
 
+/*
+  Module: Config
+  Purpose: Theme-aware chart/table configuration and constants for this component.
+*/
 /**
  * OverallSMSVolume chart configuration and theme.
  * Localized to this chart to keep concerns scoped to the component folder.

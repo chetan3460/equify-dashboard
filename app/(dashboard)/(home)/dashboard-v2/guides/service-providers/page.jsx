@@ -1,7 +1,6 @@
-"use client";
-import Content from "./content.mdx";
+import { notFound } from "next/navigation";
 
 export default function Page() {
-  return <Content />;
+  notFound();
 }
 

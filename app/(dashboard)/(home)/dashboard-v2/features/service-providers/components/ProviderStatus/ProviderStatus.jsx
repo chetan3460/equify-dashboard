@@ -17,8 +17,8 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import DashboardSelect from "@/components/dashboard-select";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import DashboardSelect from "@/app/(dashboard)/(home)/dashboard-v2/ui/dashboard-select";
+import OptionsDropdown from "@/app/(dashboard)/(home)/dashboard-v2/ui/OptionsDropdown";
 import { providerStatus, getStatusList } from "./data";
 import { PROVIDER_STATUS_CONFIG } from "./config";
 import { exportCsv } from "@/lib/csv";

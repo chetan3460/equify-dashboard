@@ -1,3 +1,7 @@
+/*
+  Module: Config
+  Purpose: Theme-aware chart/table configuration and constants for this component.
+*/
 export function getChartConfig(theme) {
     const isDark = theme === "dark";
 

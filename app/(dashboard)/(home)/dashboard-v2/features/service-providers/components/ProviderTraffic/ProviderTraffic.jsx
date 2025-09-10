@@ -1,3 +1,9 @@
+/*
+  Component: ProviderTraffic
+  Purpose: Pie chart of SMS distribution by provider with gradient legend and custom tooltip.
+  Supports period selection, theme-aware tooltip styling, and export. Uses DragProvider for DnD handle.
+  Data/Config: ./data (values, lastUpdated), ./config (gradients, theming).
+*/
 import React, { useEffect, useState } from "react";
 
 import { useTheme } from "next-themes";
@@ -9,8 +15,8 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import DashboardSelect from "@/components/dashboard-select";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import DashboardSelect from "@/app/(dashboard)/(home)/dashboard-v2/ui/dashboard-select";
+import OptionsDropdown from "@/app/(dashboard)/(home)/dashboard-v2/ui/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
 import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 

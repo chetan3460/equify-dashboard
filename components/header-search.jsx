@@ -1,14 +1,6 @@
 import React from "react";
 import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
-import {
-  Calculator,
-  Calendar,
-  CreditCard,
-  Settings,
-  Smile,
-  User,
-  X,
-} from "lucide-react";
+import { X } from "lucide-react";
 import {
   Command,
   CommandEmpty,

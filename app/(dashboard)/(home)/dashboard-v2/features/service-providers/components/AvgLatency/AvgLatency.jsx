@@ -1,4 +1,10 @@
 "use client";
+/*
+  Component: AvgLatency
+  Purpose: Bar chart (triangle bars) of average latency by provider with custom ticks and themed tooltip.
+  Notes: Supports pixel or full-height sizing and CSV export; shows Live badge; DnD handle via DragProvider.
+  Data/Config: ./data (values, lastUpdated), ./config (gradients, axis styles).
+*/
 import { useTheme } from "next-themes";
 import {
   Card,
@@ -9,7 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import OptionsDropdown from "@/app/(dashboard)/(home)/dashboard-v2/ui/OptionsDropdown";
 import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 
 import {

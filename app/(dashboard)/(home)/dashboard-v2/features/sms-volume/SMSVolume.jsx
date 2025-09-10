@@ -1,4 +1,9 @@
 "use client";
+/*
+  Feature: SMS Volume – Container
+  Purpose: Hosts overall volume line chart, department breakdown pie, and provider breakdown bar chart.
+  Manages shared period selections and wires SortableContainer with persisted order.
+*/
 import React, { useMemo, useState } from "react";
 import { SortableContainer } from "@/components/draggable";
 import { OverallSMSVolume, SMSByDepartment, SMSByProvider } from "./index";

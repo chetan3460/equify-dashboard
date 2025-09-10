@@ -1,3 +1,7 @@
+/*
+  Module: Data
+  Purpose: Mock/demo data and mapping helpers for this component (suitable for charts/tables).
+*/
 // ProviderStatus data and helpers
 
 export const providerStatus = {

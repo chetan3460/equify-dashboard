@@ -1,4 +1,10 @@
 "use client";
+/*
+  Feature: Service Providers – Container
+  Purpose: Arranges provider-related cards (status, traffic, API calls, TPS, latency, delivery reports)
+  and wires SortableContainer with grid items and persisted order.
+  Notes: Uses dynamic grid spans for some cards based on dataset length.
+*/
 import React, { useMemo } from "react";
 import { SortableContainer } from "@/components/draggable";
 import ProviderStatus from "./components/ProviderStatus/ProviderStatus";

@@ -1,3 +1,7 @@
+/*
+  Module: Data
+  Purpose: Mock/demo data and mapping helpers for this component (suitable for charts/tables).
+*/
 export const rawData = {
     lastUpdated: "01:15:45",
     Airtel: { msgSubmitted: 20822, dlrReceived: 20822 },

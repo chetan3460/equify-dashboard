@@ -1,3 +1,7 @@
+/*
+  Module: Data
+  Purpose: Mock/demo data and mapping helpers for this component (suitable for charts/tables).
+*/
 // Network statistics single-series dataset
 // Replace this with live data as needed
 export const networkRaw = {

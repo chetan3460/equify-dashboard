@@ -2,7 +2,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import ThemeButton from "./theme-button";
-import { useSidebar, useThemeStore } from "@/store";
+import { useSidebar } from "@/store";
 import ProfileInfo from "./profile-info";
 import VerticalHeader from "./vertical-header";
 import NotificationMessage from "./notification-message";
@@ -27,7 +27,7 @@ const NavTools = ({ isDesktop }) => (
 
 const MainHeader = ({ handleOpenSearch }) => {
   const { collapsed, sidebarType } = useSidebar();
-  const { navbarType } = useThemeStore();
+  const navbarType = "sticky";
   const isDesktop = useMediaQuery("(min-width: 1280px)");
 
   return (

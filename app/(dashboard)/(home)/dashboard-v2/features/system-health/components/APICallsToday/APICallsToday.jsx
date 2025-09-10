@@ -17,7 +17,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import ChevronDown from "@/components/icons/ChevronDown";
+import { ArrowDownTriangle16 } from "@/ui/icons";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -26,7 +26,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/plain-dropdown-menu";
 import { useDragContext } from "@/components/draggable/DragProvider";
-import OptionsDropdown from "@/components/OptionsDropdown";
+import OptionsDropdown from "@/app/(dashboard)/(home)/dashboard-v2/ui/OptionsDropdown";
 import { exportCsv } from "@/lib/csv";
 import { DragHandleDots16 as DragHandleIcon } from "@/ui/icons";
 import {
@@ -100,7 +100,7 @@ export default function SuccessfulTransactions({
                       className="inline-flex items-center gap-1 px-3 py-2 text-xs font-normal dark:bg-[#323E4E]"
                     >
                       Server 1
-                      <ChevronDown className="ml-1" width={10} height={6} />
+<ArrowDownTriangle16 className="ml-1" width={10} height={6} />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -121,7 +121,7 @@ export default function SuccessfulTransactions({
                       className="inline-flex items-center gap-1 cursor-pointer px-3 py-2 text-xs font-normal dark:bg-[#323E4E]"
                     >
                       Percentage
-                      <ChevronDown className="ml-1" width={10} height={6} />
+<ArrowDownTriangle16 className="ml-1" width={10} height={6} />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">

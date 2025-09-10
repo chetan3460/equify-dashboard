@@ -1,3 +1,7 @@
+/*
+  Module: Config
+  Purpose: Theme-aware chart/table configuration and constants for this component.
+*/
 // config.js
 // Keep only mock/demo data in this module so it can be swapped later with a data-fetcher.
 
