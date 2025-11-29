@@ -1,0 +1,103 @@
+Analytics Drag-and-Drop Overview
+
+1) Summary
+- Library: dnd-kit (@dnd-kit/core and @dnd-kit/sortable)
+- Pattern:
+  - Global DragProvider manages “Customize Layout” mode and Save/Cancel across all draggable sections.
+  - Analytics cards use a reusable SortableContainer that wires dnd-kit, item ordering, and localStorage persistence.
+  - Each card (Gauge/Metric) is purely presentational; no DnD logic inside.
+
+2) Where Analytics DnD is wired
+- File: app/(dashboard)/(home)/dashboard-v2/features/analytics/AnalyticCards.jsx
+- Flow:
+  - initialCardsData -> map to items: [{ id, component: <Card data={...} /> }]
+  - Render SortableContainer with:
+    - containerId (analytics-cards)
+    - storageKey (dashboard-analytics-cards)
+    - strategy="grid"
+    - child render-prop that lays out items in a CSS grid
+
+3) Helper constants
+- File: .../features/analytics/components/analytic-cards-helpers.js
+  - STORAGE_KEY = "dashboard-analytics-cards"
+  - CONTAINER_ID = "analytics-cards"
+  - applySavedOrder(baseItems, savedJson): (generic utility) rebuild order from a saved payload if needed.
+
+4) SortableContainer responsibilities
+- File: components/draggable/SortableContainer.jsx
+- Sets up:
+  a) DndContext
+     - PointerSensor with activationConstraint (delay + tolerance) to reduce accidental drags
+     - collisionDetection: rectIntersection (works well for grid)
+     - measuring: Always measure droppables (prevents layout hiccups)
+  b) SortableContext
+     - Items = array of IDs
+     - Strategy: rectSortingStrategy (grid), or switchable to vertical/horizontal
+  c) Per-item wrapper (SortableItem)
+     - useSortable gives attributes/listeners, transform, transition, isDragging
+     - While dragging, original slot fades (opacity 0) to avoid shifting siblings visually
+     - Whole item gets drag listeners in customize mode, making the entire card draggable
+  d) Persistence
+     - On mount: if storageKey is provided, load saved order from localStorage and reorder items
+     - onSave: save compact [{ id, order }] to localStorage and notify onItemsChange
+     - onCancel: restore originalItems and notify onItemsChange
+  e) Integration with DragProvider
+     - registerContainer(containerId, { onSave, onCancel }) so global Save/Cancel works when exiting customize mode
+
+5) Reordering logic on drag end
+- handleDragEnd(event):
+  - Compute oldIndex/newIndex from active.id and over.id
+  - Optional restrictBySpan: only reorder among items whose className encodes the same col-span tokens (e.g., col-span-*, md:col-span-*)
+  - Movement mode:
+    - "shift" (default): arrayMove() shifts intervening items
+    - "swap": swapAt() swaps just the two items without shifting others
+
+6) Card components are presentational only
+- Files:
+  - .../features/analytics/components/Card.jsx
+  - .../features/analytics/components/GaugeCard.jsx
+  - .../features/analytics/components/MetricCard.jsx
+- Card.jsx
+  - Reads isGlobalDragMode from DragProvider to show a drag handle icon (affordance only)
+  - Renders either GaugeCard or MetricCard based on data.type
+  - No dnd-kit calls inside; drag props are applied by SortableContainer
+
+7) Global Drag Mode (Customize)
+- Files:
+  - components/draggable/DragProvider.jsx
+  - components/partials/header/customize-button.jsx (uses useDragContext)
+  - components/draggable/DragModeHeader.jsx (if used) + DragConfirmationPopup
+  - app/(dashboard)/main-layout.jsx wraps app with <DragProvider>
+- Behavior:
+  - toggleDragMode() enters/exits customize mode
+  - When exiting, if any container marked changes, DragProvider shows a confirmation popup
+  - saveChanges(): invokes each registered container’s onSave, closes customize mode
+  - cancelChanges(): invokes onCancel on each, restores original order, closes customize mode
+
+8) Configuration knobs
+- strategy: "grid" (rectSortingStrategy), "vertical", "horizontal"
+- moveMode: "shift" (arrayMove) or "swap"
+- restrictBySpan: (true/false) prevent cross-span reorders
+- storageKey: localStorage key used for persistence of this container
+- renderOverlay: custom overlay while dragging (optional)
+
+9) File map (key parts)
+- Analytics wiring:
+  - app/(dashboard)/(home)/dashboard-v2/features/analytics/AnalyticCards.jsx
+  - app/(dashboard)/(home)/dashboard-v2/features/analytics/components/Card.jsx
+  - app/(dashboard)/(home)/dashboard-v2/features/analytics/components/GaugeCard.jsx
+  - app/(dashboard)/(home)/dashboard-v2/features/analytics/components/MetricCard.jsx
+  - app/(dashboard)/(home)/dashboard-v2/features/analytics/components/analytic-cards-helpers.js
+- Draggable system:
+  - components/draggable/DragProvider.jsx
+  - components/draggable/SortableContainer.jsx
+  - components/draggable/DragModeHeader.jsx (popup + header UI)
+  - components/partials/header/customize-button.jsx (entry point button)
+  - app/(dashboard)/main-layout.jsx (wraps everything in <DragProvider>)
+
+10) Practical tips
+- If cards jump too much while dragging, prefer the grid strategy and keep the item heights consistent.
+- If you want only adjacent swaps, use moveMode="swap".
+- If you want to limit swaps across columns, set restrictBySpan to true and encode col-span classes on items.
+- For server-side persistence, hook onItemsChange to POST the order to your API and reload it into initialItems.
+

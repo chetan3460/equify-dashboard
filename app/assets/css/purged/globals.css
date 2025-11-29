@@ -75,6 +75,9 @@
 
     /* Theme-aware gauge tail color (used by react-gauge-component) */
     --gauge-tail-color: hsl(var(--default-300));
+
+    /* Custom project colors */
+    --color-ba3333: #ba3333;
   }
 
   .dark {
@@ -224,5 +227,18 @@
 
   .steps {
     @apply flex items-baseline;
+  }
+}
+
+@layer utilities {
+  /* Utility classes for #ba3333 */
+  .text-ba3333 {
+    color: var(--color-ba3333);
+  }
+  .bg-ba3333 {
+    background-color: var(--color-ba3333);
+  }
+  .border-ba3333 {
+    border-color: var(--color-ba3333);
   }
 }
