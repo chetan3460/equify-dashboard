@@ -7,9 +7,8 @@ const nextConfig = {
     maxInactiveAge: 60 * 1000,
     pagesBufferLength: 5,
   },
+  reactCompiler: false,
   experimental: {
-    // Suppress React 19 warnings
-    reactCompiler: false,
     // Disable problematic devtools in development
     optimizePackageImports: ['@radix-ui/react-select', '@radix-ui/react-dialog'],
   },
